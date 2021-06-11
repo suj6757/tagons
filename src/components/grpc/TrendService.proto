@@ -1,0 +1,158 @@
+syntax = "proto3";
+
+package TrendService;
+
+message Table_XYFactor {
+    string Category_upper = 1;
+    string Category_lower = 2;
+    double P_R_INDEX  = 3;
+    double RISE_FALL = 4;
+}
+
+message Table_OneFloat {
+    string date = 1;
+    double Value = 2;
+}
+
+message Table_OneInt {
+    string name = 1;
+    int64 Value = 2;
+}
+
+message Table_TwoURL {
+    string ImageURL = 1;
+    string SiteURL = 2;
+}
+
+message Table_ThreeString {
+    int64 Rank = 1;
+    string PurchaseFactor = 2;
+    string SatisfactionFactor = 3;
+    string DisSatisfactionFactor = 4;
+}
+
+message Table_ThreeCategory {
+    string Category1 = 1;
+    string Category2 = 2;
+    string Category3 = 3;
+}
+
+message Table_ThreeInt {
+    string Category = 1;
+    int64 PGI = 2;
+    int64 SGI = 3;
+    int64 DGI = 4;
+}
+
+message Request_Type1 {
+    string FromDate = 1;
+    string ToDate = 2;
+    string Category1 = 3;
+    string Category2 = 4;
+    string Category3 = 5;
+    string Keyword = 6;
+}
+
+message Request_Type2 {
+    string FromDate = 1;
+    string ToDate = 2;
+    string Category1 = 3;
+    string Category2 = 4;
+    string Category3 = 5;
+    string Keyword = 6;
+    string Category_upper = 7;
+    string Name = 8;
+}
+
+message Request_Type3 {
+    string FromDate = 1;
+    string ToDate = 2;
+    string Category1 = 3;
+    string Category2 = 4;
+    string Category3 = 5;
+    string Keyword = 6;
+    string Clicked = 7;
+}
+
+message Request_Empty {
+}
+
+message Response_Showroom {
+    string ErrorCode = 1;
+    string Message = 2;
+    repeated Table_TwoURL URL = 3;
+}
+
+message Response_XY_Type1 {
+    string ErrorCode = 1;
+    string Message = 2;
+    repeated Table_XYFactor Data = 3;
+}
+
+message Response_PTrendAndFactor {
+    string ErrorCode = 1;
+    string Message = 2;
+    string PreTrendChange = 3;
+    repeated Table_OneFloat TrendData = 4;
+    repeated Table_OneInt SentimentFactorData = 5;
+    repeated Table_OneInt BrandFactorData = 6;
+}
+
+message Response_ETrendAndFactor {
+    string ErrorCode = 1;
+    string Message = 2;
+    string PreTrendChange = 3;
+    repeated Table_OneFloat TrendData = 4;
+    repeated Table_OneInt ProductFactorData = 5;
+    repeated Table_OneInt BrandFactorData = 6;
+}
+
+message Response_GITableBubble {
+    string ErrorCode = 1;
+    string Message = 2;
+    repeated Table_ThreeString TableData = 3;
+    repeated Table_ThreeInt BubbleData = 4;
+}
+
+message Response_ClickedGIBubble {
+    string ErrorCode = 1;
+    string Message = 2;
+    repeated Table_OneInt BubbleData = 3;
+    repeated Table_TwoURL URL = 4;
+}
+
+message Table_AllBubbleData {
+    string Category = 1;
+    int64 PGI = 2;
+    int64 SGI = 3;
+    int64 DGI = 4;
+    repeated Table_OneInt AssociatedBubbleData = 5;
+    repeated Table_TwoURL URL = 6;
+}
+
+message Response_GI {
+    string ErrorCode = 1;
+    string Message = 2;
+    repeated Table_ThreeString TableData = 3;
+    repeated Table_AllBubbleData BubbleData = 4;
+}
+
+message Response_TotalCategory_List {
+    string ErrorCode = 1;
+    string Message = 2;
+    repeated Table_ThreeCategory Data = 3;
+}
+
+service TrendInfo {
+    rpc GetIndustry_TotalCategory_List(Request_Empty) returns (Response_TotalCategory_List);
+    rpc GetIndustry_Showroom(Request_Type1) returns (Response_Showroom);
+
+    rpc GetIndustry_PFactor_TrendQuad(Request_Type1) returns (Response_XY_Type1);
+    rpc GetIndustry_PFactor_TrendAndFactor(Request_Type2) returns (Response_PTrendAndFactor);
+
+    rpc GetIndustry_EFactor_TrendQuad(Request_Type1) returns (Response_XY_Type1);
+    rpc GetIndustry_EFactor_TrendAndFactor(Request_Type2) returns (Response_ETrendAndFactor);
+
+    rpc GetIndustry_PFactor_GI(Request_Type1) returns (Response_GI);
+    rpc GetIndustry_EFactor_GI(Request_Type1) returns (Response_GI);
+}
