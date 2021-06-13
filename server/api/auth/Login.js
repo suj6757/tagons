@@ -2,8 +2,6 @@ const express = require('express');
 const router = express.Router();
 
 router.get('/', (req, res) => {
-    console.log('Login');
-
     var grpcjs = require('@grpc/grpc-js');
     var protoLoader = require('@grpc/proto-loader');
 
@@ -21,9 +19,15 @@ router.get('/', (req, res) => {
 
     // 방식 2
     var data2 = {
-        UserId : "testuser", 
-        UserPassword : "1234", 
+        //UserId : "testuser", 
+        //UserPassword : "1234", 
     }
+
+    //파라미터 테스트
+    console.log('======================= body : ', req.body);
+    console.log('======================= data : ', req.data);
+    console.log('======================= query : ', req.query);
+    console.log('======================= params : ', req.params);
 
     client_Test.Login(data2, function(err, data) {
         try {

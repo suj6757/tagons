@@ -6,21 +6,19 @@ import Locate from './components/head/Locate';
 import Test from './components/body/StateTest';
 import Data from './components/body/Data';
 
-class Routes extends React.Component {
-    render() {
-        return (
-            <Router>
-                <Locate />
+function Routes(props) {
+    return (
+        <Router>
+            <Locate />
 
-                <Switch>
-                    <Route exact path='/' component={Main} />
-                    <Route exact path='/add' component={Insert} />
-                    <Route exact path='/test' component={Test} />
-                    <Route exact path='/data' component={Data} />
-                </Switch>
-            </Router>
-        );
-    }
+            <Switch>
+                <Route exact path='/' component={Main} />
+                <Route exact path='/add' component={Insert} />
+                <Route exact path='/test' component={Test} />
+                <Route exact path='/data' component={Data} />
+            </Switch>
+        </Router>
+    );
 }
 
 export default Routes;

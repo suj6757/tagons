@@ -8,7 +8,10 @@ function Data(props) {
         axios({
             method: "get",
             url: urlText,
-            responseType: "type"
+            responseType: "type",
+            params : { 
+                he : '으정바보'
+            }
         }).then(({ data }) => {
             setResult(JSON.stringify(data));
         }).catch(function(error) {

@@ -1,30 +1,25 @@
 import React from 'react';
 
-class Login extends React.Component {
-    constructor(props) {
-        super(props);
+function Login(props) {
+    const [id, setId] = React.useState();
+    const [pw, setPw] = React.useState();
 
-        this.state = {
-            id : ''
-        ,   pw : ''
-        ,   resData : []
-        }
+    const saveId = () => {
+        window.sessionStorage.setItem("ID", id);
+        
+        props.callBack({
+            ID : id,
+            PW : pw
+        });
     }
- 
-    saveId = () => {
-        window.sessionStorage.setItem("ID", this.state.id);
-        this.props.callBack(this.state.id);
-    }
-    
-    render() {
-        return (
-            <>
-                <div>ID : <input type='text' name="id" value={this.state.id} onChange={({target : { value }}) => this.setState({ id : value })} /></div>
-                <div>PW : <input type='password' name="pw" value={this.state.pw} onChange={({target : { value }}) => this.setState({ pw : value })} /></div>
-                <div><button type="button" onClick={this.saveId}>로그인</button></div>
-            </>
-        );
-    }
+
+    return (
+        <>
+            <div>ID : <input type='text' name="cmbId" onChange={({target : { value }}) => setId(value)} /></div>
+            <div>PW : <input type='password' name="cmbPw" onChange={({target : { value }}) => setPw(value)} /></div>
+            <div><button type="button" onClick={saveId}>로그인</button></div>
+        </>
+    );
 }
 
 export default Login;

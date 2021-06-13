@@ -1,6 +1,6 @@
 import React from 'react';
 import axios from 'axios';
-import Customer from '../struct/Customer';
+//import Customer from '../struct/Customer';
 import Paper from '@material-ui/core/Paper';
 import Table from '@material-ui/core/Table';
 import TableHead from '@material-ui/core/TableHead';
@@ -29,7 +29,7 @@ class Main extends React.Component {
     }
 
     componentDidMount = () => {
-        this.callApi();
+        //this.callApi();
     }
     
     callApi = async () => {
@@ -41,25 +41,11 @@ class Main extends React.Component {
             this.setState({
                 resData: data.Data
             });
-            
-            console.log(this.state.resData);
         }).catch(function (error) {
-            // 오류발생시 실행
+            console.log(error);
         });
     }
-
-    /* 
-    componentDidMount() {
-        this.callApi().then(res => this.setState({ customers : res })).catch(err => console.log(err));
-    }
-
-    callApi = async () => {
-        const response = await fetch('/api/customers');
-        const body = await response.json();
-
-        return body;
-    }
-    */
+    
     render() {
         const { classes } = this.props;
     
