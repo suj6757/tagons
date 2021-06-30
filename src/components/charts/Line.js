@@ -17,9 +17,15 @@ const Line = (props) => {
      
 
     if (!(store2.iPfactorTrendandfactor === null || store2.iPfactorTrendandfactor=== undefined || store2.iPfactorTrendandfactor === "")){
-      store2.iPfactorTrendandfactor.TrendData.map((tData) => {
+      store2.iPfactorTrendandfactor.TrendData.map((tData,index) => {
         dataArr.push(tData.Value);
-        categoryArr.push(tData.date.substring(0,10));
+        if ((store2.iPfactorTrendandfactor.TrendData.length - 1) === index){
+          categoryArr.push(tData.date.substring(0,10));
+        }
+        else{
+          categoryArr.push("");
+        }
+        
       });
       // bubbleChartOptions.series = seriesData;
         seriesData = [{ name: "post-Trend",  data: dataArr }];

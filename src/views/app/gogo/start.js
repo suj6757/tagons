@@ -21,6 +21,7 @@ import DatePicker from 'react-datepicker';
 import { ko } from "date-fns/esm/locale";
 import 'react-datepicker/dist/react-datepicker.css';
 import ShowRoom from '../../../containers/pages/ShowRoom';
+import RelationImage from '../../../containers/pages/RelationImage';
 import Bubble from '../../../components/charts/Bubble';
 import Line from '../../../components/charts/Line';
 import Bar from '../../../components/charts/Bar';
@@ -620,7 +621,7 @@ const Start = ({ intl }) => {
                 </div>
                 {/* s: 연관 이미지 영역 */}
                 <div className="showroom-gallery relation-gallery" style={{overflow: 'hidden'}}>
-                   {/* <RelationImage /> */}
+                   <RelationImage activeTab={activeSentiment}/> 
                 </div>
                 {/* e: 연관 이미지 영역 */}
                 

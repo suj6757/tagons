@@ -11,6 +11,7 @@ const ScatterDatetime = (props) => {
   //서버 호출 후 받는 데이터
 
   const [resData, setResData] = useState({});
+  const [charData, setCharData] = useState({});
   const [scatterName, setScatter] = useState(props.name) ;
   const [activeFirstTab, setActiveFirstTab] = useState(props.activeFirstTab) ;
   const dispatch = useDispatch();
@@ -21,14 +22,14 @@ const ScatterDatetime = (props) => {
     return str.split(p1).join(p2);
   }
   
-  const clickChart = (seriesIndex,name,dataArr,RISE_FALL) => {
+  const clickChart = (seriesIndex,name) => {
     var param1 = {} ;
     var callUrl = "";
     if (seriesIndex >= 0 ){
       
       const categoryUpLow = name.split('-');
-      console.log('name' , categoryUpLow[0],  categoryUpLow[1] , dataArr[0] , dataArr[1],store );
-
+      console.log('click' , charData );
+      
       if (!(store.SearchCondition.activeFirstTab === "" || store.SearchCondition.activeFirstTab === null || store.SearchCondition.activeFirstTab === undefined)){
         param1.FromDate = store.SearchCondition.FromDate;
         param1.ToDate = store.SearchCondition.ToDate;
@@ -62,15 +63,28 @@ const ScatterDatetime = (props) => {
   }
   const setChartData = (chartData) => {
     var seriesData = [];
-     
-    chartData.Data.map((res) => {
+    var maxRiseData = {};
+    var maxindex = 0;
+    setCharData(chartData); 
+    chartData.Data.map((res,index) => {
+      if (index === 0) {
+        maxRiseData = res;
+        maxindex =index;
+      }
+      else {
+        if (maxRiseData.RISE_FALL <= res.RISE_FALL){
+          maxRiseData = res;
+          maxindex =index;
+        }
+      }
       seriesData.push({
         name: res.Category_upper.concat('-',res.Category_lower),
         data: [[res.P_R_INDEX, res.RISE_FALL]],
       });
     });
     //setResData(chartData);
-    console.log("seriesData!!", chartData, resData);
+    clickChart(maxindex , maxRiseData.Category_upper.concat('-',maxRiseData.Category_lower));
+    console.log("seriesData!!", maxRiseData,chartData);
     setScatterDatetimeOption({
         series: seriesData,
         options: {
@@ -84,7 +98,7 @@ const ScatterDatetime = (props) => {
                   click: function(event, chartContext, config) {
                         // console.log('scatter_config1' , config.config.series[config.seriesIndex]);
                         if (config.seriesIndex >=0 ){
-                          clickChart(config.seriesIndex,config.config.series[config.seriesIndex].name,config.config.series[config.seriesIndex].data[0],config.config.series[config.seriesIndex].data[1]);
+                          clickChart(config.seriesIndex,config.config.series[config.seriesIndex].name);
                         }
                         
                       }
@@ -149,7 +163,7 @@ const ScatterDatetime = (props) => {
                     }
                 },
             },
-           //  colors: ['#868686'], // marker&label 회색
+            colors: ['#868686'], // marker&label 회색
             xaxis: {
                 min: 1,
                 max: 2, //x축은 소수점이 안먹힘
@@ -281,15 +295,16 @@ const ScatterDatetime = (props) => {
                     }
                 },
             },
+            colors: ['#868686'], // marker&label 회색 
             xaxis: {
-                min: 0.9,
-                max: 5.1, //x축은 소수점이 안먹힘
+                min: 1,
+                max: 2, //x축은 소수점이 안먹힘
                 type: 'category',
                 tickAmount: 2
             },
             yaxis: {
-                min: 0.9,
-                max: 2.1,
+                min: 1 ,
+                max: 2 ,
                 tickAmount: 2,
                 show: false
             }

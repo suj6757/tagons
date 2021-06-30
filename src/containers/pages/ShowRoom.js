@@ -45,8 +45,6 @@ const ShowRoom = (props) => {
         callShowroomApi(param1);
       }
     }
-    
-    
   }, [store]);
 
   return (
@@ -55,6 +53,7 @@ const ShowRoom = (props) => {
         {!thumbList.URL || thumbList.URL.length === 0  ? <li> 자료가 없습니다. </li> : thumbList.URL.map((item, index) => {
             return (
               <li key={index}>
+                <p>{index + 1}</p>
                 <a href={item.SiteURL} target="_blank" rel="noopener noreferrer">
                 <img
                   className="img-fluid border-radius"

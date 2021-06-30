@@ -35,7 +35,7 @@ const Bubble = (props) => {
             //setResData(response.data);
             //setChartData(response.data);
             // console.log('Bubble click', response.data);
-            // dispatch(getIndustryPfactorGiRelatedwords(response.data));
+            dispatch(getIndustryPfactorGiRelatedwords(response.data));
           })
           .catch(function (error) {
             console.log(error);
@@ -82,10 +82,10 @@ const Bubble = (props) => {
             events: {
               click:
                 function(event, chartContext, w) {
-                  // console.log('scatter_config1' , config.config.series[config.seriesIndex]);
-                  if (w.config.seriesIndex >=0 ) {
+                 
+                  if (w.seriesIndex >=0 ) {
                     console.log('bubble click ' , w.config);
-                    clickChart(w.config.seriesIndex, w.config.series[w.config.seriesIndex].name);
+                    clickChart(w.seriesIndex, w.config.series[w.seriesIndex].name);
                   }
                 }
             },
