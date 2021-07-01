@@ -85,14 +85,14 @@ const TopNav = ({
         </div> */}
       </div>
       <div className="navbar-right">
-        {/* <ul className="d-inline-block top-nav-list">
-          <li><NavLink to="/app/prime" activeClassName="active" className="nav-menu">PRIME</NavLink></li>
-          <li><NavLink to="/app/gogo/start" activeClassName="active" className="nav-menu">TREND</NavLink></li>
-          <li><NavLink to="/app/socialListening" activeClassName="active" className="nav-menu">SOCIAL LISTENING</NavLink></li>
-          <li><NavLink to="/app/onlineRetailer" activeClassName="active" className="nav-menu">ONLINE RETAILER</NavLink></li>
-          <li><NavLink to="/app/simulator" activeClassName="active" className="nav-menu">SIMULATOR</NavLink></li>
-          <li><NavLink to="/app/about" activeClassName="active" className="nav-menu">ABOUT TousFlux</NavLink></li>
-        </ul> */}
+         <ul className="d-inline-block top-nav-list">
+          <li><NavLink to="#" activeClassName="active" className="nav-menu">PRIME</NavLink></li>
+          <li><NavLink to="#" activeClassName="active" className="nav-menu">TREND</NavLink></li>
+          <li><NavLink to="#" activeClassName="active" className="nav-menu">SOCIAL LISTENING</NavLink></li>
+          <li><NavLink to="#" activeClassName="active" className="nav-menu">ONLINE RETAILER</NavLink></li>
+          <li><NavLink to="#" activeClassName="active" className="nav-menu">SIMULATOR</NavLink></li>
+          <li><NavLink to="#" activeClassName="active" className="nav-menu">ABOUT TousFlux</NavLink></li>
+        </ul>
         <div className="user d-inline-block">
           <UncontrolledDropdown className="dropdown-menu-right">
             <DropdownToggle className="p-0" color="empty">

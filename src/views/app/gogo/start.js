@@ -61,6 +61,7 @@ const Start = ({ intl }) => {
   const [selectCategoryList, setCategoryList] = useState([]);// eslint-disable-line no-unused-vars
 
   const [selectPretrendPercent, setPretrendPercent] = useState({ percent : '85.5%', percentStr : '85.5%' });
+  const [showPreTrend, setShowPreTrend] = useState(false);
 
   let categoryList = [];
   let categoryList1 = [];
@@ -487,11 +488,11 @@ const Start = ({ intl }) => {
                           </PopoverBody>
                         </Popover>
                       </div>
-                      <span className="mean" style={{ left: selectPretrendPercent.percentStr }}>Pre-Trend <span className="number">{selectPretrendPercent.percent}</span></span>
+                      <span className="mean" style={{ left: selectPretrendPercent.percentStr }} onClick={() => { showPreTrend == true ? setShowPreTrend(false) : setShowPreTrend(true); }}>Pre-Trend <span className="number">{selectPretrendPercent.percent}</span></span>
                       {/* 전체 100% 기준으로 number 값의 나머지 값을 style 값에 인라인으로 대입바랍니다.  */}
                     </div>
                     {/* 각 차트별 height 값은 props로 전달 */}
-                    <Line setPercent={setPretrendPercent} height={210} name="PostTrendLine" activeFirstTab={activeFirstTab} />
+                    <Line setPercent={setPretrendPercent} showPreTrend={showPreTrend} height={210} name="PostTrendLine" activeFirstTab={activeFirstTab} />
                   </div>
                   <div className="chart-area mb-0">
                     <div className="chart-header">

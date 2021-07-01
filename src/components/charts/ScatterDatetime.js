@@ -22,13 +22,13 @@ const ScatterDatetime = (props) => {
     return str.split(p1).join(p2);
   }
   
-  const clickChart = (seriesIndex,name) => {
+  const clickChart = (seriesIndex) => {
     var param1 = {} ;
     var callUrl = "";
     if (seriesIndex >= 0 ){
       
-      const categoryUpLow = name.split('-');
-      console.log('click' , charData );
+      // const categoryUpLow = name.split('-');
+      console.log('click' , charData.Data[seriesIndex] );
       
       if (!(store.SearchCondition.activeFirstTab === "" || store.SearchCondition.activeFirstTab === null || store.SearchCondition.activeFirstTab === undefined)){
         param1.FromDate = store.SearchCondition.FromDate;
@@ -37,8 +37,8 @@ const ScatterDatetime = (props) => {
         param1.Category2 = store.SearchCondition.Category2;
         param1.Category3 = store.SearchCondition.Category3;
         param1.Keyword = store.SearchCondition.Keyword;
-        param1.Category_upper = categoryUpLow[0];
-        param1.Name = categoryUpLow[1] ;
+        param1.Category_upper = charData.Data[seriesIndex].Category_upper;
+        param1.Name = charData.Data[seriesIndex].Category_lower ;
         if (store.SearchCondition.activeFirstTab === '1'){
           callUrl = "/api/GetIndustry_PFactor_TrendAndFactor";
         }
@@ -78,13 +78,19 @@ const ScatterDatetime = (props) => {
         }
       }
       seriesData.push({
-        name: res.Category_upper.concat('-',res.Category_lower),
+        name: res.Category_lower,         
         data: [[res.P_R_INDEX, res.RISE_FALL]],
+        relationTxt : [
+            '<>상위카테고리 ('.concat(res.Category_upper,')</>'),
+            '<>하위카테고리 ('.concat(res.Category_lower,')</>'),
+            '<>P_R_INDEX/RISE_FALL ('.concat(res.P_R_INDEX,'/',res.RISE_FALL,')</>'),
+          ],
+          tooltipTxt: `상위카테고리: ${res.Category_upper}<br/>하위카테고리: ${res.Category_lower}<br/>P_R_INDEX/RISE_FALL: ${res.P_R_INDEX}/${res.RISE_FALL}<br/>`
       });
     });
     //setResData(chartData);
-    clickChart(maxindex , maxRiseData.Category_upper.concat('-',maxRiseData.Category_lower));
-    console.log("seriesData!!", maxRiseData,chartData);
+    clickChart(maxindex );
+    console.log("seriesData!!", seriesData);
     setScatterDatetimeOption({
         series: seriesData,
         options: {
@@ -96,9 +102,9 @@ const ScatterDatetime = (props) => {
                     type: 'xy' } ,
                 events: {
                   click: function(event, chartContext, config) {
-                        // console.log('scatter_config1' , config.config.series[config.seriesIndex]);
+                        console.log('scatter_config1' , config.config.series[config.seriesIndex]);
                         if (config.seriesIndex >=0 ){
-                          clickChart(config.seriesIndex,config.config.series[config.seriesIndex].name);
+                          clickChart(config.seriesIndex);
                         }
                         
                       }

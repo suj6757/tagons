@@ -12,37 +12,21 @@ const Line = (props) => {
   const store2 = useSelector(state => state.industryApp);
   useEffect(() => {    
     var seriesData = [];
-    var dataArr = [];
     var categoryArr = [];
-     
+    var dataArr = [];
+    var postArr = [];
+    var preArr = [];
 
     if (!(store2.iPfactorTrendandfactor === null || store2.iPfactorTrendandfactor=== undefined || store2.iPfactorTrendandfactor === "")){
-      store2.iPfactorTrendandfactor.TrendData.map((tData,index) => {
-        dataArr.push(tData.Value);
-        if ((store2.iPfactorTrendandfactor.TrendData.length - 1) === index){
-          categoryArr.push(tData.date.substring(0,10));
-        }
-        else{
-          categoryArr.push("");
-        }
-        
-      });
-      // bubbleChartOptions.series = seriesData;
-        seriesData = [{ name: "post-Trend",  data: dataArr }];
-        /*
-        if (store2.iPfactorTrendandfactor.TrendData.length === 0){
-            alert('Post-Trend데이타가 없습니다.');
-        } */
-
         //퍼센트 계산
         let percent = store2.iPfactorTrendandfactor.PreTrendChange;
         let resultPercent = percent.substr(0, percent.indexOf('%'));
+        let percentStr = resultPercent;
 
+        //양수/음수 판별
         if(resultPercent >= 0) {
             resultPercent = 100 - resultPercent;
         }
-
-        let percentStr = resultPercent;
         //최대비율
         if(resultPercent > 70) {
             percentStr = 70;
@@ -56,6 +40,62 @@ const Line = (props) => {
             percent : resultPercent + '%',
             percentStr : percentStr + '%'
         });
+      
+        console.log('arr.length : ', store2.iPfactorTrendandfactor.TrendData.length);
+        console.log('post-trend : ', Math.round(percent.substr(0, percent.indexOf('%'))));
+
+        var postTrend = Math.round(percent.substr(0, percent.indexOf('%')));
+        console.log(postTrend);
+        
+        store2.iPfactorTrendandfactor.TrendData.map((tData, index) => {
+            //postTrend
+            if(index < postTrend) {
+                postArr.push(tData.Value);
+            }
+            else {
+                preArr.push(tData.Value)
+            }
+
+            if ((store2.iPfactorTrendandfactor.TrendData.length - 1) === index){
+                categoryArr.push(tData.date.substring(0,10));
+            }
+            else{
+                categoryArr.push("");
+            }
+        });
+
+        //console.log('post : ', postArr);
+        //console.log('pre : ', preArr);
+        //console.log('data : ', dataArr);
+
+        // bubbleChartOptions.series = seriesData;
+        
+        dataArr = [];
+
+        alert(props.showPreTrend);
+
+        //pre-trend가 보이는거면
+        if(props.showPreTrend) {
+            postArr.map((data) => {
+                dataArr.push(data);
+            });
+            preArr.map((data) => {
+                dataArr.push(data);
+            });
+            console.log('true : ', dataArr);
+        }
+        else {
+            dataArr = postArr;
+            console.log('false : ', dataArr);
+        }
+
+        seriesData = [{ name: "post-Trend",  data: dataArr }];
+
+        /*
+        if (store2.iPfactorTrendandfactor.TrendData.length === 0){
+            alert('Post-Trend데이타가 없습니다.');
+        } */
+
 
       setLineOptions({
         options: {
@@ -65,6 +105,7 @@ const Line = (props) => {
               toolbar: {
                 show: false,
               },
+              colors:['#F44336', '#E91E63', '#9C27B0'],
               zoom: {
                 enabled: false
               }
@@ -100,10 +141,11 @@ const Line = (props) => {
       
     }
 
-  },[store2]);
-  return (
-    <ReactApexChart options={lineOptions.options} series={lineOptions.series} type="line" height={props.height} />
-  );
+  },[store2, props.showPreTrend]);
+
+    return (
+        <ReactApexChart options={lineOptions.options} series={lineOptions.series} type="line" height={props.height} />
+    );
 };
 
 export default Line;
