@@ -181,9 +181,10 @@ const ScatterDatetime = (props) => {
             yaxis: {
                 min: 1,
                 max: 2,
+                decimalsInFloat: 1, // 소수점 1자리까지 표시
                 tickAmount: 2,
                 // forceNiceScale: true
-                show: false,
+                // show: false,
             },
              legend : {
                  show: false ,
@@ -237,7 +238,7 @@ const ScatterDatetime = (props) => {
                 },
                 events: {
                   click: function(event, chartContext, config) {
-                        console.log('scatter_config2' , config.config.series[config.seriesIndex].data[0]);
+                        // console.log('scatter_config2' , config.config.series[config.seriesIndex].data[0]);
                         clickChart(config.seriesIndex,config.config.series[config.seriesIndex].name,config.config.series[config.seriesIndex].data[0],config.config.series[config.seriesIndex].data[1]);
                       }
                   },
@@ -311,8 +312,9 @@ const ScatterDatetime = (props) => {
             yaxis: {
                 min: 1 ,
                 max: 2 ,
+                decimalsInFloat: 1, // 소수점 1자리까지 표시
                 tickAmount: 2,
-                show: false
+                // show: false
             }
         }
     });

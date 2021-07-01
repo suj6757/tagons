@@ -8,18 +8,17 @@ const Line = (props) => {
   const [lineName, setLineName] = useState(props.name) ;
   const [lineOptions,setLineOptions] = useState(lineChartOptions) ;
   const dispatch = useDispatch();
-  const store = useSelector(state => state.startApp);
-  const store2 = useSelector(state => state.industryApp);
+  const startApp = useSelector(state => state.startApp);
+  const industryApp = useSelector(state => state.industryApp);
   useEffect(() => {    
     var seriesData = [];
     var categoryArr = [];
-    var dataArr = [];
     var postArr = [];
     var preArr = [];
 
-    if (!(store2.iPfactorTrendandfactor === null || store2.iPfactorTrendandfactor=== undefined || store2.iPfactorTrendandfactor === "")){
+    if (!(industryApp.iPfactorTrendandfactor === null || industryApp.iPfactorTrendandfactor=== undefined || industryApp.iPfactorTrendandfactor === "")){
         //퍼센트 계산
-        let percent = store2.iPfactorTrendandfactor.PreTrendChange;
+        let percent = industryApp.iPfactorTrendandfactor.PreTrendChange;
         let resultPercent = percent.substr(0, percent.indexOf('%'));
         let percentStr = resultPercent;
 
@@ -40,62 +39,44 @@ const Line = (props) => {
             percent : resultPercent + '%',
             percentStr : percentStr + '%'
         });
-      
-        console.log('arr.length : ', store2.iPfactorTrendandfactor.TrendData.length);
-        console.log('post-trend : ', Math.round(percent.substr(0, percent.indexOf('%'))));
 
-        var postTrend = Math.round(percent.substr(0, percent.indexOf('%')));
-        console.log(postTrend);
+        //이하 차트 데이터
+        let toDate = startApp.SearchCondition.ToDate;
+        let preEndIndex = industryApp.iPfactorTrendandfactor.TrendData.length - 1;
         
-        store2.iPfactorTrendandfactor.TrendData.map((tData, index) => {
-            //postTrend
-            if(index < postTrend) {
+        industryApp.iPfactorTrendandfactor.TrendData.map((tData, index) => {
+            let dateString = tData.date.substring(0,10);
+
+            // series (line data)
+            if(props.showPreTrend) {
+              // post만 보여줄 경우
+              if(dateString < toDate) {
                 postArr.push(tData.Value);
-            }
-            else {
-                preArr.push(tData.Value)
+                preArr.push(null);
+              }else if(dateString == toDate) {
+                postArr.push(tData.Value);
+                preArr.push(tData.Value);
+              }else {
+                postArr.push(null);
+                preArr.push(tData.Value);
+              }
+            }else {
+              // post, pre 함께 보여줄 경우
+              if(dateString <= toDate) {
+                postArr.push(tData.Value);
+              }
             }
 
-            if ((store2.iPfactorTrendandfactor.TrendData.length - 1) === index){
-                categoryArr.push(tData.date.substring(0,10));
+            // x축 label
+            if(dateString == toDate) {
+                categoryArr.push(dateString);
+            }else if(preEndIndex == index){
+                categoryArr.push(dateString);
             }
             else{
                 categoryArr.push("");
             }
         });
-
-        //console.log('post : ', postArr);
-        //console.log('pre : ', preArr);
-        //console.log('data : ', dataArr);
-
-        // bubbleChartOptions.series = seriesData;
-        
-        dataArr = [];
-
-        alert(props.showPreTrend);
-
-        //pre-trend가 보이는거면
-        if(props.showPreTrend) {
-            postArr.map((data) => {
-                dataArr.push(data);
-            });
-            preArr.map((data) => {
-                dataArr.push(data);
-            });
-            console.log('true : ', dataArr);
-        }
-        else {
-            dataArr = postArr;
-            console.log('false : ', dataArr);
-        }
-
-        seriesData = [{ name: "post-Trend",  data: dataArr }];
-
-        /*
-        if (store2.iPfactorTrendandfactor.TrendData.length === 0){
-            alert('Post-Trend데이타가 없습니다.');
-        } */
-
 
       setLineOptions({
         options: {
@@ -105,7 +86,7 @@ const Line = (props) => {
               toolbar: {
                 show: false,
               },
-              colors:['#F44336', '#E91E63', '#9C27B0'],
+              // colors:['#F44336', '#E91E63', '#9C27B0'],
               zoom: {
                 enabled: false
               }
@@ -120,28 +101,34 @@ const Line = (props) => {
               // text: ""
             },
             grid : {
-                yaxis : {
-                    lines : {
-                        show : false
-                    }
+              yaxis : {
+                lines : {
+                  show : false
                 }
+              }
             },
             xaxis: {
               categories:categoryArr,
               show: false,
             },
             yaxis: {
-               
-                    show: false,
-                },
+              show: false,
+            },
+            legend: { // 범례
+              show: false
+            },
+            colors:['#25e9ae', '#008bdf']
           },
-          series: seriesData,
-              }
+          series: [
+            { name: "post-Trend",  data: postArr },
+            { name: "pre-Trend",  data: preArr }
+          ]
+        }
       );
       
     }
 
-  },[store2, props.showPreTrend]);
+  },[industryApp, props.showPreTrend]);
 
     return (
         <ReactApexChart options={lineOptions.options} series={lineOptions.series} type="line" height={props.height} />
