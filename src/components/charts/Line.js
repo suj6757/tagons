@@ -17,7 +17,7 @@ const Line = (props) => {
     var preArr = [];
 
     if (!(industryApp.iPfactorTrendandfactor === null || industryApp.iPfactorTrendandfactor=== undefined || industryApp.iPfactorTrendandfactor === "")){
-        //퍼센트 계산
+        //이하 퍼센트 계산
         let percent = industryApp.iPfactorTrendandfactor.PreTrendChange;
         let resultPercent = percent.substr(0, percent.indexOf('%'));
         let percentStr = resultPercent;
