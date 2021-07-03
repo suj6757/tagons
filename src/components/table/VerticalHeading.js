@@ -4,6 +4,7 @@ import DatePicker, { registerLocale } from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 
 import IntlMessages from '../../helpers/IntlMessages';
+
 registerLocale("ko", ko);
 
 const VerticalHeading = ({ thumb, className, intl }) => {
@@ -38,7 +39,7 @@ const VerticalHeading = ({ thumb, className, intl }) => {
                         endDate={endDateRange}
                         onChange={setStartDateRange}
                         shouldCloseOnSelect={false}
-                        useWeekdaysShort={true}
+                        useWeekdaysShort
                         placeholderText={messages['form-components.start']}
                         // 토요일, 일요일 색깔 바꾸기 위함 
                         dayClassName={date => 
@@ -55,7 +56,7 @@ const VerticalHeading = ({ thumb, className, intl }) => {
                         endDate={endDateRange}
                         onChange={setEndDateRange}
                         shouldCloseOnSelect={false}
-                        useWeekdaysShort={true}
+                        useWeekdaysShort
                         placeholderText={messages['form-components.end']}
                         // 토요일, 일요일 색깔 바꾸기 위함 
                         dayClassName={date => 
@@ -67,9 +68,7 @@ const VerticalHeading = ({ thumb, className, intl }) => {
                 </tr>
                 <tr>
                     <th style={{ width:'160px' }}>Product(上) Category</th>
-                    <td>
-
-                    </td>
+                    <td />
                     <th style={{ width:'160px' }}>Product(下) Category</th>
                     <td>No Keywords</td>
                 </tr>

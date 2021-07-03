@@ -1,0 +1,66 @@
+{
+    "env": {
+      "browser": true,
+      "commonjs": true,
+      "es6": true,
+      "jest": true,
+      "node": true
+    },
+    "extends": [
+      "airbnb",
+      "plugin:react/recommended",
+      "plugin:jsx-a11y/strict",
+      "plugin:prettier/recommended",
+      "prettier/react"
+    ],
+    "parser": "babel-eslint",
+    "parserOptions": {
+      "ecmaVersion": 6,
+      "sourceType": "module",
+      "ecmaFeatures": {
+        "jsx": true,
+        "modules": true,
+        "experimentalObjectRestSpread": true
+      }
+    },
+    "plugins": [
+      "react", "react-hooks", "jsx-a11y", "prettier"
+    ],
+    "rules": {
+      "react/jsx-filename-extension": [1, {
+        "extensions": [".js", ".jsx"]
+      }],
+      "react-hooks/rules-of-hooks": "error",
+      "react-hooks/exhaustive-deps": "warn",
+      "react/jsx-props-no-spreading": 0,
+      "no-console": "off",
+	  "no-unused-vars" : "off",
+	  "no-var" : "off",
+	  "import/no-cycle" : "off",
+	  "no-use-before-define" : "off",
+	  "import/prefer-default-export" : "off",
+	  "no-param-reassign" : "off",
+	  "spaced-comment":"off",
+	  "one-var" : "off",
+	  "array-callback-return" : "off",
+	  "object-shorthand" : "off",
+	  "import/named" : "off",
+	  "no-nested-ternary" : "off",
+	  "react/display-name" : "off",
+	  "react/jsx-key" : "off",
+	  "react/no-array-index-key" : "off",
+	  "react/destructuring-assignment" : "off",
+	  "require-yield" : "off",
+      "react/prop-types": 0,
+      "prettier/prettier": 0
+    },
+    "globals": {
+      "window": true,
+      "document": true,
+      "localStorage": true,
+      "FormData": true,
+      "FileReader": true,
+      "Blob": true,
+      "navigator": true
+    }
+  }

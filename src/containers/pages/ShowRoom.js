@@ -31,7 +31,7 @@ const ShowRoom = (props) => {
   React.useEffect(() => {
     var param1 = {};
     var category = {};  
-    var SearchChart = store.SearchChart;
+    var {SearchChart} = store;
     console.log('ShowRoom : ', store.SearchChart);
     
     if (store.SearchChart.ShowRoom === true){

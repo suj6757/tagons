@@ -1,7 +1,7 @@
 import React , { useState , useEffect}  from 'react';
 import ReactApexChart from "react-apexcharts";
-import { barChartOptions } from './config';
 import { useDispatch, useSelector } from 'react-redux';
+import { barChartOptions } from './config';
 import { getIndustryPfactorTrendandfactor, getIndustryTotalcategoryList } from '../../redux/actions';
 /* Sentiment Factor | Brand */
 const Bar = (props) => {

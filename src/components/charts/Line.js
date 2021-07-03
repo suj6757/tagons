@@ -1,8 +1,8 @@
 import React , { useState , useEffect} from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import ReactApexChart from "react-apexcharts";
-import { lineChartOptions } from './config';
 import { checkPropTypes } from 'prop-types';
+import { lineChartOptions } from './config';
 /* Post-Trend */
 const Line = (props) => {
     const [lineName, setLineName] = useState(props.name) ;
@@ -18,7 +18,7 @@ const Line = (props) => {
 
         if (!(industryApp.iPfactorTrendandfactor === null || industryApp.iPfactorTrendandfactor === undefined || industryApp.iPfactorTrendandfactor === "" || JSON.stringify(industryApp.iPfactorTrendandfactor) === "{}")) {
             //이하 퍼센트 계산
-            let percent = industryApp.iPfactorTrendandfactor.PreTrendChange;
+            const percent = industryApp.iPfactorTrendandfactor.PreTrendChange;
             let resultPercent = percent.substr(0, percent.indexOf('%'));
             
             //양수/음수 판별
@@ -26,16 +26,16 @@ const Line = (props) => {
                 resultPercent = 100 - resultPercent;
             }
             //셋팅
-            props.setPercent(resultPercent + '%');
+            props.setPercent(`${resultPercent  }%`);
 
             //이하 차트 데이터
-            let fromDate = startApp.SearchCondition.FromDate;
-            let toDate = startApp.SearchCondition.ToDate;
-            let preEndIndex = industryApp.iPfactorTrendandfactor.TrendData.length - 1;
-            let clickData = industryApp.iPfactorTrendandfactor.Name;
+            const fromDate = startApp.SearchCondition.FromDate;
+            const toDate = startApp.SearchCondition.ToDate;
+            const preEndIndex = industryApp.iPfactorTrendandfactor.TrendData.length - 1;
+            const clickData = industryApp.iPfactorTrendandfactor.Name;
         
             industryApp.iPfactorTrendandfactor.TrendData.map((tData, index) => {
-                let dateString = tData.date.substring(0,10);
+                const dateString = tData.date.substring(0,10);
                
                 // series (line data)
                 if(props.showPreTrend) {
@@ -44,7 +44,7 @@ const Line = (props) => {
                         postArr.push(tData.Value);
                         preArr.push(null);
                     }
-                    else if(dateString == toDate) {
+                    else if(dateString === toDate) {
                         postArr.push(tData.Value);
                         preArr.push(tData.Value);
                     }
@@ -53,21 +53,18 @@ const Line = (props) => {
                         preArr.push(tData.Value);
                     }
                 }
-                else {
-                    // post, pre 함께 보여줄 경우
-                    if(dateString <= toDate) {
-                        postArr.push(tData.Value);
-                    }
-                    else{
-                        postArr.push(null);
-                    }
+                else if(dateString <= toDate) {
+                    postArr.push(tData.Value);
+                }
+                else{
+                    postArr.push(null);
                 }
 
                 // x축 label
-                if(dateString == fromDate || dateString == toDate) {
+                if(dateString === fromDate || dateString === toDate) {
                     categoryArr.push(dateString);
                 }
-                else if(preEndIndex == index){
+                else if(preEndIndex === index){
                     categoryArr.push(dateString);
                 }
                 else{

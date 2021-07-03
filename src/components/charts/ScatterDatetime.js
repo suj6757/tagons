@@ -1,9 +1,9 @@
 import React , { useState , useEffect} from 'react';
 import ReactApexChart from "react-apexcharts";
-import { scatterDatetimeChartOptions } from './config';
 import { useDispatch, useSelector } from 'react-redux';
-import { getIndustryPfactorTrendandfactor } from '../../redux/actions';
 import axios from 'axios';
+import { scatterDatetimeChartOptions } from './config';
+import { getIndustryPfactorTrendandfactor } from '../../redux/actions';
 
 const ScatterDatetime = (props) => {
   var categoryData = [];
@@ -29,6 +29,8 @@ const ScatterDatetime = (props) => {
     
     if (seriesIndex >= 0 ){
       // const categoryUpLow = name.split('-');
+      const categoryUpper = categoryData[seriesIndex][0];
+      const name = categoryData[seriesIndex][1]
       if (!(store.SearchCondition.activeFirstTab === "" || store.SearchCondition.activeFirstTab === null || store.SearchCondition.activeFirstTab === undefined)){
         param1.FromDate = store.SearchCondition.FromDate;
         param1.ToDate = store.SearchCondition.ToDate;
@@ -36,8 +38,8 @@ const ScatterDatetime = (props) => {
         param1.Category2 = store.SearchCondition.Category2;
         param1.Category3 = store.SearchCondition.Category3;
         param1.Keyword = store.SearchCondition.Keyword;
-        param1.Category_upper = categoryData[seriesIndex][0];
-        param1.Name = categoryData[seriesIndex][1] ;
+        param1.Category_upper = categoryUpper
+        param1.Name = name
         if (store.SearchCondition.activeFirstTab === '1'){
           callUrl = "/api/GetIndustry_PFactor_TrendAndFactor";
         }

@@ -20,6 +20,8 @@ import Select from 'react-select';
 import DatePicker from 'react-datepicker';
 import { ko } from "date-fns/esm/locale";
 import 'react-datepicker/dist/react-datepicker.css';
+import { useDispatch, useSelector } from 'react-redux';
+import axios from 'axios';
 import ShowRoom from '../../../containers/pages/ShowRoom';
 import RelationImage from '../../../containers/pages/RelationImage';
 import Bubble from '../../../components/charts/Bubble';
@@ -29,10 +31,8 @@ import Scatter from '../../../components/charts/ScatterDatetime';
 import { ReactTableWithPaginationCard } from '../../../containers/ui/ReactTableCards';
 import { Colxx } from '../../../components/common/CustomBootstrap';
 import CustomSelectInput from '../../../components/common/CustomSelectInput';
-import { useDispatch, useSelector } from 'react-redux';
 import { getSearchCondition, getIndustryTotalcategoryList , getSearchType,
          getIndustryPfactorGiRelatedwords,getGiBubble,getIndustryPfactorTrendandfactor} from '../../../redux/actions';
-import axios from 'axios';
 
 const Start = ({ intl }) => {
   const dispatch = useDispatch();
@@ -514,7 +514,9 @@ const Start = ({ intl }) => {
                           </PopoverBody>
                         </Popover>
                       </div>
-                      <span className="mean" style={{ left: '70.0%' }} onClick={() => { showPreTrend == true ? setShowPreTrend(false) : setShowPreTrend(true); }}>Pre-Trend <span className="number">{selectPretrendPercent}</span></span>
+                      <span className="mean" style={{ left: '70.0%' }} onClick={() => {
+                        return showPreTrend === true ? setShowPreTrend(false) : setShowPreTrend(true);
+                      }} aria-hidden="true">Pre-Trend <span className="number">{selectPretrendPercent}</span></span>
                       {/* 전체 100% 기준으로 number 값의 나머지 값을 style 값에 인라인으로 대입바랍니다.  */}
                     </div>
                     {/* 각 차트별 height 값은 props로 전달 */}

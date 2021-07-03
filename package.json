@@ -80,7 +80,7 @@
     "lint:fix": "eslint . --fix",
     "client": "cd src && yarn start",
     "server": "node ./server/server.js",
-    "tourflux": "concurrently --kill-others-on-fail \"yarn server\"  \"yarn client\"",
+    "tousflux": "concurrently --kill-others-on-fail \"yarn server\"  \"yarn client\"",
     "precommit": "lint-staged"
   },
   "husky": {
