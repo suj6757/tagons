@@ -30,13 +30,14 @@ import { ReactTableWithPaginationCard } from '../../../containers/ui/ReactTableC
 import { Colxx } from '../../../components/common/CustomBootstrap';
 import CustomSelectInput from '../../../components/common/CustomSelectInput';
 import { useDispatch, useSelector } from 'react-redux';
-import { getSearchCondition, getIndustryTotalcategoryList } from '../../../redux/actions';
+import { getSearchCondition, getIndustryTotalcategoryList , getSearchType,
+         getIndustryPfactorGiRelatedwords,getGiBubble,getIndustryPfactorTrendandfactor} from '../../../redux/actions';
 import axios from 'axios';
 
 const Start = ({ intl }) => {
   const dispatch = useDispatch();
   const { industryApp } = useSelector(state => state.industryApp);
-
+  const store = useSelector(state => state.startApp);
   const param1 = {};
   const [startDateRange, setStartDateRange] = useState(new Date());
   const [endDateRange, setEndDateRange] = useState(new Date());
@@ -60,7 +61,7 @@ const Start = ({ intl }) => {
   const [selectName , setName] = useState('');// eslint-disable-line no-unused-vars
   const [selectCategoryList, setCategoryList] = useState([]);// eslint-disable-line no-unused-vars
 
-  const [selectPretrendPercent, setPretrendPercent] = useState({ percent : '85.5%', percentStr : '85.5%' });
+  const [selectPretrendPercent, setPretrendPercent] = useState('0.0%');
   const [showPreTrend, setShowPreTrend] = useState(false);
 
   let categoryList = [];
@@ -74,6 +75,10 @@ const Start = ({ intl }) => {
   const [selectKeyword, setKeyword] = useState('');      
   const [activeFirstTab, setActiveFirstTab] = useState('1');
   const [activeSentiment, setActiveSentiment] = useState('1');
+  // api 호출시 로딩바 적용 테스트
+  const [loading, setLoading] = useState(false);
+  // eslint-disable-next-line no-unused-vars
+  const [loaderror, setLoadError] = useState(null);
 
   useEffect(() => {
     var date = new Date();
@@ -83,17 +88,20 @@ const Start = ({ intl }) => {
     
     date1.setDate(date1.getDate() -2);
     setEndDateRange(date1);// 종료일
-      
+    setLoading(true);  
     axios.post("/api/GetIndustry_TotalCategory_List")
     .then((response) => {
         categoryList = response.data;
         setCategoryList(categoryList);
         setCategory();
+        setLoading(false);
     })
     .catch(function (error) {
-        console.log(error);
+        //console.log(error);
+        setLoading(false);
     });
   }, []);
+
 
   const setCategory = () => {
     let preKey = '';
@@ -178,10 +186,8 @@ const Start = ({ intl }) => {
   //datePicker format 수정
   const dateString = (dateValue) => {
     let retStr = '';
-
     //Year
     retStr = retStr.concat(dateValue.getFullYear());
-    
     //Month
     if(dateValue.getMonth() < 10) {
         retStr = retStr.concat('-0', dateValue.getMonth() + 1);
@@ -189,7 +195,6 @@ const Start = ({ intl }) => {
     else {
         retStr = retStr.concat('-', dateValue.getMonth() + 1);
     }
-
     //Date
     if(dateValue.getDate() < 10) {
         retStr = retStr.concat('-0', dateValue.getDate());
@@ -197,13 +202,13 @@ const Start = ({ intl }) => {
     else {
         retStr = retStr.concat('-', dateValue.getDate());
     }
-
     return retStr;
   }
   
   //검색조건 엔터버튼 클릭
   const handleSearchClick = (e) => {
     var param = {};
+    var searchType = {};
     param.FromDate = dateString(startDateRange);
     param.ToDate = dateString(endDateRange);
     param.Category1 = selectedOptionsStep1.value;
@@ -213,14 +218,22 @@ const Start = ({ intl }) => {
     param.Category_upper = '';
     param.Name = '';
     param.activeFirstTab = activeFirstTab;
-    
+
+    searchType.ShowRoom = true;
+    searchType.TrendQuad  = true;
+    searchType.PostTrend  = false;
+    searchType.FactorNBrand  = false;
+    searchType.GiAnalysis  = true;
+    searchType.GiAnalysisBubble  = true;
+    searchType.RelationWord = false;
     // 검색조건 스토어에 저장
+    dispatch(getSearchType(searchType)); // 검색 조건 추가
     dispatch(getSearchCondition(param));
   }
-
   //검색조건 엔터버튼 클릭
   const searchActivrClick = () => {
     var param = {};
+    var searchType = {};
     param.FromDate = dateString(startDateRange);
     param.ToDate = dateString(endDateRange);
     param.Category1 = selectedOptionsStep1.value;
@@ -230,8 +243,19 @@ const Start = ({ intl }) => {
     param.Category_upper = '';
     param.Name = '';
     param.activeFirstTab = activeFirstTab;
-    
+
+    searchType.ShowRoom = false;
+    searchType.TrendQuad  = true;
+    searchType.PostTrend  = false;
+    searchType.FactorNBrand  = false;
+    searchType.GiAnalysis  = true;
+    searchType.GiAnalysisBubble  = true;
+    searchType.RelationWord = false;
     // 검색조건 스토어에 저장
+    dispatch(getIndustryPfactorTrendandfactor(null));
+    dispatch(getIndustryPfactorGiRelatedwords(null));
+    dispatch(getGiBubble(null));
+    dispatch(getSearchType(searchType)); // 검색 조건 추가
     dispatch(getSearchCondition(param));
   }
   const validateKeyword = (value) => {
@@ -245,10 +269,10 @@ const Start = ({ intl }) => {
     setKeyWordtext(e.target.value);
   };
   useEffect(() => {
-       
     searchActivrClick();
   }, [activeFirstTab]);  
-
+  if (loading) return <div className="loading" />;
+  if (loaderror) return <div>에러가 발생했습니다</div>;
   return (
     <>
       <Row>
@@ -440,7 +464,7 @@ const Start = ({ intl }) => {
       
       <Row>
         <Colxx xxs="12">
-          <Card>
+          <Card className="bor-top-radius0">
             <CardBody>
               {/* s:trend-quad */}
               <div className="box-title">
@@ -463,11 +487,13 @@ const Start = ({ intl }) => {
               </div>
               <div className="clearfix box-line">
                 <div className="box left">
+                  <p className="desc">- 키워드(dot) 클릭시, 우측 그래프가 활성화됩니다.</p>
                   {/* 각 차트별 height 값은 props로 전달 차트 */}
                   {/* <Bubble height={550} /> */}
-                  <Scatter height={500} name="TrendQuadScatter" activeFirstTab={activeFirstTab}/>
+                  <Scatter height={600} name="TrendQuadScatter" activeFirstTab={activeFirstTab} className="scatter-chart"/>
                 </div>
                 <div className="box right">
+                  <p className="desc">- Pre-Trend 클릭 시, 예측트렌드가 노출됩니다.</p>
                   <div className="chart-area">
                     <div className="chart-header">
                       <div className="chart-title">
@@ -488,7 +514,7 @@ const Start = ({ intl }) => {
                           </PopoverBody>
                         </Popover>
                       </div>
-                      <span className="mean" style={{ left: selectPretrendPercent.percentStr }} onClick={() => { showPreTrend == true ? setShowPreTrend(false) : setShowPreTrend(true); }}>Pre-Trend <span className="number">{selectPretrendPercent.percent}</span></span>
+                      <span className="mean" style={{ left: '70.0%' }} onClick={() => { showPreTrend == true ? setShowPreTrend(false) : setShowPreTrend(true); }}>Pre-Trend <span className="number">{selectPretrendPercent}</span></span>
                       {/* 전체 100% 기준으로 number 값의 나머지 값을 style 값에 인라인으로 대입바랍니다.  */}
                     </div>
                     {/* 각 차트별 height 값은 props로 전달 */}
@@ -597,7 +623,7 @@ const Start = ({ intl }) => {
                     <ReactTableWithPaginationCard  activeFirstTab={activeFirstTab}/>
                   </div>
                   <div className="box right relation-img">
-                  <button type="button" className="help" id="popover_6" onClick={() => setPopoverOpenHelp6(true)} onKeyDown={() => setPopoverOpenHelp6(true)}><img src="/assets/img/icon/icon_help_small.png" alt="도움말" /></button>
+                  {/* <button type="button" className="help" id="popover_6" onClick={() => setPopoverOpenHelp6(true)} onKeyDown={() => setPopoverOpenHelp6(true)}><img src="/assets/img/icon/icon_help_small.png" alt="도움말" /></button>
                   <Popover
                     className="pop-left"
                     style={{ maxWidth: '700px'}}
@@ -616,8 +642,8 @@ const Start = ({ intl }) => {
                       <img src="/assets/img/icon/help2.png" alt="도움말 이미지" />
                       <p className="f-red">버블 클릭시, 그래프 아래에 연관된 이미지가 활성화됩니다.</p>
                     </PopoverBody>
-                  </Popover>
-                    <Bubble height={400} className="relation-bubble" name="GiBubble" activeFirstTab={activeFirstTab}/>
+                  </Popover> */}
+                    <Bubble height={470} className="relation-bubble" name="GiBubble" activeFirstTab={activeFirstTab}/>
                   </div>
                 </div>
                 {/* s: 연관 이미지 영역 */}

@@ -83,6 +83,7 @@ export const TREND_INDUSTRY_GI_BUBBLE = 'TREND_INDUSTRY_GI_BUBBLE';
 
 /* START */
 export const SEARCH_CONDITION = 'SEARCH_CONDITION';
+export const SEARCH_TYPE = 'SEARCH_TYPE';
 
 export * from './menu/actions';
 export * from './settings/actions';

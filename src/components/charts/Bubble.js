@@ -1,14 +1,18 @@
 import React , { useState , useEffect} from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import ReactApexChart from "react-apexcharts";
+import axios from 'axios';
 import { bubbleChartOptions } from './config';
 import { getIndustryPfactorGiRelatedwords } from '../../redux/actions';
-import axios from 'axios';
 
 const Bubble = (props) => {
   const [bubbleName, setBubbleName] = useState(props.name) ;
   const [bubbleOptions,setBubbleOptions] = useState(bubbleChartOptions);
   const [activeFirstTab, setActiveFirstTab] = useState(props.activeFirstTab) ;
+    // api 호출시 로딩바 적용 테스트
+  const [loading, setLoading] = useState(false);
+  const [loaderror, setLoadError] = useState(null);
+
   const dispatch = useDispatch();
   const store = useSelector(state => state.startApp);
   const store2 = useSelector(state => state.industryApp);
@@ -28,13 +32,10 @@ const Bubble = (props) => {
           callUrl = "/api/GetIndustry_PFactor_GI_RelatedWords";
         }
         else {
-          callUrl = "/api/GetIndustry_EFactor_TrendAndFactor";
+          callUrl = "/api/GetIndustry_EFactor_GI_RelatedWords";
         }
         axios.post(callUrl,param1)
           .then(function (response) {
-            //setResData(response.data);
-            //setChartData(response.data);
-            // console.log('Bubble click', response.data);
             dispatch(getIndustryPfactorGiRelatedwords(response.data));
           })
           .catch(function (error) {
@@ -48,18 +49,18 @@ const Bubble = (props) => {
     var bubbleXArr = [];
     var bubbleYArr = [];
     var xMin, xMax, yMin, yMax = 0;
-
-    if (!(store2.iGiBubbleelectData === null || store2.iGiBubbleelectData=== undefined || store2.iGiBubbleelectData === "")){
+    // console.log('bubble', store2.iGiBubbleelectData );
+    if (!(store2.iGiBubbleelectData === null || store2.iGiBubbleelectData=== undefined || store2.iGiBubbleelectData === "" || JSON.stringify(store2.iGiBubbleelectData) === "{}")){
+      // console.log('bubble set ',store2.iGiBubbleelectData.BubbleData);
       store2.iGiBubbleelectData.BubbleData.map((bData) => {
         seriesData.push({
           name: bData.Topics,
-          data: [[bData.DGI, bData.SGI,bData.PGI]],
+          data: [[bData.DGI, bData.SGI, bData.PGI]],
           relationTxt: [
             '<>DGI ('.concat(bData.DGI,')</>'),
             '<>SGI ('.concat(bData.SGI,')</>'),
             '<>PGI ('.concat(bData.PGI,')</>'),
           ],
-          tooltipTxt: `DGI: ${bData.DGI}<br/>SGI: ${bData.SGI}<br/>DGI: ${bData.PGI}<br/>`
         });
         bubbleXArr.push(bData.DGI);
         bubbleYArr.push(bData.SGI);
@@ -82,9 +83,7 @@ const Bubble = (props) => {
             events: {
               click:
                 function(event, chartContext, w) {
-                 
                   if (w.seriesIndex >=0 ) {
-                    console.log('bubble click ' , w.config);
                     clickChart(w.seriesIndex, w.config.series[w.seriesIndex].name);
                   }
                 }
@@ -142,17 +141,96 @@ const Bubble = (props) => {
           },
           plotOptions: {
             bubble: {
-              minBubbleRadius: 20,
+              minBubbleRadius: 18,
             }
           },
         },
         series: seriesData
       });
-      console.log('bubble',seriesData);
+
     }
-
-  },[store2]);
-
+    else{
+      setBubbleOptions({
+        options: {
+          chart: {
+            toolbar: {
+              show: false,
+            },
+            zoom: {
+              enabled: false
+            },
+            events: {
+              click:
+                function(event, chartContext, w) {
+                  if (w.seriesIndex >=0 ) {
+                    clickChart(w.seriesIndex, w.config.series[w.seriesIndex].name);
+                  }
+                }
+            },
+          },
+          tooltip: {
+            custom: function({ series, seriesIndex, dataPointIndex, w}) {
+              return `${'<div class="arrow_box" style="padding:5px;">' +
+              '<span>'} 
+                  DGI: ${ Math.trunc(w.config.series[seriesIndex].data[0][0]) } <br/>
+                  SGI: ${ Math.trunc(w.config.series[seriesIndex].data[0][1]) } <br/>
+                  PGI: ${ Math.trunc(w.config.series[seriesIndex].data[0][2]) } <br/>
+              </span></div>`
+            }
+          },
+          dataLabels: {
+            enabled: true,
+            formatter: function(value, { seriesIndex, dataPointIndex, w }) {
+              return w.config.series[seriesIndex].name
+            }
+          },
+          fill: {
+            opacity: 0.7
+          },
+          title: {
+            //text: ""
+          },
+          xaxis: {
+            min: 0,
+            max: 10,
+            tickAmount: 12,
+            type: "category",
+            show: false,
+            title: {
+              text: "DGI"
+            },
+          },
+          yaxis:{
+            min: 0,
+            max: 10,
+            labels: {
+              formatter: function(value, index) {
+                return value.toFixed();
+              }
+            },
+            title: {
+              text: "SGI"
+            },
+          },
+          legend : {
+            show: false ,
+          },
+          grid: {
+            show: false,
+          },
+          plotOptions: {
+            bubble: {
+              minBubbleRadius: 18,
+            }
+          },
+        },
+        series: []
+      });
+    }
+  },[store2.iGiBubbleelectData]);
+  // Loading 
+  if (loading) return <div className="loading" />;
+  if (loaderror) return <div>에러가 발생했습니다</div>;
   return (
     <ReactApexChart options={bubbleOptions.options} series={bubbleOptions.series} type="bubble" height={props.height} className={props.className} />
   );

@@ -13,7 +13,8 @@ router.use('/', (req, res) => {
 
     var grpcjs = require('@grpc/grpc-js');
     var protoLoader = require('@grpc/proto-loader');
-
+    var serverIpOld = '203.245.41.17:50052';
+    var serverIpNew = '211.206.127.139:50052';
     var PROTO_PATH_TEST = __dirname  + '/TrendService.proto';
     var packageDefinition_Test = protoLoader.loadSync(PROTO_PATH_TEST,
     {
@@ -24,7 +25,7 @@ router.use('/', (req, res) => {
         oneofs: true
     });
     var protoDescriptor_Test = grpcjs.loadPackageDefinition(packageDefinition_Test);
-    var client_Test = new protoDescriptor_Test.TrendService.TrendInfo('203.245.41.17:50052', grpcjs.credentials.createInsecure())
+    var client_Test = new protoDescriptor_Test.TrendService.TrendInfo(serverIpNew, grpcjs.credentials.createInsecure())
     
     /* var data = {
         FromDate : "2021-05-01", 
@@ -62,10 +63,7 @@ router.use('/', (req, res) => {
 
     client_Test.GetIndustry_PFactor_TrendAndFactor(data2, function(err, data) {
         try {
-            console.log('error : ', err);
             console.log(data);
-            console.log(data.SentimentFactorDatas)
-
             res.send(data);
         }
         catch(ex) {

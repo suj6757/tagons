@@ -99,19 +99,23 @@ message Response_XY_Type1 {
 message Response_PTrendAndFactor {
     string ErrorCode = 1;
     string Message = 2;
-    string PreTrendChange = 3;
-    repeated Table_OneFloat TrendData = 4;
-    repeated Table_OneInt SentimentFactorData = 5;
-    repeated Table_OneInt BrandFactorData = 6;
+    string Category_upper = 3;
+    string Name = 4;
+    string PreTrendChange = 5;
+    repeated Table_OneFloat TrendData = 6;
+    repeated Table_OneInt SentimentFactorData = 7;
+    repeated Table_OneInt BrandFactorData = 8;
 }
 
 message Response_ETrendAndFactor {
     string ErrorCode = 1;
     string Message = 2;
-    string PreTrendChange = 3;
-    repeated Table_OneFloat TrendData = 4;
-    repeated Table_OneInt ProductFactorData = 5;
-    repeated Table_OneInt BrandFactorData = 6;
+    string Category_upper = 3;
+    string Name = 4;
+    string PreTrendChange = 5;
+    repeated Table_OneFloat TrendData = 6;
+    repeated Table_OneInt ProductFactorData = 7;
+    repeated Table_OneInt BrandFactorData = 8;
 }
 
 message Response_GITableBubble {

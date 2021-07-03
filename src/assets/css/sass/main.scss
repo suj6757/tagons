@@ -31,6 +31,10 @@ body {
   font-family: 'noto', sans-serif;
 }
 
+p {
+  font-family: 'noto', sans-serif;
+}
+
 .f-blue {
   color: #0053A6;
 }
@@ -80,13 +84,13 @@ body {
 
     .navbar-logo {
       position: static;
-      width: 138px;
+      width: 175px;
       height: 40px;
       margin: 0 0 0 30px;
 
       .logo {
         background: url("../../logos/logo.png") no-repeat;
-        background-size: contain;
+        background-size: cover;
       }
     }
 
@@ -441,9 +445,23 @@ table {
     overflow: hidden;
 
     li {
+      position: relative;
       width: 203.5px;
       margin: 0 15px 12px 0;
       list-style: none;
+
+      span {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 28px;
+        height: 28px;
+        background-color: #5D5D5D;
+        font-size: 14px;
+        color: #fff;
+        text-align: center;
+        line-height: 28px;
+      }
 
       img {
         max-width: 100%;
@@ -523,6 +541,11 @@ table {
   border-radius: 0 0 .75rem .75rem;
 }
 
+.desc {
+  margin: 0;
+  font-size: 13px;
+}
+
 // chart 영역 스타일
 .chart-area {
   margin-bottom: 20px;
@@ -533,7 +556,7 @@ table {
     display: flex;
     align-items:center;
     height: 55px;
-    background-color: #b3b3b3;
+    background-color: #F1F1F1;
 
     .chart-title {
       h4 {
@@ -541,9 +564,10 @@ table {
         display: inline-block;
         margin: 0 10px 0 15px;
         font-size: 20px;
-        color: #fff;
+        color: #444;
         vertical-align: middle;
         z-index: 20;
+        cursor: pointer;
       }
     }
 
@@ -554,18 +578,19 @@ table {
       height: 55px;
       margin-top: 0;
       font-size: 15px;
-      color: #fff;
+      color: #888;
       z-index: 10;
-      background: #2a5894 url("/assets/img/icon/bg_tit.png") no-repeat left 50%;
+      background: #DFEFFB url("/assets/img/icon/bg_tit.png") no-repeat left 50%;
       background-size: contain;
       line-height: 55px;
       text-align: right;
+      cursor: pointer;
 
       .number {
         margin: 0 10px;
         font-size: 20px;
         font-weight: 700;
-        color: #fff;
+        color: #888;
       }
     }
 
@@ -579,15 +604,15 @@ table {
   .nav-item {
     display: inline-block;
     margin: 0;
-    border-left: 1px solid #707070;
+    background: url('/assets/img/icon/bl_line.png') no-repeat left 50%;
     vertical-align: middle;
     
     &:first-child {
-      border: 0;
+      background: 0;
     }
 
     &:last-child {
-      border: 0;
+      background: 0;
     }
 
     .nav-link {
@@ -595,13 +620,15 @@ table {
       padding: 0;
       background-color: transparent;
       border: 0;
+      border-bottom: 1px solid transparent;
       margin: 0 10px 0 15px;
       font-size: 20px;
-      color: #707070;
+      color: #BBB;
       box-shadow: none;
 
       &.active {
-        color: #fff;
+        border-bottom-color: #444;
+        color: #444;
       }
     }
 
@@ -667,68 +694,6 @@ table {
   background-color: #f9a21b !important;
 }
 
-// @mixin on-circle($item-count, $circle-size, $item-size) {  
-//   position: relative;
-//   width:  $circle-size;
-//   height: $circle-size;
-//   border-radius: 50%;
-//   padding: 0; 
-//   list-style: none;
-  
-//   > * {
-//     display: block;
-//     position: absolute;
-//     top:  50%; 
-//     left: 50%;
-//     margin: -($item-size / 2);
-//     // width:  $item-size;
-//     // height: $item-size;
-  
-//     $angle: (360 / $item-count);
-//     $rot: 0;
-
-//     @for $i from 1 through $item-count {
-//       &:nth-of-type(#{$i}) {
-//         transform: rotate($rot * 1deg) translate($circle-size / 2) rotate($rot * -1deg);
-//       }
-
-//       $rot: $rot + $angle;
-//     }
-//   }
-// }
-
-
-// .relation-bubble {
-//   .apexcharts-tooltip {
-//     &.apexcharts-theme-light {
-//       border: 0;
-//       background: transparent;
-//       box-shadow: none;
-//       overflow: visible;
-      
-//       .active-keyword-area {
-//         @include on-circle($item-count: 5, $circle-size: 15em, $item-size: 70px);
-//         border: 0;
-
-//         .item {
-//           width: 70px;
-//           height: 70px;
-//           background-color: #0f00f3;
-//           font-size: 12px;
-//           color: #fff;
-//           box-shadow: none;
-//           max-width: 100%; 
-//           border-radius: 50%;
-//           display: flex;
-//           align-items: center;
-//           justify-content: center;
-//           transition: .15s;
-//         }
-//       }
-
-//     }
-//   }
-// }
 .relation-img {
   .help {
     float: right;
@@ -779,6 +744,10 @@ table {
 .loading {
   border: 2px solid rgba(249, 162, 27, 0.2);
   border-top-color : #f9a21b;
+}
+
+.scatter-chart svg {
+  overflow: visible !important;
 }
 
 

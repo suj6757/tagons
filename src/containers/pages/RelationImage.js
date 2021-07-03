@@ -7,8 +7,8 @@ const RelationImage = (props) =>  {
   const store = useSelector(state => state.startApp);
   const store2 = useSelector(state => state.industryApp);
   useEffect(() => {
-    console.log('11111',store2.iPfactorGiRelatedwords);
-    if (store2.iPfactorGiRelatedwords === undefined  || store2.iPfactorGiRelatedwords === null || store2.iPfactorGiRelatedwords === "" ) {
+    // console.log('RelationImage',JSON.stringify(store2.iPfactorGiRelatedwords));
+    if (store2.iPfactorGiRelatedwords === undefined  || store2.iPfactorGiRelatedwords === null || store2.iPfactorGiRelatedwords === "" || JSON.stringify(store2.iPfactorGiRelatedword) === "{}") {
       setThumbList([]);
     }
     else{
@@ -18,10 +18,10 @@ const RelationImage = (props) =>  {
   } , [store2.iPfactorGiRelatedwords]);
   return (
     <>
-      {thumbList.map((item,index) => {
+      {!thumbList || thumbList.length === 0  ? <> </> : thumbList.map((item,index) => {
         return (
           <div key={index} >
-            <p>{item.RelatedWord}</p>
+            <p style={{ color: item.clickColor }}>{item.RelatedWord}</p>
             <a href={item.SiteURL} target="_blank" rel="noopener noreferrer">
             <img
               className="img-fluid border-radius"

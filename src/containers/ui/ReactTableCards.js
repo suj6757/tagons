@@ -16,7 +16,7 @@ import DatatablePagination from '../../components/DatatablePagination';
 
 // import products from '../../data/products';
 
-function Table({ columns, data, divided = false, defaultPageSize = 5 }) {
+function Table({ columns, data, divided = false, defaultPageSize = 6 }) {
   
   const {
     getTableProps,
@@ -143,16 +143,20 @@ export const ReactTableWithPaginationCard = () => {
   const store2 = useSelector(state => state.industryApp);
 
   const [products , setProducts] = useState([]);
+  // api 호출시 로딩바 적용 테스트
+  const [loading, setLoading] = useState(false);
+  const [loaderror, setLoadError] = useState(null);
 
   const callGIApi = async (paramValue,callUrl) =>{ 
+    setLoading(true);
     await axios.post(callUrl,paramValue)
       .then(function (response) { 
-        // setEFactorGI(JSON.stringify(response) );
-        /* 여기에서 데이타 갱신 함수 콜 */ // 여기가 로그인 확인
         setProducts(response.data.TableData); //getGiBubble
         dispatch(getGiBubble(response.data));
+        setLoading(false);
       })
       .catch(function (error) {
+        setLoading(false);
         console.log(error);
       });
   };
@@ -178,7 +182,11 @@ export const ReactTableWithPaginationCard = () => {
         callGIApi(param1,callUrl);
       }
     
-  },[store]);
+  },[store.SearchCondition]);
+
+  if (loading) return <div className="loading" />;
+  if (loaderror) return <div>에러가 발생했습니다</div>;
+
   return (
     <Card className="mb-4">
       <CardBody>

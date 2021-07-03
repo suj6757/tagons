@@ -9,19 +9,19 @@ const ShowRoom = (props) => {
   const dispatch = useDispatch();
   const store = useSelector(state => state.startApp);
   const store2 = useSelector(state => state.industryApp);
+  // api 호출시 로딩바 적용 테스트
+  const [loading, setLoading] = useState(false);
+  const [loaderror, setLoadError] = useState(null);
+
   const callShowroomApi =  async (paramValue) =>{  
-    console.log('파라메터 -> ',paramValue);
+    setLoading(true);
     await axios.post("/api/GetIndustry_Showroom",paramValue)
     .then(function (response) {
-      // console.log(response);
-      if (response.data.ErrorCode !== 'OK') {
-        alert(response.data.Message);
-      }
       setThumbList(response.data);
-      //showRoomChange(response.data);
-      /* 여기에서 데이타 갱신 함수 콜 */ // 여기가 로그인 확인
+      setLoading(false);
     })
     .catch(function (error) {
+      setLoading(false);
       console.log(error);
     });
   };
@@ -30,30 +30,30 @@ const ShowRoom = (props) => {
   }
   React.useEffect(() => {
     var param1 = {};
-    var category = {};    
-    // console.log('ShowRoom : ',  store);
-    // console.log(' Name ' , showRoomName);
-    setThumbList([]);
-    if (showRoomName === "Showroom"){
-      if (!(store.SearchCondition.Category1 === "" || store.SearchCondition.Category1 === null || store.SearchCondition.Category1 === undefined)){
-        param1.FromDate = replaceAll(store.SearchCondition.FromDate,"-","");
-        param1.ToDate = replaceAll(store.SearchCondition.ToDate,"-","");
-        param1.Category1 = store.SearchCondition.Category1;
-        param1.Category2 = store.SearchCondition.Category2;
-        param1.Category3 = store.SearchCondition.Category3;
-        param1.Keyword = store.SearchCondition.Keyword;
-        callShowroomApi(param1);
-      }
+    var category = {};  
+    var SearchChart = store.SearchChart;
+    console.log('ShowRoom : ', store.SearchChart);
+    
+    if (store.SearchChart.ShowRoom === true){
+      setThumbList([]);
+      param1.FromDate = replaceAll(store.SearchCondition.FromDate,"-","");
+      param1.ToDate = replaceAll(store.SearchCondition.ToDate,"-","");
+      param1.Category1 = store.SearchCondition.Category1;
+      param1.Category2 = store.SearchCondition.Category2;
+      param1.Category3 = store.SearchCondition.Category3;
+      param1.Keyword = store.SearchCondition.Keyword;
+      callShowroomApi(param1);
     }
-  }, [store]);
-
+  }, [store.SearchCondition]);
+  if (loading) return <div className="loading" />;
+  if (loaderror) return <div>에러가 발생했습니다</div>;
   return (
     <>
       <ul>
         {!thumbList.URL || thumbList.URL.length === 0  ? <li> 자료가 없습니다. </li> : thumbList.URL.map((item, index) => {
             return (
               <li key={index}>
-                <p>{index + 1}</p>
+                <span>{index+1}</span>
                 <a href={item.SiteURL} target="_blank" rel="noopener noreferrer">
                 <img
                   className="img-fluid border-radius"

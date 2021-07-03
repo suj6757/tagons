@@ -66,13 +66,55 @@ export const lineChartOptions = {
         enabled: false
       }
     },
-        grid: {
-            yaxis: {
-                lines: {
-                    show: false
-                }
-            },
+    grid: {
+        yaxis: {
+            lines: {
+                show: false
+            }
         },
+    },
+    dataLabels: {
+      enabled: false
+    },
+    fill: {
+      opacity: 0.7
+    },
+    title: {
+      // text: ""
+    },
+    xaxis: {
+      categories: [],
+    },
+    yaxis: {
+      show: false,
+    },
+    legend: { // 범례
+        show: false
+    },
+    colors:[]
+    },
+    series: []
+};
+
+export const barChartOptions = {
+  options: {
+    chart: {
+      type: 'bar',
+      height: 350,
+      toolbar: {
+        show: false,
+      },
+      zoom: {
+        enabled: false
+      }
+    },
+    grid: {
+        yaxis: {
+            lines: {
+                show: false
+            }
+        },
+    },
     dataLabels: {
       enabled: false
     },
@@ -88,51 +130,6 @@ export const lineChartOptions = {
   },
   series: []
 };
-
-// bar config options 설정
-export const barChartOptions = {
-  options: {
-    chart: {
-      type: 'bar',
-      height: 350,
-      toolbar: {
-        show: false,
-      },
-      zoom: {
-        enabled: false
-      }
-    },
-        grid: {
-            yaxis: {
-                lines: {
-                    show: false
-                }
-            },
-        },
-    dataLabels: {
-      enabled: true
-    },
-    fill: {
-      opacity: 0.7
-    },
-    title: {
-      // text: ""
-    },
-    xaxis: {
-      tickAmount: 2,
-      type: "numeric",
-      min: 1,
-      max: 2
-    },
-    yaxis: {
-      tickAmount: 2,
-      min: 1,
-      max: 2
-    }
-  },
-  series: []
-};
-
 export const scatterChartOptions = {
   series: [{
     name: "SAMPLE A",
@@ -158,6 +155,94 @@ export const scatterDatetimeChartOptions = {
       zoom: {
         type: 'xy'
       }
+    },
+    /*
+    noData: {
+      text: 'Data loading...',
+      align: 'center',
+      verticalAlign: 'middle',
+      style: {
+        fontSize: '14px',
+      }
+    }, */
+    annotations: {
+      position: "back",
+      xaxis: [
+        {
+          x: 0,
+          x2: 50,
+          label: {
+            text: 'Rise',
+            borderWidth: 0,
+            position: 'top',
+            offsetX: '46%',
+            offsetY: -7,
+            orientation: 'horizontal',
+            style: {
+              background: 'transparent',
+              fontSize: '16px',
+              fontWeight: '700',
+              color: '#000'
+            }
+          },
+          strokeDashArray: 0,
+          borderColor: "#666",
+          fillColor: "#797979",
+          opacity: 0.1
+        },
+        {
+          x: 50,
+          x2: 100,
+          label: {
+            text: 'Fall',
+            borderWidth: 0,
+            position: 'bottom',
+            offsetY: 15,
+            orientation: 'horizontal',
+            style: {
+              background: 'transparent',
+              fontSize: '16px',
+              fontWeight: '700',
+              color: '#000'
+            }
+          },
+          strokeDashArray: 0,
+          borderColor: "#666",
+          fillColor: "#fd7b7a",
+          opacity: 0.1
+        }
+      ],
+      yaxis: [
+        {
+          y: 0,
+          y2: 50,
+          strokeDashArray: 0,
+          borderColor: "#666",
+          fillColor: "#c8c4c3",
+          opacity: 0.3,
+        },
+        {
+          y: 50,
+          y2: 100,
+          label: {
+            text: 'P/R Index',
+            borderWidth: 0,
+            offsetX: 75,
+            offsetY: 7,
+            orientation: 'horizontal',
+            style: {
+              background: 'transparent',
+              fontSize: '16px',
+              fontWeight: '700',
+              color: '#000',
+            }
+          },
+          strokeDashArray: 0,
+          borderColor: "#666",
+          fillColor: "#bbd5ee",
+          opacity: 0.3
+        }
+      ]
     },
     dataLabels: {
       enabled: false
