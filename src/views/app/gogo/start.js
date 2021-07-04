@@ -178,11 +178,6 @@ const Start = ({ intl }) => {
     });
     setSelectDataTypeStep3(categoryList2);
   }
-
-  useEffect(() => {
-    
-  }, [industryApp]);
-
   //datePicker format 수정
   const dateString = (dateValue) => {
     let retStr = '';
@@ -204,7 +199,16 @@ const Start = ({ intl }) => {
     }
     return retStr;
   }
-  
+  //
+  const preTrendClick = () => {
+    console.log('preTrendClick',showPreTrend);
+    if (showPreTrend){
+      setShowPreTrend(false) ;
+    }
+    else{
+      setShowPreTrend(true) ;
+    }
+  }
   //검색조건 엔터버튼 클릭
   const handleSearchClick = (e) => {
     var param = {};
@@ -226,9 +230,13 @@ const Start = ({ intl }) => {
     searchType.GiAnalysis  = true;
     searchType.GiAnalysisBubble  = true;
     searchType.RelationWord = false;
+    setShowPreTrend(false);
     // 검색조건 스토어에 저장
     dispatch(getSearchType(searchType)); // 검색 조건 추가
     dispatch(getSearchCondition(param));
+  }
+  const chageShowTrend = (showVal) =>{
+    setShowPreTrend(showVal) ;
   }
   //검색조건 엔터버튼 클릭
   const searchActivrClick = () => {
@@ -252,6 +260,7 @@ const Start = ({ intl }) => {
     searchType.GiAnalysisBubble  = true;
     searchType.RelationWord = false;
     // 검색조건 스토어에 저장
+    setShowPreTrend(false);
     dispatch(getIndustryPfactorTrendandfactor(null));
     dispatch(getIndustryPfactorGiRelatedwords(null));
     dispatch(getGiBubble(null));
@@ -490,7 +499,7 @@ const Start = ({ intl }) => {
                   <p className="desc">- 키워드(dot) 클릭시, 우측 그래프가 활성화됩니다.</p>
                   {/* 각 차트별 height 값은 props로 전달 차트 */}
                   {/* <Bubble height={550} /> */}
-                  <Scatter height={600} name="TrendQuadScatter" activeFirstTab={activeFirstTab} className="scatter-chart"/>
+                  <Scatter height={600} name="TrendQuadScatter" chageShowTrend={chageShowTrend} activeFirstTab={activeFirstTab} className="scatter-chart"/>
                 </div>
                 <div className="box right">
                   <p className="desc">- Pre-Trend 클릭 시, 예측트렌드가 노출됩니다.</p>
@@ -514,13 +523,11 @@ const Start = ({ intl }) => {
                           </PopoverBody>
                         </Popover>
                       </div>
-                      <span className="mean" style={{ left: '70.0%' }} onClick={() => {
-                        return showPreTrend === true ? setShowPreTrend(false) : setShowPreTrend(true);
-                      }} aria-hidden="true">Pre-Trend <span className="number">{selectPretrendPercent}</span></span>
+                      <span className="mean" style={{ left: '70.0%' }} onClick={preTrendClick} aria-hidden="true">Pre-Trend <span className="number">{selectPretrendPercent}</span></span>
                       {/* 전체 100% 기준으로 number 값의 나머지 값을 style 값에 인라인으로 대입바랍니다.  */}
                     </div>
                     {/* 각 차트별 height 값은 props로 전달 */}
-                    <Line setPercent={setPretrendPercent} showPreTrend={showPreTrend} height={210} name="PostTrendLine" activeFirstTab={activeFirstTab} />
+                    <Line setPercent={setPretrendPercent} showPreTrend={showPreTrend} height={210} name="PostTrendLine" activeFirstTab={activeFirstTab} className="linetrend-chart"/>
                   </div>
                   <div className="chart-area mb-0">
                     <div className="chart-header">
@@ -646,6 +653,7 @@ const Start = ({ intl }) => {
                     </PopoverBody>
                   </Popover> */}
                     <Bubble height={470} className="relation-bubble" name="GiBubble" activeFirstTab={activeFirstTab}/>
+                    <p className="desc text-right">- 위 버블 클릭 시, 연관 이미지 노출됩니다.</p>
                   </div>
                 </div>
                 {/* s: 연관 이미지 영역 */}

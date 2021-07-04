@@ -72,27 +72,56 @@ const Line = (props) => {
                 }
             });
 
-            //차트 시리즈
-            lineChartOptions.series = [
-                { name: "post-Trend",  data: postArr },
-                { name: "pre-Trend",  data: preArr }
-            ];
-            //차트 옵션
-            lineChartOptions.options = {
-                ...lineChartOptions.options,
-                title : {
-                    text: clickData
+            setLineOptions({
+                ...lineOptions,
+                options : {
+                    title : {
+                        text : clickData
+                    },
+                    xaxis : {
+                        categories : categoryArr,
+                        show : false
+                    },
+                    grid : {
+                        padding : {
+                            top : 0,
+                            bottom : 0,
+                            right : 6,
+                            left : 37 ,
+                        }
+                    },
+                    colors : ['#25e9ae', '#d50028']
                 },
-                xaxis: {
-                    categories : categoryArr,
-                    show : false
-                },
-                colors:['#25e9ae', '#d50028']
-            };
+                series : [
+                    { name: "post-Trend",  data: postArr },
+                    { name: "pre-Trend",  data: preArr }
+                ]
+            });
         }
-        
-        setLineOptions(lineChartOptions);
-
+        else{
+          setLineOptions({
+                ...lineOptions,
+                options : {
+                    title : {
+                        text : ""
+                    },
+                    xaxis : {
+                        categories : [],
+                        show : false
+                    },
+                    grid : {
+                        padding : {
+                            top : 0,
+                            bottom : 0,
+                            right : 6,
+                            left : 37 ,
+                        }
+                    },
+                    colors : []
+                },
+                series : []
+            });
+        }
     },[industryApp.iPfactorTrendandfactor, props.showPreTrend]);
 
     return (

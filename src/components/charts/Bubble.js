@@ -50,6 +50,7 @@ const Bubble = (props) => {
     var bubbleYArr = [];
     var xMin, xMax, yMin, yMax = 0;
     // console.log('bubble', store2.iGiBubbleelectData );
+    dispatch(getIndustryPfactorGiRelatedwords(null));
     if (!(store2.iGiBubbleelectData === null || store2.iGiBubbleelectData=== undefined || store2.iGiBubbleelectData === "" || JSON.stringify(store2.iGiBubbleelectData) === "{}")){
       // console.log('bubble set ',store2.iGiBubbleelectData.BubbleData);
       store2.iGiBubbleelectData.BubbleData.map((bData) => {
@@ -226,6 +227,7 @@ const Bubble = (props) => {
         },
         series: []
       });
+      dispatch(getIndustryPfactorGiRelatedwords(null));
     }
   },[store2.iGiBubbleelectData]);
   // Loading 

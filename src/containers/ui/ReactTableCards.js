@@ -179,6 +179,7 @@ export const ReactTableWithPaginationCard = () => {
         else{
           callUrl = "/api/GetIndustry_EFactor_GI";
         }
+        dispatch(getGiBubble(null));
         callGIApi(param1,callUrl);
       }
     

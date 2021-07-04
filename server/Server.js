@@ -1,5 +1,6 @@
 // express 사용해서 api 호출 링크별로 route 해주게 설정
 const express = require('express');
+
 const router = express();
 const port = 5000;
 
@@ -16,7 +17,7 @@ router.use('/api/GetIndustry_PFactor_GI_RelatedWords', require('./api/sample_Get
 router.use('/api/Login', require('./api/sample_Login'));
 
 router.listen(port, function () {
-    console.log('Example app listening on port : ' + port);
+    console.log(`Example app listening on port : ${  port}`);
 });
 
 module.exports = router;

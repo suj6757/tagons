@@ -18,6 +18,9 @@ const ScatterDatetime = (props) => {
   // api 호출시 로딩바 적용 테스트
   const [loading, setLoading] = useState(false);
   const [loaderror, setLoadError] = useState(null);
+  //색 지정
+  var colorArr = [];
+  var color = '';
 
   const replaceAll = (str,p1,p2) => {
     return str.split(p1).join(p2);
@@ -30,7 +33,8 @@ const ScatterDatetime = (props) => {
     if (seriesIndex >= 0 ){
       // const categoryUpLow = name.split('-');
       const categoryUpper = categoryData[seriesIndex][0];
-      const name = categoryData[seriesIndex][1]
+      const name = categoryData[seriesIndex][1];
+      dispatch(getIndustryPfactorTrendandfactor(null));
       if (!(store.SearchCondition.activeFirstTab === "" || store.SearchCondition.activeFirstTab === null || store.SearchCondition.activeFirstTab === undefined)){
         param1.FromDate = store.SearchCondition.FromDate;
         param1.ToDate = store.SearchCondition.ToDate;
@@ -38,8 +42,9 @@ const ScatterDatetime = (props) => {
         param1.Category2 = store.SearchCondition.Category2;
         param1.Category3 = store.SearchCondition.Category3;
         param1.Keyword = store.SearchCondition.Keyword;
-        param1.Category_upper = categoryUpper
-        param1.Name = name
+        param1.Category_upper = categoryUpper;
+        param1.Name = name ;
+        props.chageShowTrend(false);
         if (store.SearchCondition.activeFirstTab === '1'){
           callUrl = "/api/GetIndustry_PFactor_TrendAndFactor";
         }
@@ -65,6 +70,7 @@ const ScatterDatetime = (props) => {
     var callUrl = "";
     if (seriesIndex >= 0 ){
       if (!(store.SearchCondition.activeFirstTab === "" || store.SearchCondition.activeFirstTab === null || store.SearchCondition.activeFirstTab === undefined)){
+        dispatch(getIndustryPfactorTrendandfactor(null));
         param1.FromDate = store.SearchCondition.FromDate;
         param1.ToDate = store.SearchCondition.ToDate;
         param1.Category1 = store.SearchCondition.Category1;
@@ -79,6 +85,7 @@ const ScatterDatetime = (props) => {
         else {
           callUrl = "/api/GetIndustry_EFactor_TrendAndFactor";
         }
+        props.chageShowTrend(false);
         // console.log('파라메터 clickChart2', callUrl ,param1);
         axios.post(callUrl,param1)
           .then(function (response) {
@@ -108,8 +115,24 @@ const ScatterDatetime = (props) => {
           } ,
           events: {
             click: function(event, chartContext, config) {
-              // console.log('scatter_config1' , config.config);
-              if (config.seriesIndex >=0 ){
+              colorArr = [];
+              
+              if (config.seriesIndex >= 0) {
+                console.log('before : ', ScatterChartOption.options.colors);
+                colorArr = ScatterChartOption.options.colors.map(function(data, index) {
+                  return index === config.seriesIndex ? '#d50028' : '#868686';
+                });
+                
+                console.log('after : ', colorArr);
+                
+                setScatterDatetimeOption({
+                  ...ScatterDatetimeOption,
+                  options : {
+                    ...ScatterDatetimeOption.options,
+                    colors : colorArr
+                  }
+                });
+                
                 clickChart(config.seriesIndex,config.config.series[config.seriesIndex]);
               }
             }
@@ -227,6 +250,12 @@ const ScatterDatetime = (props) => {
               show: true
             }
           },
+          padding : {
+            top : 0,
+            bottom : 0,
+            right : 0,
+            left : 0 ,
+          }
         },
         colors: ['#868686'], // marker&label 회색
         xaxis: {
@@ -253,11 +282,12 @@ const ScatterDatetime = (props) => {
   };
   const setChartData = (chartData) => {
     var seriesData = [];
-    
     var maxRiseData = {};
     var maxindex = -1;
     
-    categoryData = [];    
+    if (categoryData.length > 0 ){
+      categoryData = [];    
+    } 
     chartData.Data.map((res,index) => {
       if (index === 0) {
         maxRiseData = res;
@@ -272,12 +302,21 @@ const ScatterDatetime = (props) => {
         name: res.Category_lower,
         data: [[res.P_R_INDEX, res.RISE_FALL]],
       });
+      
+      //색 초기화
+      if(res.Category_lower === '니트') {
+        color = '#d50028';
+      }
+      else {
+        color = '#868686';
+      }
+      colorArr.push(color);
     });
+    ScatterChartOption.options.colors = colorArr;
 
     setScatterDatetimeOption({
       options: ScatterChartOption.options,
       series: seriesData,
-
     });
 
     if (maxindex >=0 ){
@@ -310,6 +349,8 @@ const ScatterDatetime = (props) => {
       param1.Category2 = store.SearchCondition.Category2;
       param1.Category3 = store.SearchCondition.Category3;
       param1.Keyword = store.SearchCondition.Keyword;
+      props.chageShowTrend(false);
+      dispatch(getIndustryPfactorTrendandfactor(null));
       if (store.SearchCondition.activeFirstTab === '1'){
         callUrl = "/api/GetIndustry_PFactor_TrendQuad";
       }

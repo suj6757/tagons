@@ -22,14 +22,17 @@ const Bar = (props) => {
       var iPfactorTrendandfactor = [];
       var colorArrr = [];
       var barlen = 0;
+      var chartTypeName = "";
       //console.log('Bar barSentiName ', props.activeTab , JSON.stringify(store2.iPfactorTrendandfactor) );
       if (!(store2.iPfactorTrendandfactor === null || store2.iPfactorTrendandfactor=== undefined || store2.iPfactorTrendandfactor === "" || JSON.stringify(store2.iPfactorTrendandfactor) === "{}")){
         
         if (props.activeTab === '1') {
           iPfactorTrendandfactor = store2.iPfactorTrendandfactor.SentimentFactorData;
+          chartTypeName = "Sentiment Factor";
         }
         else{
           iPfactorTrendandfactor = store2.iPfactorTrendandfactor.BrandFactorData;
+          chartTypeName = "Brand";
         }
 
         if (!(iPfactorTrendandfactor === null  || iPfactorTrendandfactor=== undefined || iPfactorTrendandfactor === ""  || JSON.stringify(iPfactorTrendandfactor) === "[]")) {
@@ -37,16 +40,17 @@ const Bar = (props) => {
             dataArr.push(tData.Value);
             categoryArr.push(tData.name);
             if (index === 0){
-              colorArrr.push('#8B0000');
+              colorArrr.push('#CC0000');
             }
-            else if (index === (barlen -1)){
-              colorArrr.push('#00008B'); 
+            else if (index === (iPfactorTrendandfactor.length -1)){
+              colorArrr.push('#0000CC'); 
             }
             else{
               colorArrr.push('#808080'); 
             }
           });
           seriesData = [{
+                    name : chartTypeName,
                     data: dataArr}];
         } 
         
@@ -68,7 +72,13 @@ const Bar = (props) => {
                 enabled: true
               },
               fill: {
-                opacity: 0.7
+                opacity: 0.7 ,
+                colors: colorArrr,
+              },
+              plotOptions: {
+                bar: {
+                    distributed: true
+                }
               },
               title: {
                 // text: ""
@@ -85,6 +95,9 @@ const Bar = (props) => {
               },
               yaxis: {
                   show: false,
+              },
+              legend : {
+                show: false ,
               },
             },
             series: seriesData,
@@ -110,10 +123,17 @@ const Bar = (props) => {
                 enabled: true
               },
               fill: {
-                opacity: 0.7
+                opacity: 0.7,
+                type: 'solid', 
+                colors: colorArrr,
               },
               title: {
                 // text: ""
+              },
+              plotOptions: {
+                bar: {
+                    distributed: true
+                }
               },
               grid : {
                         yaxis : {
@@ -127,6 +147,9 @@ const Bar = (props) => {
               },
               yaxis: {
                   show: false,
+              },
+              legend : {
+                show: false ,
               },
             },
             series: [],
@@ -142,24 +165,29 @@ const Bar = (props) => {
       var colorArrr = [];
       var iPfactorTrendandfactor = [];
       var barlen = 0;
-      
+      var chartTypeName = "";
       if (!(store2.iPfactorTrendandfactor === null || store2.iPfactorTrendandfactor=== undefined || store2.iPfactorTrendandfactor === "" || JSON.stringify(store2.iPfactorTrendandfactor) === "{}")){
         if (props.activeTab === '1') {
           iPfactorTrendandfactor = store2.iPfactorTrendandfactor.SentimentFactorData;
+          chartTypeName = "Sentiment Factor";
         }
         else{
           iPfactorTrendandfactor = store2.iPfactorTrendandfactor.BrandFactorData;
+          chartTypeName = "Brand";
         }
-        // console.log('data', store2.iPfactorTrendandfactor );
+        if (iPfactorTrendandfactor === null || iPfactorTrendandfactor=== undefined || iPfactorTrendandfactor === ""  ){
+          iPfactorTrendandfactor = [];
+        }
+        console.log('data', iPfactorTrendandfactor,store2.iPfactorTrendandfactor.SentimentFactorData,store2.iPfactorTrendandfactor.BrandFactorData );
 
         iPfactorTrendandfactor.map((tData,index) => {
           dataArr.push(tData.Value);
           categoryArr.push(tData.name);
           if (index === 0){
-            colorArrr.push('#8B0000');
+            colorArrr.push('#CC0000');
           }
-          else if (index === (barlen -1)){
-            colorArrr.push('#00008B'); 
+          else if (index === (iPfactorTrendandfactor.length -1)){
+            colorArrr.push('#0000CC'); 
           }
           else{
             colorArrr.push('#808080'); 
@@ -174,6 +202,7 @@ const Bar = (props) => {
             alert('Brand 데이타가 없습니다');
         } */
         seriesData = [{
+                  name : chartTypeName,
                   data: dataArr}];
 
         setBarOption({
@@ -193,7 +222,9 @@ const Bar = (props) => {
                 enabled: true 
               },
               fill: {
-                opacity: 0.7
+                opacity: 0.7 ,
+                type: 'solid',
+                colors: colorArrr, 
               },
               title: {
                 // text: ""
