@@ -29,10 +29,10 @@ const Bubble = (props) => {
         param1.Keyword = store.SearchCondition.Keyword;
         param1.Factor = factor ;
         if (store.SearchCondition.activeFirstTab === '1'){
-          callUrl = "/api/GetIndustry_PFactor_GI_RelatedWords";
+          callUrl = "/industry/GetIndustry_PFactor_GI_RelatedWords";
         }
         else {
-          callUrl = "/api/GetIndustry_EFactor_GI_RelatedWords";
+          callUrl = "/industry/GetIndustry_EFactor_GI_RelatedWords";
         }
         axios.post(callUrl,param1)
           .then(function (response) {
@@ -94,6 +94,7 @@ const Bubble = (props) => {
             custom: function({ series, seriesIndex, dataPointIndex, w}) {
               return `${'<div class="arrow_box" style="padding:5px;">' +
               '<span>'} 
+                  ${ w.config.series[seriesIndex].name } <br/>
                   DGI: ${ Math.trunc(w.config.series[seriesIndex].data[0][0]) } <br/>
                   SGI: ${ Math.trunc(w.config.series[seriesIndex].data[0][1]) } <br/>
                   PGI: ${ Math.trunc(w.config.series[seriesIndex].data[0][2]) } <br/>
@@ -113,8 +114,8 @@ const Bubble = (props) => {
             //text: ""
           },
           xaxis: {
-            min: 0,
-            max: xMax,
+            min: -10,
+            max: 110,
             tickAmount: 12,
             type: "category",
             show: false,
@@ -123,8 +124,8 @@ const Bubble = (props) => {
             },
           },
           yaxis:{
-            min: 0,
-            max: yMax,
+            min: -10,
+            max: 110 ,
             labels: {
               formatter: function(value, index) {
                 return value.toFixed();
@@ -140,11 +141,11 @@ const Bubble = (props) => {
           grid: {
             show: false,
           },
-          plotOptions: {
-            bubble: {
-              minBubbleRadius: 18,
-            }
-          },
+          // plotOptions: {
+          //   bubble: {
+          //     minBubbleRadius: 18,
+          //   }
+          // },
         },
         series: seriesData
       });
@@ -192,8 +193,8 @@ const Bubble = (props) => {
             //text: ""
           },
           xaxis: {
-            min: 0,
-            max: 10,
+            min: -10,
+            max: 110,
             tickAmount: 12,
             type: "category",
             show: false,
@@ -202,8 +203,8 @@ const Bubble = (props) => {
             },
           },
           yaxis:{
-            min: 0,
-            max: 10,
+            min: -10,
+            max: 110,
             labels: {
               formatter: function(value, index) {
                 return value.toFixed();
@@ -219,11 +220,11 @@ const Bubble = (props) => {
           grid: {
             show: false,
           },
-          plotOptions: {
-            bubble: {
-              minBubbleRadius: 18,
-            }
-          },
+          // plotOptions: {
+          //   bubble: {
+          //     minBubbleRadius: 18,
+          //   }
+          // },
         },
         series: []
       });

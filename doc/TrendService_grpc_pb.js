@@ -1,6 +1,6 @@
 // GENERATED CODE -- DO NOT EDIT!
 
-'use strict';
+
 var grpc = require('grpc');
 var TrendService_pb = require('./TrendService_pb.js');
 

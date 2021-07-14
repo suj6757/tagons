@@ -1,0 +1,103 @@
+syntax = "proto3";
+
+package naver_shopping_best;
+
+service NaverShoppingBest {
+    rpc Select_Nshopping_Category_Data(NshoppingCategoryParam) returns (NshoppingCategoryData) {}
+    rpc Select_Nshopping_IsDetail_Data(NshoppingBest100) returns (NshoppingBest100Param) {}
+    rpc Select_Nshopping_IsAdult_Data(NshoppingBest100) returns (NshoppingBest100Param) {}
+    rpc Insert_Nshopping_Item_Data(NshoppingBest100Param) returns (InsertReply) {}
+    rpc Insert_Nshopping_Keyword_Data(NshoppingKeywordParam) returns (InsertReply) {}
+    rpc Insert_Nshopping_PriceCompare_Data(NshoppingPriceCompareParam) returns (InsertReply) {}
+    rpc Insert_Nshopping_Review_Data(NshoppingReviewParam) returns (InsertReply) {}
+    rpc Update_Nshopping_Item_Data(NshoppingBest100Param) returns (InsertReply) {}
+    rpc Set_Nshopping_Image(Empty) returns (InsertReply) {}
+}
+
+message Empty {
+
+}
+
+message NshoppingCategoryParam {
+    int64 channelcode = 1;
+}
+
+message NshoppingCategoryData {
+    repeated string category_code = 1;
+}
+
+message NshoppingBest100 {
+    optional string idx = 1;
+    optional int64 rank = 2;
+    optional string category = 3;
+    optional string category_code = 4;
+    optional string product_code = 5;
+    optional string product_name = 6;
+    optional int64 product_price = 7;
+    optional string product_url = 8;
+    optional string image_url = 9;
+    optional int64 review_count = 10;
+    optional string is_adult = 11;
+    optional string is_detail = 12;
+    optional double reg_date = 13;
+    optional string product_morpheme = 14;
+    optional string bucketfile_path = 15;
+}
+
+message NshoppingBest100Param {
+    repeated NshoppingBest100 rows = 1;
+}
+
+message NshoppingKeyword {
+    string idx = 1;
+    string category_code = 2;
+    string keyword = 3;
+    string rank_type = 4;
+    int64 rank = 5;
+    string rank_updown = 6;
+    double reg_date = 7;
+}
+
+message NshoppingKeywordParam {
+    repeated NshoppingKeyword rows = 1;
+}
+
+message NshoppingPriceCompare {
+    string idx = 1;
+    string product_code = 2;
+    string product_name = 3;
+    string mall_name = 4;
+    int64 mall_price = 5;
+    int64 delivery_fee = 6;
+    int64 zzim_count = 7;
+    bool discount_benefit = 8;
+    bool point_benefit = 9;
+    double reg_date = 10;
+}
+
+message NshoppingPriceCompareParam {
+    repeated NshoppingPriceCompare rows = 1;
+}
+
+message NshoppingReview {
+    string idx = 1;
+    string category_code = 2;
+    string product_code = 3;
+    string product_name = 4;
+    string review = 5;
+    string positive_yn = 6;
+    string unique_key = 7;
+    double write_date = 8;
+    double reg_date = 9;
+    string review_morpheme = 10;
+}
+
+message NshoppingReviewParam {
+    repeated NshoppingReview rows = 1;
+}
+
+
+message InsertReply {
+    int64 count = 1;
+}
+

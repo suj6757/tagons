@@ -1,6 +1,6 @@
-// /* eslint-disable react-hooks/exhaustive-deps */
-// /* eslint-disable jsx-a11y/click-events-have-key-events */
-// /* eslint-disable jsx-a11y/no-static-element-interactions */
+/* eslint-disable react-hooks/exhaustive-deps */
+/* eslint-disable jsx-a11y/click-events-have-key-events */
+/* eslint-disable jsx-a11y/no-static-element-interactions */
 import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import classnames from 'classnames';
@@ -46,7 +46,7 @@ const Notification = ({
   ]);
   const titleHtml = title ? <h4 className="title">{title}</h4> : null;
   return (
-    <div className={className} onClick={() => handleClick()} aria-hidden="true">
+    <div className={className} onClick={() => handleClick()}>
       <div className="notification-message" role="alert">
         {titleHtml}
         <div className="message">{message}</div>

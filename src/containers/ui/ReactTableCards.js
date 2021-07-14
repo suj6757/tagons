@@ -174,10 +174,10 @@ export const ReactTableWithPaginationCard = () => {
         param1.Category3 = store.SearchCondition.Category3;
         param1.Keyword = store.SearchCondition.Keyword;
         if (store.SearchCondition.activeFirstTab === "1") {
-          callUrl = "/api/GetIndustry_PFactor_GI";
+          callUrl = "/industry/GetIndustry_PFactor_GI";
         }
         else{
-          callUrl = "/api/GetIndustry_EFactor_GI";
+          callUrl = "/industry/GetIndustry_EFactor_GI";
         }
         dispatch(getGiBubble(null));
         callGIApi(param1,callUrl);

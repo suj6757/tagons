@@ -1,0 +1,27 @@
+syntax = "proto3";
+
+package LoginService;
+
+message Table_UserInfo2 {
+  int64 CompanyCode = 1;
+  string CompanyName = 2;
+  string PrimeFlag = 3;
+  string TrendFlag = 4;
+  string SocialListeningFlag = 5;
+  string OnlineRetailerFlag = 6;
+}
+
+message Response_LoginUserInfo {
+  string ErrorCode = 1;
+  string Message = 2;
+  repeated Table_UserInfo2 Userinfo = 3;
+}
+
+message Request_UserInfo {
+  string UserId = 1;
+  string UserPassword = 2;
+}
+
+service UserInfo {
+  rpc Login(Request_UserInfo) returns (Response_LoginUserInfo);
+}

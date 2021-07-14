@@ -1,0 +1,98 @@
+syntax = "proto3";
+
+package PrimeService;
+
+message Table_DateValue1 {
+    string Indicator_Name = 1;
+    string Indicator_Value = 2;
+    double Past = 3;
+    double Present  = 4;
+}
+
+message Table_DateValue2 {
+    string Indicator_Name = 1;
+    string Indicator_Value = 2;
+    int64 Past = 3;
+    int64 Present  = 4;
+}
+
+message Table_DateValue3 {
+    string Channel_Category = 1;
+    string Channel = 2;
+    string Post_Product = 3;
+    string Comment_Review  = 4;
+    string View = 5;
+    string Like_Cart = 6;
+    string Press = 7;
+    string Positive_Rate = 8;
+    string Negative_Rate = 9;
+}
+
+message Response_Type1 {
+    string ErrorCode = 1;
+    string Message = 2;
+    int64 KeyRank = 3;
+    int64 Click = 4;
+    int64 SocialBuzz = 5;
+    int64 Num_Of_Product  = 6;
+    int64 Num_Of_Conversion = 7;
+}
+
+message Response_Type2 {
+    string ErrorCode = 1;
+    string Message = 2;
+    Table_DateValue1 Data1 = 3;
+    Table_DateValue1 Data2 = 4;
+    Table_DateValue1 Data3 = 5;
+}
+
+message Response_Type3 {
+    string ErrorCode = 1;
+    string Message = 2;
+    Table_DateValue2 Data1 = 3;
+    Table_DateValue2 Data2 = 4;
+    Table_DateValue1 Data3 = 5;
+    Table_DateValue1 Data4 = 6;
+}
+
+message Response_Type4 {
+    string ErrorCode = 1;
+    string Message = 2;
+    Table_DateValue2 Data1 = 3;
+    Table_DateValue2 Data2 = 4;
+}
+
+message Response_Type5 {
+    string ErrorCode = 1;
+    string Message = 2;
+    Table_DateValue2 Data1 = 3;
+    Table_DateValue2 Data2 = 4;
+    Table_DateValue2 Data3 = 5;
+    Table_DateValue2 Data4 = 6;
+}
+
+message Response_Type6 {
+    string ErrorCode = 1;
+    string Message = 2;
+    repeated Table_DateValue3 Data = 3;
+}
+
+message Request_Type1 {
+    string FromDate = 1;
+    string ToDate = 2;
+    string Period_Unit = 3;
+    repeated string Channel_Upper = 4;
+    repeated string Channel_Lower = 5;
+    string Keyword = 6;
+    string Company = 7;
+    int64 CompanyCode = 8;
+}
+
+service PrimeInfo {
+    rpc GetState_4_Trend_Indicator(Request_Type1) returns (Response_Type1);
+    rpc GetState_Total_Indicator_Click(Request_Type1) returns (Response_Type2);
+    rpc GetState_Total_Indicator_SocialBuzz(Request_Type1) returns (Response_Type3);
+    rpc GetState_Total_Indicator_NumofProduct(Request_Type1) returns (Response_Type4);
+    rpc GetState_Total_Indicator_NumofConversion(Request_Type1) returns (Response_Type5);
+    rpc GetChannel_Posting_Indicator(Request_Type1) returns (Response_Type6);
+}

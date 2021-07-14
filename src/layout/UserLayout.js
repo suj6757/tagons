@@ -13,9 +13,8 @@ const UserLayout = ({ children }) => {
 
   return (
     <>
-      <div className="fixed-background" />
       <main>
-        <div className="container">{children}</div>
+        <div className="container login-wrap">{children}</div>
       </main>
     </>
   );

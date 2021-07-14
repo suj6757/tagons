@@ -1,0 +1,206 @@
+.indi-wrap{
+    margin-top: 50px;
+    font-family: 'noto', sans-serif;
+    .lst-indi{
+        display: flex;
+        justify-content: space-between;
+        padding: 0;
+        margin: 0;
+        list-style:none;
+
+        li{
+            position: relative;
+            width: 264px;
+            height: 264px;
+            border: 4px solid #bbb;
+            border-radius: 50%;
+            text-align: center;
+            margin: 0 1rem;
+            z-index: 100;
+
+            div{
+                display: table;
+                width: 100%;
+                height: 100%;
+
+                p{
+                    display: table-cell;
+                    vertical-align: middle;
+
+                    span{
+                        display: block;
+                        color: #bbb;
+                    }
+
+                    span.title{
+                        font-size: 20px;
+                        margin-bottom: 40px;
+                    }
+
+                    span.count{
+                        line-height: 45px;
+                        font-size: 45px;
+                    }
+                }
+            }
+
+        }
+        li.active{
+            border: 4px solid #f9a21b;
+        }
+        li.active span{
+            color: #f9a21b;
+        }
+
+    }
+}
+
+.cont-noti {
+    margin-top: 30px;
+    margin-right: 20px;
+    font-size: 18px;
+    color: #bbb;
+    text-align: right;
+}
+
+.graph-area{
+    ul{
+        display: flex;
+        padding: 0;
+        margin-top: 20px;
+        justify-content: flex-start;
+        list-style: none;
+    }
+
+    &.bar{
+        .graph-list{
+            li{
+                width: 25%;
+                margin: 0 10px;
+                
+                p{
+                    line-height: inherit;    
+                    margin: 0;
+                }
+                .count-area{
+                    border: 1px solid #d1d1d1;
+                    padding: 10px 20px;
+                    border-radius: 20px;
+                    margin-bottom: 20px;
+                    color: #888;
+            
+                    .count{
+                        font-size: 40px;
+                        text-align: center;
+                        margin-bottom: 0;
+
+                        &.blue{
+                            color: #8faadc;
+                        }
+
+                        &.red{
+                            color: #fb9874;
+                        }
+                    }
+
+                    .area-title{
+                        font-size: 20px;
+                    }
+                }
+            }
+            
+        }
+    }
+    
+    &.line{
+        .graph-list{
+            li{
+                width: 25%;
+                margin: 0 10px;
+                &.center_graph{
+                    width: 50%;
+                }
+            }
+            
+            .txt-area{
+                padding: 10px 0;
+                background: #4e4f4f;
+                font-size: 14px;
+                text-align: center;
+                color: #fff;
+
+                p{
+                    margin: 0;
+                }
+            }
+        }
+    }
+}
+
+.channel_header{
+    .btn-h_tab{
+        background-color: #fff;
+        border-color: #bbb;
+        color: #bbb;
+
+        &.active{
+            background-color: #f9a21b;
+            border-color: #f9a21b;
+            color: #fff;
+        }
+        + .btn-h_tab{
+            margin-left: 10px;
+        }
+    }
+}
+
+.channel_cont{
+    margin-top: 10px;
+    display: none;
+
+    &.active{
+        display: block;
+    }
+
+    .btn-items{
+
+        background-color: #fff;
+        border: none;
+        color: #bbb;
+
+        &.active{
+            background-color: #bbb;
+            border-color: #bbb;
+            color: #fff;
+        }
+
+        + .btn-items{
+            margin-left: 10px;
+        }
+    }
+
+    .list_tag{
+        margin: 10px 0;
+        padding: 0;
+        list-style: none;
+
+        li{
+            display: inline-block;
+            padding: 0.5rem 1rem;
+            border: 1px solid #f9a21b;
+            border-radius: 20px;
+            color: #555;
+
+            .close{
+                margin-left: 10px;
+                font-size: 1rem;
+                span{
+                    vertical-align: middle;
+                }
+            }
+            + li{
+                margin-left: 10px;
+            }
+        }
+    }
+}

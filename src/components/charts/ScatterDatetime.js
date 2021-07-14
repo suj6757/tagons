@@ -1,3 +1,4 @@
+/* eslint-disable no-plusplus */
 import React , { useState , useEffect} from 'react';
 import ReactApexChart from "react-apexcharts";
 import { useDispatch, useSelector } from 'react-redux';
@@ -26,10 +27,11 @@ const ScatterDatetime = (props) => {
     return str.split(p1).join(p2);
   }
 
-  const clickChart = (seriesIndex,seriesData) => {
+  const clickChart = (seriesIndex,seriesData,seriesLength) => {
     var param1 = {} ;
     var callUrl = "";
-    
+    let i = 0 ;
+    colorArr = [];
     if (seriesIndex >= 0 ){
       // const categoryUpLow = name.split('-');
       const categoryUpper = categoryData[seriesIndex][0];
@@ -46,26 +48,43 @@ const ScatterDatetime = (props) => {
         param1.Name = name ;
         props.chageShowTrend(false);
         if (store.SearchCondition.activeFirstTab === '1'){
-          callUrl = "/api/GetIndustry_PFactor_TrendAndFactor";
+          callUrl = "/industry/GetIndustry_PFactor_TrendAndFactor";
         }
         else {
-          callUrl = "/api/GetIndustry_EFactor_TrendAndFactor";
+          callUrl = "/industry/GetIndustry_EFactor_TrendAndFactor";
         }
-        // console.log('파라메터 clickChart ',callUrl ,param1);
+        i = 0 ;
+        while (i < seriesLength ){
+          if ( i === seriesIndex){
+            colorArr.push('#d50028');
+          }
+          else{
+            colorArr.push('#868686');
+          }
+           i++ ;
+        }
+        
+
         axios.post(callUrl,param1)
           .then(function (response) {
-            // console.log('TrendAndFacto', response.data);
             dispatch(getIndustryPfactorTrendandfactor(response.data));
+            /*  setScatterDatetimeOption({...ScatterDatetimeOption,
+              options : {
+                colors : colorArr
+              } ,
+              series : seriesData, }); */
           })
           .catch(function (error) {
             console.log(error);
           });
+                      
       }
+
 
     }
 
   }
-  const clickChart2 = (seriesIndex,Categoryupper,Categorylower) => {
+  const clickChart2 = (seriesIndex,Categoryupper,Categorylower, fSeriesData ) => {
     var param1 = {} ;
     var callUrl = "";
     if (seriesIndex >= 0 ){
@@ -80,17 +99,23 @@ const ScatterDatetime = (props) => {
         param1.Category_upper = Categoryupper;
         param1.Name = Categorylower ;
         if (store.SearchCondition.activeFirstTab === '1'){
-          callUrl = "/api/GetIndustry_PFactor_TrendAndFactor";
+          callUrl = "/industry/GetIndustry_PFactor_TrendAndFactor";
         }
         else {
-          callUrl = "/api/GetIndustry_EFactor_TrendAndFactor";
+          callUrl = "/industry/GetIndustry_EFactor_TrendAndFactor";
         }
         props.chageShowTrend(false);
         // console.log('파라메터 clickChart2', callUrl ,param1);
         axios.post(callUrl,param1)
           .then(function (response) {
             if (!(response.data === "" || response.data === null || response.data === undefined )){
+               /* setScatterDatetimeOption({...ScatterDatetimeOption,
+                options : {
+                  colors : colorArr
+                } ,
+                series : fSeriesData, }); */
               dispatch(getIndustryPfactorTrendandfactor(response.data));
+
             }
             else{
               console.log('factor error',response);
@@ -115,25 +140,8 @@ const ScatterDatetime = (props) => {
           } ,
           events: {
             click: function(event, chartContext, config) {
-              colorArr = [];
-              
               if (config.seriesIndex >= 0) {
-                console.log('before : ', ScatterChartOption.options.colors);
-                colorArr = ScatterChartOption.options.colors.map(function(data, index) {
-                  return index === config.seriesIndex ? '#d50028' : '#868686';
-                });
-                
-                console.log('after : ', colorArr);
-                
-                setScatterDatetimeOption({
-                  ...ScatterDatetimeOption,
-                  options : {
-                    ...ScatterDatetimeOption.options,
-                    colors : colorArr
-                  }
-                });
-                
-                clickChart(config.seriesIndex,config.config.series[config.seriesIndex]);
+                clickChart(config.seriesIndex,config.config.series,config.config.series.length);
               }
             }
           },
@@ -282,9 +290,10 @@ const ScatterDatetime = (props) => {
   };
   const setChartData = (chartData) => {
     var seriesData = [];
+    var i = 0 ;
     var maxRiseData = {};
     var maxindex = -1;
-    
+    colorArr = [];
     if (categoryData.length > 0 ){
       categoryData = [];    
     } 
@@ -302,25 +311,28 @@ const ScatterDatetime = (props) => {
         name: res.Category_lower,
         data: [[res.P_R_INDEX, res.RISE_FALL]],
       });
-      
-      //색 초기화
-      if(res.Category_lower === '니트') {
-        color = '#d50028';
-      }
-      else {
-        color = '#868686';
-      }
-      colorArr.push(color);
     });
-    ScatterChartOption.options.colors = colorArr;
+
+    i = 0 ;
+    while (i < chartData.Data.length ){
+      if ( i === maxindex){
+        colorArr.push('#d50028');
+      }
+      else{
+        colorArr.push('#868686');
+      }
+       i++ ;
+    }
+    // ScatterChartOption.options.colors = colorArr;
 
     setScatterDatetimeOption({
       options: ScatterChartOption.options,
       series: seriesData,
+
     });
 
     if (maxindex >=0 ){
-     clickChart2(maxindex ,chartData.Data[maxindex].Category_upper , chartData.Data[maxindex].Category_lower );
+     clickChart2(maxindex ,chartData.Data[maxindex].Category_upper , chartData.Data[maxindex].Category_lower , seriesData );
     }
   }
   const callTrendQuadApi = async (paramValue,callUrl) =>{
@@ -352,10 +364,10 @@ const ScatterDatetime = (props) => {
       props.chageShowTrend(false);
       dispatch(getIndustryPfactorTrendandfactor(null));
       if (store.SearchCondition.activeFirstTab === '1'){
-        callUrl = "/api/GetIndustry_PFactor_TrendQuad";
+        callUrl = "/industry/GetIndustry_PFactor_TrendQuad";
       }
       else {
-        callUrl = "/api/GetIndustry_EFactor_TrendQuad";
+        callUrl = "/industry/GetIndustry_EFactor_TrendQuad";
       }
       callTrendQuadApi(param1,callUrl);
     }

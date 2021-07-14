@@ -89,7 +89,7 @@ const Start = ({ intl }) => {
     date1.setDate(date1.getDate() -2);
     setEndDateRange(date1);// 종료일
     setLoading(true);  
-    axios.post("/api/GetIndustry_TotalCategory_List")
+    axios.post("/industry/GetIndustry_TotalCategory_List")
     .then((response) => {
         categoryList = response.data;
         setCategoryList(categoryList);
@@ -97,7 +97,7 @@ const Start = ({ intl }) => {
         setLoading(false);
     })
     .catch(function (error) {
-        //console.log(error);
+        console.log(error);
         setLoading(false);
     });
   }, []);
@@ -534,6 +534,7 @@ const Start = ({ intl }) => {
                         {/* s: Sentiment Factor 탭 */}
                         <Nav tabs className="card-header-tabs chart-tab">
                           <NavItem>
+                          {activeFirstTab === '1'?
                             <NavLink
                               to="#"
                               location={{}}
@@ -547,6 +548,21 @@ const Start = ({ intl }) => {
                             >
                               Sentiment Factor
                             </NavLink>
+                            :
+                            <NavLink
+                              to="#"
+                              location={{}}
+                              className={classnames({
+                                active: activeSentiment === '1',
+                                'nav-link': true,
+                              })}
+                              onClick={() => {
+                                setActiveSentiment('1');
+                              }}
+                            >
+                              Product Factor
+                            </NavLink>
+                          }
                           </NavItem>
                           <NavItem>
                             <NavLink

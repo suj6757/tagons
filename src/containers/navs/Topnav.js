@@ -6,6 +6,7 @@ import { injectIntl } from 'react-intl';
 
 import {
   UncontrolledDropdown,
+  Dropdown,
   DropdownItem,
   DropdownToggle,
   DropdownMenu,
@@ -30,6 +31,15 @@ const TopNav = ({
   logoutUserAction,
 }) => {
   const [searchKeyword, setSearchKeyword] = useState('');
+  const [menuDropdown, setMenuDropdown] = useState(false);
+
+  /* eslint-disable no-unused-vars */
+  const showDropdown = (e) => {
+    setMenuDropdown(!menuDropdown);
+  }
+  const hideDropdown = e => {
+    setMenuDropdown(false);
+  }
 
   const search = () => {
     history.push(`${searchPath}?key=${searchKeyword}`);
@@ -85,14 +95,50 @@ const TopNav = ({
         </div> */}
       </div>
       <div className="navbar-right">
-        <ul className="d-inline-block top-nav-list">
-          <li><NavLink to="#" activeClassName="" className="nav-menu">PRIME</NavLink></li>
-          <li><NavLink to="/app/gogo/start" activeClassName="active" className="nav-menu">TREND</NavLink></li>
-          <li><NavLink to="#" activeClassName="" className="nav-menu">SOCIAL LISTENING</NavLink></li>
-          <li><NavLink to="#" activeClassName="" className="nav-menu">ONLINE RETAILER</NavLink></li>
-          <li><NavLink to="#" activeClassName="" className="nav-menu">SIMULATOR</NavLink></li>
-          <li><NavLink to="#" activeClassName="" className="nav-menu">ABOUT TousFlux</NavLink></li>
-        </ul>
+        <Dropdown className="top-nav" isOpen={menuDropdown} onMouseEnter={showDropdown} onMouseLeave={hideDropdown}>
+          <DropdownToggle tag="div">
+            <ul className="d-inline-block top-nav-list">
+              <li><NavLink to="/app/prime/prime" activeClassName="active" className="nav-menu">PRIME</NavLink></li>
+              <li><NavLink to="/app/gogo/start" activeClassName="active" className="nav-menu">TREND</NavLink></li>
+              <li><NavLink to="#" activeClassName="" className="nav-menu">SOCIAL LISTENING</NavLink></li>
+              <li><NavLink to="#" activeClassName="" className="nav-menu">ONLINE RETAILER</NavLink></li>
+              <li><NavLink to="#" activeClassName="" className="nav-menu">SIMULATOR</NavLink></li>
+              <li><NavLink to="#" activeClassName="" className="nav-menu">ABOUT TousFlux</NavLink></li>
+            </ul>
+          </DropdownToggle>
+          <DropdownMenu>
+            <div className="sub-menu-area">
+              <ul className="sub-list1">
+                <li><NavLink to="#" activeClassName="" className="sub-menu">STATES</NavLink></li>
+                <li><NavLink to="#" activeClassName="" className="sub-menu">CHANNELS</NavLink></li>
+              </ul>
+              <ul className="sub-list2">
+                <li><NavLink to="#" activeClassName="" className="sub-menu">BASIC</NavLink></li>
+                <li><NavLink to="#" activeClassName="" className="sub-menu">ACVANCED</NavLink></li>
+                <li><NavLink to="#" activeClassName="" className="sub-menu">INDUSTRY</NavLink></li>
+              </ul>
+              <ul className="sub-list3">
+                <li><NavLink to="#" activeClassName="" className="sub-menu">OPINION/NEEDS</NavLink></li>
+                <li><NavLink to="#" activeClassName="" className="sub-menu">POSITIONING</NavLink></li>
+              </ul>
+              <ul className="sub-list4">
+                <li><NavLink to="#" activeClassName="" className="sub-menu">ON-BROAD</NavLink></li>
+                <li><NavLink to="#" activeClassName="" className="sub-menu">ON-DETAIL</NavLink></li>
+                <li><NavLink to="#" activeClassName="" className="sub-menu">ADS MONITORING</NavLink></li>
+              </ul>
+              <ul className="sub-list5">
+                <li><NavLink to="#" activeClassName="" className="sub-menu">INFLUENCER</NavLink></li>
+                <li><NavLink to="#" activeClassName="" className="sub-menu">ADS</NavLink></li>
+                <li><NavLink to="#" activeClassName="" className="sub-menu">SELECT CHANNEL</NavLink></li>
+              </ul>
+              <ul className="sub-list6">
+                <li><NavLink to="#" activeClassName="" className="sub-menu">TousFlux 소개</NavLink></li>
+                <li><NavLink to="#" activeClassName="" className="sub-menu">사용법</NavLink></li>
+                <li><NavLink to="#" activeClassName="" className="sub-menu">공지사항</NavLink></li>
+              </ul>
+            </div>
+          </DropdownMenu>
+        </Dropdown>
         <div className="user d-inline-block">
           <UncontrolledDropdown className="dropdown-menu-right">
             <DropdownToggle className="p-0" color="empty">
@@ -100,7 +146,7 @@ const TopNav = ({
                 <img alt="Profile" src="/assets/img/pic_default.png" />
               </span>
             </DropdownToggle>
-            <DropdownMenu className="mt-3" right>
+            <DropdownMenu className="mt-2" right>
               <div className="name">
                 <span>
                   <img alt="Profile" src="/assets/img/pic_default.png" />

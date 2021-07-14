@@ -1,0 +1,347 @@
+syntax = "proto3";
+
+package TrendService;
+
+message Table_XYFactor {
+    string Category_upper = 1;
+    string Category_lower = 2;
+    double P_R_INDEX  = 3;
+    double RISE_FALL = 4;
+}
+
+message Table_OneFloat {
+    string date = 1;
+    double Value = 2;
+}
+
+message Table_OneFloat2 {
+    string date = 1;
+    double TFIDF = 2;
+}
+
+message Table_OneFloat3 {
+    string name = 1;
+    double Value = 2;
+}
+
+message Table_OneFloat4 {
+    string date = 1;
+    double value = 2;
+}
+
+message Table_OneInt {
+    string name = 1;
+    int64 Value = 2;
+}
+
+message Table_OneInt2 {
+    string date = 1;
+    int64 value = 2;
+}
+
+message Table_TwoString {
+    string name = 1;
+    string Value = 2;
+}
+
+message Table_TwoURL {
+    string ImageURL = 1;
+    string SiteURL = 2;
+}
+
+message Table_ThreeString {
+    int64 Rank = 1;
+    string PurchaseFactor = 2;
+    string SatisfactionFactor = 3;
+    string DisSatisfactionFactor = 4;
+}
+
+message Table_ThreeCategory {
+    string Category1 = 1;
+    string Category2 = 2;
+    string Category3 = 3;
+}
+
+message Table_ThreeInt {
+    string Category = 1;
+    int64 PGI = 2;
+    int64 SGI = 3;
+    int64 DGI = 4;
+}
+
+message Table_ClickedBubble {
+    string RelatedWord = 1;
+    int64 TF = 2;
+    string SiteURL = 3;
+    string ImageURL = 4;
+}
+
+message Table_DateValues {
+    string date = 1;
+    repeated Table_OneInt channel = 2;
+}
+
+message Table_DateValue2 {
+    string Rank = 1;
+    repeated Table_TwoString channel = 2;
+}
+
+message Table_DateValue3 {
+    string Rank = 1;
+    repeated Table_OneFloat3 channel = 2;
+}
+
+message Table_DateValues4 {
+    string date = 1;
+    repeated Table_OneFloat3 channel = 2;
+}
+
+message Table_DateValues5 {
+    string Channel = 1;
+    repeated Table_OneInt2 Data = 2;
+}
+
+message Table_DateValues6 {
+    string Channel = 1;
+    repeated Table_OneFloat4 Data = 2;
+}
+
+message Table_AllBubbleData {
+    string Topics = 1;
+    double PGI = 2;
+    double SGI = 3;
+    double DGI = 4;
+}
+
+message Table_Social_Channel {
+    string ChannelType = 1;
+    int64 ChannelCode = 2;
+    string ChannelName = 3;
+    string ChannelName_EN = 4;
+    string SocialChannelType = 5;
+}
+
+message Table_ECommerce_Channel {
+    string ChannelType = 1;
+    int64 ChannelCode = 2;
+    string ChannelName = 3;
+    string ChannelName_EN = 4;
+}
+
+message Table_Response_Type1 {
+    string name = 1;
+    repeated double value = 2;
+}
+
+message Table_Response_Type2 {
+    Table_OneInt Total = 1;
+    repeated Table_OneInt Social = 2;
+    repeated Table_OneInt OnlineShopping = 3;
+    repeated Table_OneInt GoogleAnalytics = 4;
+}
+
+message Request_Type1 {
+    string FromDate = 1;
+    string ToDate = 2;
+    string Category1 = 3;
+    string Category2 = 4;
+    string Category3 = 5;
+    string Keyword = 6;
+}
+
+message Request_Type2 {
+    string FromDate = 1;
+    string ToDate = 2;
+    string Category1 = 3;
+    string Category2 = 4;
+    string Category3 = 5;
+    string Keyword = 6;
+    string Category_upper = 7;
+    string Name = 8;
+}
+
+message Request_Type3 {
+    string FromDate = 1;
+    string ToDate = 2;
+    string Category1 = 3;
+    string Category2 = 4;
+    string Category3 = 5;
+    string Keyword = 6;
+    string Factor = 7;
+}
+
+message Request_Social_Type1 {
+    string FromDate = 1;
+    string ToDate = 2;
+    string Period_Unit = 3;
+    repeated string Channel = 4;
+    string Keyword = 5;
+}
+
+message Request_ECommerce_Type1 {
+    string FromDate = 1;
+    string ToDate = 2;
+    string Period_Unit = 3;
+    repeated string Channel = 4;
+    string Keyword = 5;
+}
+
+message Request_Response_Type1 {
+    string FromDate = 1;
+    string ToDate = 2;
+    string Company = 3;
+    string CompanyCode = 4;
+    string Response_Limit = 5;
+    string Keyword = 6;
+}
+
+message Request_Response_Type2 {
+    string FromDate = 1;
+    string ToDate = 2;
+    string Company = 3;
+    string CompanyCode = 4;
+    string Response_Limit = 5;
+    string Selected_Index = 6;
+    string Keyword = 7;
+}
+
+message Request_Empty {
+}
+
+message Response_Showroom {
+    string ErrorCode = 1;
+    string Message = 2;
+    repeated Table_TwoURL URL = 3;
+}
+
+message Response_XY_Type1 {
+    string ErrorCode = 1;
+    string Message = 2;
+    repeated Table_XYFactor Data = 3;
+}
+
+message Response_PTrendAndFactor {
+    string ErrorCode = 1;
+    string Message = 2;
+    string Category_upper = 3;
+    string Name = 4;
+    string PreTrendChange = 5;
+    repeated Table_OneFloat TrendData = 6;
+    repeated Table_OneInt SentimentFactorData = 7;
+    repeated Table_OneInt BrandFactorData = 8;
+}
+
+message Response_ETrendAndFactor {
+    string ErrorCode = 1;
+    string Message = 2;
+    string Category_upper = 3;
+    string Name = 4;
+    string PreTrendChange = 5;
+    repeated Table_OneFloat TrendData = 6;
+    repeated Table_OneInt ProductFactorData = 7;
+    repeated Table_OneInt BrandFactorData = 8;
+}
+
+message Response_GITableBubble {
+    string ErrorCode = 1;
+    string Message = 2;
+    repeated Table_ThreeString TableData = 3;
+    repeated Table_ThreeInt BubbleData = 4;
+}
+
+message Response_ClickedGIBubble {
+    string ErrorCode = 1;
+    string Message = 2;
+    repeated Table_ClickedBubble Data = 3;
+}
+
+message Response_GI {
+    string ErrorCode = 1;
+    string Message = 2;
+    repeated Table_ThreeString TableData = 3;
+    repeated Table_AllBubbleData BubbleData = 4;
+}
+
+message Response_TotalCategory_List {
+    string ErrorCode = 1;
+    string Message = 2;
+    repeated Table_ThreeCategory Data = 3;
+}
+
+message Response_Social_Chart1 {
+    string ErrorCode = 1;
+    string Message = 2;
+    repeated Table_DateValues5 buzz = 3;
+    repeated Table_DateValues5 comment = 4;
+}
+
+message Response_Social_Chart2 {
+    string ErrorCode = 1;
+    string Message = 2;
+    repeated Table_DateValue2 Data = 3;
+}
+
+message Response_Social_Chart3 {
+    string ErrorCode = 1;
+    string Message = 2;
+    repeated Table_OneFloat2 Data = 3;
+}
+
+message Response_Chart1 {
+    string ErrorCode = 1;
+    string Message = 2;
+    repeated Table_DateValues5 Data = 3;
+}
+
+message Response_Chart2 {
+    string ErrorCode = 1;
+    string Message = 2;
+    repeated Table_DateValues6 Data = 3;
+}
+
+message Response_Social_Channel {
+    string ErrorCode = 1;
+    string Message = 2;
+    repeated Table_Social_Channel Data = 3;
+}
+
+message Response_ECommerce_Channel {
+    string ErrorCode = 1;
+    string Message = 2;
+    repeated Table_ECommerce_Channel Data = 3;
+}
+
+message Response_Response_Type1 {
+    string ErrorCode = 1;
+    string Message = 2;
+    repeated Table_Response_Type1 Output1 = 3;
+    repeated Table_OneFloat3 output2 = 4;
+    Table_Response_Type2 output3 = 5;
+}
+
+service TrendInfo {
+    rpc GetIndustry_TotalCategory_List(Request_Empty) returns (Response_TotalCategory_List);
+    rpc GetIndustry_Showroom(Request_Type1) returns (Response_Showroom);
+
+    rpc GetIndustry_PFactor_TrendQuad(Request_Type1) returns (Response_XY_Type1);
+    rpc GetIndustry_PFactor_TrendAndFactor(Request_Type2) returns (Response_PTrendAndFactor);
+
+    rpc GetIndustry_EFactor_TrendQuad(Request_Type1) returns (Response_XY_Type1);
+    rpc GetIndustry_EFactor_TrendAndFactor(Request_Type2) returns (Response_ETrendAndFactor);
+
+    rpc GetIndustry_PFactor_GI(Request_Type1) returns (Response_GI);
+    rpc GetIndustry_EFactor_GI(Request_Type1) returns (Response_GI);
+
+    rpc GetIndustry_PFactor_GI_RelatedWords(Request_Type3) returns (Response_ClickedGIBubble);
+    rpc GetIndustry_EFactor_GI_RelatedWords(Request_Type3) returns (Response_ClickedGIBubble);
+
+    rpc GetSocial_Channel_List(Request_Empty) returns (Response_Social_Channel);
+    rpc GetSocial_TrendChart(Request_Social_Type1) returns (Response_Social_Chart1);
+    rpc GetSocial_KeywordRank(Request_Social_Type1) returns (Response_Social_Chart2);
+    rpc GetSocial_KeywordChart(Request_Social_Type1) returns (Response_Social_Chart3);
+
+    rpc GetECommerce_Channel_List(Request_Empty) returns (Response_ECommerce_Channel);
+    rpc GetECommerce_TrendChart(Request_ECommerce_Type1) returns (Response_Chart1);
+    rpc GetECommerce_TrendChart_NumOfMerchandise(Request_ECommerce_Type1) returns (Response_Chart1);
+    rpc GetECommerce_TrendChart_AvgOfRatings(Request_ECommerce_Type1) returns (Response_Chart2);
+}

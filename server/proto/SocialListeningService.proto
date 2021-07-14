@@ -1,0 +1,132 @@
+syntax = "proto3";
+
+package SocialListeningService;
+
+message Table_ThreeString {
+    string Positive = 1;
+    string Neutral = 2;
+    string Negative = 3;
+}
+
+message Table_TwoString {
+    string Name = 1;
+    string Value = 2;
+}
+
+message Table_OneFloat {
+    string name = 1;
+    double value = 2;
+}
+
+message Table_OneFloat2 {
+    string date = 1;
+    double value = 2;
+}
+
+
+message Table_OneInt1 {
+    string date = 1;
+    int64 value = 2;
+}
+
+message Table_Stentiment_Analysis_Type1 {
+    string name = 1;
+    double Positive = 2;
+    double Neutral = 3;
+    double Negative = 4;
+}
+
+message Table_DateValues1 {
+    string Channel = 1;
+    repeated Table_OneFloat2 Data = 2;
+}
+
+message Table_DateValues2 {
+    int64 Rank = 1;
+    string Value = 2;
+    int64 TF = 3;
+    int64 DF = 4;
+    double IDF = 5;
+}
+
+message Request_Stentiment_Analysis_Type1 {
+    string FromDate = 1;
+    string ToDate = 2;
+    string Period_Unit = 3;
+    string Channel_Upper = 4;
+    repeated string Channel_Lower = 5;
+    repeated string Competitors = 6;
+    string Keyword = 7;
+}
+
+message Request_Stentiment_Analysis_Type2 {
+    string FromDate = 1;
+    string ToDate = 2;
+    string Period_Unit = 3;
+    string Channel_Upper = 4;
+    string Channel_Lower = 5;
+    repeated string Competitors = 6;
+    string Keyword = 7;
+}
+
+message Request_Stentiment_Analysis_Type3 {
+    string FromDate = 1;
+    string ToDate = 2;
+    string Period_Unit = 3;
+    string Channel_Upper = 4;
+    string Channel_Lower = 5;
+    string Selected_Competitors = 6;
+    string Keyword = 7;
+}
+
+message Request_Needs_Pattern_Type1 {
+    string FromDate = 1;
+    string ToDate = 2;
+    string Channel_Upper = 4;
+    repeated string Channel_Lower = 5;
+    string Keyword = 6;
+}
+
+message Request_Needs_Pattern_Type2 {
+    string FromDate = 1;
+    string ToDate = 2;
+    string Channel_Upper = 4;
+    string Channel_Lower = 5;
+    string Keyword = 6;
+}
+
+message Response_Stentiment_Analysis_Type1 {
+    string ErrorCode = 1;
+    string Message = 2;
+    repeated Table_Stentiment_Analysis_Type1 Data = 3;
+}
+
+message Response_Stentiment_Analysis_Type2 {
+    string ErrorCode = 1;
+    string Message = 2;
+    repeated Table_DateValues1 Positive = 3;
+    repeated Table_DateValues1 Negative = 4;
+}
+
+message Response_Stentiment_Analysis_Type3 {
+    string ErrorCode = 1;
+    string Message = 2;
+    repeated Table_DateValues2 Positive = 3;
+    repeated Table_DateValues2 Negative = 4;
+}
+
+message Response_Needs_Pattern_Type1 {
+    string ErrorCode = 1;
+    string Message = 2;
+    repeated Table_OneFloat Data = 3;
+    repeated Table_TwoString TableData = 4;
+}
+
+service SocialListeningInfo {
+    rpc GetSentiment_Analysis(Request_Stentiment_Analysis_Type1) returns (Response_Stentiment_Analysis_Type1);
+    rpc GetChannel_Sentiment_Analysis(Request_Stentiment_Analysis_Type2) returns (Response_Stentiment_Analysis_Type2);
+    rpc GetSentiment_Factor(Request_Stentiment_Analysis_Type3) returns (Response_Stentiment_Analysis_Type3);
+
+    rpc GetNeeds_Pattern_Init(Request_Needs_Pattern_Type1) returns (Response_Needs_Pattern_Type1);
+    rpc GetNeeds_Pattern_Selected(Request_Needs_Pattern_Type2) returns (Response_Needs_Pattern_Type1);
+}

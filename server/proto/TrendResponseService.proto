@@ -1,0 +1,69 @@
+syntax = "proto3";
+
+package TrendResponseService;
+
+message Table_XYFactor {
+    int64 X_Axis = 1;
+    double Y_Axis = 2;
+}
+
+message Table_XYFactor_Type2 {
+    string Legend = 1;
+    double Total = 2;
+}
+
+message Table_SubData {
+    string Name = 1;
+    repeated Table_XYFactor Data = 2;
+}
+
+message Table_DataList {
+    string Category2 = 1;
+    repeated Table_SubData SubData = 2;
+}
+
+message Table_DataList_Type2 {
+    string Category2 = 1;
+    repeated Table_XYFactor_Type2 Data = 2;
+}
+
+message Table_Info {
+    string Category1 = 1;
+    repeated Table_DataList SubData = 2;
+}
+
+message Table_Info_Type2 {
+    string Category1 = 1;
+    repeated Table_DataList_Type2 SubData = 2;
+}
+
+message Response_Type1 {
+    string ErrorCode = 1;
+    string Message = 2;
+    repeated Table_Info ChartData = 3;
+    repeated Table_Info_Type2 LegendData = 4;
+}
+
+message Request_Type1 {
+    string FromDate = 1;
+    string ToDate = 2;
+    string Company = 3;
+    int64 CompanyCode = 4;
+    string Response_Limit = 5;
+    string Keyword = 6;
+}
+
+message Request_Type2 {
+    string FromDate = 1;
+    string ToDate = 2;
+    string Company = 3;
+    int64 CompanyCode = 4;
+    string Response_Limit = 5;
+    int64 Selected_Index = 6;
+    string Keyword = 7;
+}
+
+service TrendResponseInfo {
+    rpc GetTrend_Response_Init_Info(Request_Type1) returns (Response_Type1);
+    rpc GetTrend_Response_Selected_Info(Request_Type2) returns (Response_Type1);
+}

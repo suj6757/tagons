@@ -15,7 +15,7 @@ const ShowRoom = (props) => {
 
   const callShowroomApi =  async (paramValue) =>{  
     setLoading(true);
-    await axios.post("/api/GetIndustry_Showroom",paramValue)
+    await axios.post("/industry/GetIndustry_Showroom",paramValue)
     .then(function (response) {
       setThumbList(response.data);
       setLoading(false);

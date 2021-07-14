@@ -1,0 +1,44 @@
+syntax = "proto3";
+
+package OnDetailOverviewService;
+
+message Table_DateValues1 {
+    string Channel = 1;
+    int64 Value = 2;
+}
+
+message Table_DateValues2 {
+    string Channel = 1;
+    int64 Num_Of_Reviews = 2;
+    int64 Avg_Of_Ratings = 3;
+    int64 Display_Ads_Spending = 4;
+}
+
+message Request_Type1 {
+    string FromDate = 1;
+    string ToDate = 2;
+    string Period_Unit = 3;
+    string Channel_Upper = 4;
+    repeated string Channel_Lower = 5;
+    string Keyword = 7;
+}
+
+message Response_Type1 {
+    string ErrorCode = 1;
+    string Message = 2;
+    repeated Table_DateValues1 Product = 3;
+    repeated Table_DateValues1 Price = 4;
+    repeated Table_DateValues1 Reviews = 5;
+    repeated Table_DateValues1 Delivery = 6;
+}
+
+message Response_Type2 {
+    string ErrorCode = 1;
+    string Message = 2;
+    repeated Table_DateValues2 Data = 3;
+}
+
+service OnDetailOverviewInfo {
+    rpc GetRetailers_Channel_Average(Request_Type1) returns (Response_Type1);
+    rpc GetRetailers_Crossover_Analysis(Request_Type1) returns (Response_Type2);
+}

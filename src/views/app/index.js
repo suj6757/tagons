@@ -14,6 +14,9 @@ const SecondMenu = React.lazy(() =>
 const AboutLink = React.lazy(() =>
   import(/* webpackChunkName: "viwes-blank-page" */ './about')
 );
+const PrimeLink = React.lazy(() =>
+  import(/* webpackChunkName: "viwes-blank-page" */ './prime')
+);
 
 const App = ({ match }) => {
   return (
@@ -33,6 +36,10 @@ const App = ({ match }) => {
             <Route
               path={`${match.url}/about`}
               render={(props) => <AboutLink {...props} />}
+            />
+            <Route
+              path={`${match.url}/prime`}
+              render={(props) => <PrimeLink {...props} />}
             />
             <Redirect to="/error" />
           </Switch>

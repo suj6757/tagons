@@ -10,6 +10,8 @@ import "react-pro-sidebar/dist/css/styles.css";
 
 const LeftMenu = () => {
   const [menuCollapse, setMenuCollapse] = useState(false);
+  const [menu, setMenu] = useState('menu');
+
   const menuIconClick = () => (
     menuCollapse ? setMenuCollapse( false ) : setMenuCollapse( true )
   )
@@ -28,9 +30,25 @@ const LeftMenu = () => {
         </SidebarHeader>
         <SidebarContent>
           <Menu>
-            <MenuItem active>FASHION</MenuItem>
-            {/* <MenuItem>COSMETIC / BEAUTY</MenuItem>
-            <MenuItem>GROCERIES</MenuItem> */}
+           {/* 메뉴별 컴포넌트 대체 작업 예정 */}
+            {(() => {
+              switch (menu) {
+                case 'prime':
+                  return <MenuItem active>STATES</MenuItem>;
+                case 'trend':
+                  return <MenuItem active>FASHION</MenuItem>;
+                case 'social':
+                  return <MenuItem active>SENTIMENT ANALYSIS</MenuItem>;
+                case 'online':
+                  return <MenuItem active>ON-BROAD</MenuItem>;
+                case 'simulator':
+                  return <MenuItem active>simulator</MenuItem>;
+                case 'about':
+                  return <MenuItem active>about</MenuItem>;
+                default:
+                  return null;
+              }
+            })()}
           </Menu>
         </SidebarContent>
       </ProSidebar>

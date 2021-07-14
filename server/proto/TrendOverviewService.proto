@@ -1,0 +1,116 @@
+syntax = "proto3";
+
+package TrendOverviewService;
+
+message Table_OneFloat {
+    string Date = 1;
+    double Value = 2;
+}
+
+message Table_OneFloat2 {
+    string Words = 1;
+    double Value = 2;
+}
+
+message Table_DateValue1 {
+    string Channel_Category = 1;
+    string Channel = 2;
+    repeated Table_OneFloat Data = 3;
+}
+
+message Table_DateValue2 {
+    string Channel = 1;
+    repeated Table_OneFloat Data = 3;
+}
+
+message Table_DateValue3 {
+    string Channel_Category = 1;
+    repeated Table_OneFloat Data = 3;
+}
+
+message Table_DateValue4 {
+    int64 No = 1;
+    string Channel1 = 2;
+    string Channel2 = 3;
+    double Gap = 4;
+}
+
+message Table_DateValue5 {
+    string Channel = 1;
+    repeated Table_OneFloat2 Data = 3;
+}
+
+message Request_Type1 {
+    string FromDate = 1;
+    string ToDate = 2;
+    string Period_Unit = 3;
+    repeated string Channel_Upper = 4;
+    repeated string Channel_Lower = 5;
+    string Keyword = 6;
+    string Selected_Tab = 7;
+    string Company = 8;
+    int64 CompanyCode = 9;
+}
+
+message Request_Type2 {
+    string FromDate = 1;
+    string ToDate = 2;
+    string Period_Unit = 3;
+    repeated string Channel_Upper = 4;
+    repeated string Channel_Lower = 5;
+    string Keyword = 6;
+    string Selected_Tab = 7;
+    string Selected_Channel = 8;
+    string Company = 9;
+    int64 CompanyCode = 10;
+}
+
+message Request_Type3 {
+    string FromDate = 1;
+    string ToDate = 2;
+    string Period_Unit = 3;
+    repeated string Channel_Upper = 4;
+    repeated string Channel_Lower = 5;
+    string Keyword = 6;
+    string Selected_Tab = 7;
+    string Company = 8;
+    int64 CompanyCode = 9;
+    string Channel1 = 10;
+    string Channel2 = 11;
+}
+
+message Response_Type1 {
+    string ErrorCode = 1;
+    string Message = 2;
+    repeated Table_OneFloat LineData = 3;
+    repeated Table_DateValue1 HeatMapData = 4;
+}
+
+message Response_Type2 {
+    string ErrorCode = 1;
+    string Message = 2;
+    repeated Table_DateValue2 BarData = 3;
+    repeated Table_DateValue1 HeatMapData = 4;
+}
+
+message Response_Type3 {
+    string ErrorCode = 1;
+    string Message = 2;
+    repeated Table_DateValue3 LineData = 3;
+    repeated Table_DateValue4 TableData = 4;
+}
+
+message Response_Type4 {
+    string ErrorCode = 1;
+    string Message = 2;
+    repeated Table_DateValue2 ChannelChart = 3;
+    repeated Table_OneFloat GapChart = 4;
+    repeated Table_DateValue5 GapComparison = 5;
+}
+
+service TrendOverviewInfo {
+    rpc GetBasic_Overview_Total(Request_Type1) returns (Response_Type1);
+    rpc GetBasic_Overview_ID_Rate(Request_Type2) returns (Response_Type2);
+    rpc GetBasic_Overview_Gap1(Request_Type1) returns (Response_Type3);
+    rpc GetBasic_Overview_Gap2(Request_Type3) returns (Response_Type4);
+}

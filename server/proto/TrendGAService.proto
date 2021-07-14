@@ -1,0 +1,287 @@
+syntax = "proto3";
+
+package TrendGAService;
+
+service TrendGAInfo {
+    rpc GetGA_Keyword_GAP(KeywordGapChartParam) returns (KeywordGapChart);
+    rpc GetGA_Social_Comparison(KeywordGapChartParam) returns (KeywordGapChart);
+    rpc GetGA_Board_Trend(KeywordGapChartParam) returns (GABoardTrendChart);
+    rpc GetGA_Demographics_Analysis(KeywordGapChartParam) returns (GADemographicsChart);
+    rpc GetGA_User_Indicators_Line(KeywordGapChartParam) returns (UserIndicatorsLine);
+    rpc GetGA_User_Indicators_Bar(KeywordGapChartParam) returns (UserIndicatorsBar);
+}
+
+message KeywordGapChartParam {
+    string Period_Unit = 1;
+    string Company = 2;
+    int64 CompanyCode  = 3;
+    optional string Keyword = 4;
+    optional string Internal_Index = 5;
+    optional string External_Index = 6;
+    optional string Select_Legend = 7;
+
+}
+
+message KeywordGapChart {
+    message Items {
+        optional string Keyword = 1;
+        optional uint32 Users = 2;
+        optional double Users_Ratio = 3;
+        optional uint32 Sessions = 4;
+        optional double Sessions_Ratio = 5;
+        optional double Conversion_Rate = 6;
+        optional double Bounce_Rate = 7;
+        optional uint32 Buzz = 8;
+        optional uint32 SearchVolume = 9;
+        optional uint32 Products = 10;
+    }
+
+    repeated Items items = 1;
+}
+
+message GABoardTrendChart {
+    message Items {
+        string Date = 1;
+        uint32 Users = 2;
+        uint32 Sessions = 3;
+        double User_Idx = 4;
+        double Sess_Idx = 5;
+        double Conversion_Rate = 6;
+        double Bounce_Rate = 7;
+    }
+
+    repeated Items items = 1;
+}
+
+message GADemographicsChart {
+    message GenderUsers {
+        uint32 Male = 1;
+        uint32 Female = 2;
+    }
+
+    message GenderSessions {
+        uint32 Male = 1;
+        uint32 Female = 2;
+    }
+
+    message GenderConversion_rate {
+        double Male = 1;
+        double Female = 2;
+    }
+
+    message GenderBounce_rate {
+        double Male = 1;
+        double Female = 2;
+    }
+
+    message Gender {
+        GenderUsers Users = 1;
+        GenderSessions Sessions = 2;
+        GenderConversion_rate Conversion_Rate = 3;
+        GenderBounce_rate Bounce_Rate = 4;
+    }
+
+    message AgeUsers {
+        uint32 _18and24 = 1;
+        uint32 _24and34 = 2;
+        uint32 _35and44 = 3;
+        uint32 _45and54 = 4;
+        uint32 _55and64 = 5;
+        uint32 _65plus = 6;
+    }
+
+    message AgeSessions {
+        uint32 _18and24 = 1;
+        uint32 _24and34 = 2;
+        uint32 _35and44 = 3;
+        uint32 _45and54 = 4;
+        uint32 _55and64 = 5;
+        uint32 _65plus = 6;
+    }
+
+    message AgeConversion_rate {
+        double _18and24 = 1;
+        double _24and34 = 2;
+        double _35and44 = 3;
+        double _45and54 = 4;
+        double _55and64 = 5;
+        double _65plus = 6;
+    }
+
+    message AgeBounce_rate {
+        double _18and24 = 1;
+        double _24and34 = 2;
+        double _35and44 = 3;
+        double _45and54 = 4;
+        double _55and64 = 5;
+        double _65plus = 6;
+    }
+
+    message Age {
+        AgeUsers Users = 1;
+        AgeSessions Sessions = 2;
+        AgeConversion_rate Conversion_Rate = 3;
+        AgeBounce_rate Bounce_Rate = 4;
+    }
+
+    message DeviceUsers {
+        uint32 Desktop = 1;
+        uint32 Mobile = 2;
+        uint32 Tablet = 3;
+    }
+
+    message DeviceSessions {
+        uint32 Desktop = 1;
+        uint32 Mobile = 2;
+        uint32 Tablet = 3;
+    }
+
+    message DeviceConversion_rate {
+        double Desktop = 1;
+        double Mobile = 2;
+        double Tablet = 3;
+    }
+
+    message DeviceBounce_rate {
+        double Desktop = 1;
+        double Mobile = 2;
+        double Tablet = 3;
+    }
+
+    message Devicecategory {
+        DeviceUsers Users = 1;
+        DeviceSessions Sessions = 2;
+        DeviceConversion_rate Conversion_Rate = 3;
+        DeviceBounce_rate Bounce_Rate = 4;
+    }
+
+    message RegionUsers {
+        optional uint32 Region1 = 1;
+        optional uint32 Region2 = 2;
+        optional uint32 Region3 = 3;
+        optional uint32 Region4 = 4;
+        optional uint32 Region5 = 5;
+    }
+
+    message RegionSessions {
+        optional uint32 Region1 = 1;
+        optional uint32 Region2 = 2;
+        optional uint32 Region3 = 3;
+        optional uint32 Region4 = 4;
+        optional uint32 Region5 = 5;
+    }
+
+    message RegionConversion_rate {
+        optional double Region1 = 1;
+        optional double Region2 = 2;
+        optional double Region3 = 3;
+        optional double Region4 = 4;
+        optional double Region5 = 5;
+    }
+
+    message RegionBounce_rate {
+        optional double Region1 = 1;
+        optional double Region2 = 2;
+        optional double Region3 = 3;
+        optional double Region4 = 4;
+        optional double Region5 = 5;
+    }
+
+    message Region {
+        repeated string Regions = 1;
+        RegionUsers Users = 2;
+        RegionSessions Sessions = 3;
+        RegionConversion_rate Conversion_Rate = 4;
+        RegionBounce_rate Bounce_Rate = 5;
+    }
+
+    Gender gender = 1;
+    Age age = 2;
+    Devicecategory device_category = 3;
+    Region region = 4;
+}
+
+message UserIndicatorsLine {
+
+    message Legend_names {
+        repeated string inflow_names = 1;
+        repeated string bounce_names = 2;
+        repeated string mvp_names = 3;
+        repeated string conversion_names = 4;
+    }
+
+    message Inflow {
+        string Date = 2;
+        uint32 legend1 = 3;
+        uint32 legend2 = 4;
+        uint32 legend3 = 5;
+        uint32 legend4 = 6;
+    }
+
+    message Bounce {
+        string Date = 2;
+        uint32 legend1 = 3;
+        uint32 legend2 = 4;
+        uint32 legend3 = 5;
+        uint32 legend4 = 6;
+    }
+
+    message Mostvisitedpage {
+        string Date = 2;
+        uint32 legend1 = 3;
+        uint32 legend2 = 4;
+        uint32 legend3 = 5;
+        uint32 legend4 = 6;
+    }
+
+    message Conversion {
+        string Date = 2;
+        double legend1 = 3;
+        double legend2 = 4;
+        double legend3 = 5;
+        
+    }
+
+    Legend_names legend_names = 1;
+    repeated Inflow inflow = 2;
+    repeated Bounce bounce = 3;
+    repeated Mostvisitedpage mostVisitedPage = 4;
+    repeated Conversion conversion = 5;
+}
+
+message UserIndicatorsBar {
+    message Gender {
+        uint32 Male = 1;
+        uint32 Female = 2;
+    }
+
+    message Age  {
+        uint32 _18and24 = 1;
+        uint32 _24and34 = 2;
+        uint32 _35and44 = 3;
+        uint32 _45and54 = 4;
+        uint32 _55and64 = 5;
+        uint32 _65plus = 6;
+    }
+
+    message Device_category {
+        uint32 Desktop = 1;
+        uint32 Mobile = 2;
+        uint32 Tablet = 3;
+    }
+
+    message Region {
+        repeated string Regions = 1;
+        uint32 Region1 = 2;
+        uint32 Region2 = 3;
+        uint32 Region3 = 4;
+        uint32 Region4 = 5;
+        uint32 Region5 = 6;
+    }
+
+    string tab_type = 1;
+    Gender gender = 2;
+    Age  age  = 3;
+    Device_category device_category = 4;
+    Region region = 5;
+}

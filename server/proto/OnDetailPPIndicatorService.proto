@@ -1,0 +1,143 @@
+syntax = "proto3";
+
+package OnDetailPPIndicatorService;
+
+message Table_DateValues1 {
+    string Date = 1;
+    int64 Value = 2;
+}
+
+message Table_DateValues2 {
+    string Date = 1;
+    double Value = 2;
+}
+
+message Table_DateValues3 {
+    string Name = 1;
+    double Value = 2;
+}
+
+message Table_DateValues4 {
+    double Ratings = 1;
+    int64 Value = 2;
+}
+
+message Table_DateValues5 {
+    int64 Price = 1;
+    double Rank = 2;
+}
+
+message Table_DateValues6 {
+    int64 Price = 1;
+    double Rank = 2;
+    string Brand = 3;
+}
+
+message Table_DateValues7 {
+    int64 Rank = 1;
+    string ProductName = 2;
+    string BrandName = 3;
+    double AvgOfRegularPrice = 4;
+}
+
+message Table_DateGroup1 {
+    string Channel = 1;
+    repeated Table_DateValues1 Data = 2;
+}
+
+message Table_DateGroup2 {
+    string Channel = 1;
+    repeated Table_DateValues2 Data = 2;
+}
+
+message Table_DateGroup3 {
+    string Channel = 1;
+    repeated Table_DateValues2 Data = 2;
+}
+
+message Request_Type1 {
+    string FromDate = 1;
+    string ToDate = 2;
+    string Period_Unit = 3;
+    string Channel_Upper = 4;
+    repeated string Channel_Lower = 5;
+    string Keyword = 7;
+    string Selected_Tab = 8;
+}
+
+message Request_Type2 {
+    string FromDate = 1;
+    string ToDate = 2;
+    string Period_Unit = 3;
+    string Channel_Upper = 4;
+    repeated string Channel_Lower = 5;
+    string Keyword = 7;
+    string Selected_Channel = 8;
+}
+
+
+message Request_Type3 {
+    string FromDate = 1;
+    string ToDate = 2;
+    string Period_Unit = 3;
+    string Channel_Upper = 4;
+    repeated string Channel_Lower = 5;
+    string Keyword = 7;
+    string Selected_Channel = 8;
+    repeated string Brand = 9;
+}
+
+message Response_Type1 {
+    string ErrorCode = 1;
+    string Message = 2;
+    repeated Table_DateGroup1 Product = 3;
+    repeated Table_DateGroup2 Delivery_Graph = 4;
+    repeated Table_DateGroup2 Delivery_Table = 5;
+    repeated Table_DateGroup1 Reviews_Graph = 6;
+    repeated Table_DateGroup1 Reviews_Table = 7;
+}
+
+message Response_Type2 {
+    string ErrorCode = 1;
+    string Message = 2;
+    repeated Table_DateGroup1 Regular_Graph = 3;
+    repeated Table_DateGroup1 Regular_Table = 4;
+    repeated Table_DateGroup1 Sale_Graph = 5;
+    repeated Table_DateGroup1 Sale_Table = 6;
+    repeated Table_DateGroup1 Reqular_Delivery_Graph = 7;
+    repeated Table_DateGroup1 Reqular_Delivery_Table = 8;
+    repeated Table_DateGroup1 Sale_Delivery_Graph = 9;
+    repeated Table_DateGroup1 Sale_Delivery_Table = 10;
+}
+
+message Response_Type3 {
+    string ErrorCode = 1;
+    string Message = 2;
+    repeated Table_DateValues1 DeliveryDays_NumOfProduct = 3;
+    repeated Table_DateValues4 Ratings_NumOfProduct = 4;
+    repeated Table_DateValues4 RegularPrice_Ratings = 5;
+    repeated Table_DateValues2 DeliveryDays_Ratings = 6;
+    repeated Table_DateValues5 RegularPrice_Rank = 7;
+}
+
+message Response_Type4 {
+    string ErrorCode = 1;
+    string Message = 2;
+    repeated Table_DateValues6 Data = 3;
+}
+
+message Response_Type5 {
+    string ErrorCode = 1;
+    string Message = 2;
+    repeated Table_DateGroup2 Product_Rank = 3;
+    repeated Table_DateGroup1 Regular_Price = 4;
+    repeated Table_DateValues7 Product_Rank_Table = 5;
+}
+
+service OnDetailPPIndicatorInfo {
+    rpc GetCommerce_Indicator(Request_Type1) returns (Response_Type1);
+    rpc GetPrice_Indicator(Request_Type1) returns (Response_Type2);
+    rpc GetPP_Indicator(Request_Type2) returns (Response_Type3);
+    rpc GetBrand_Distribution(Request_Type2) returns (Response_Type4);
+    rpc GetBrand_ProductRank(Request_Type3) returns (Response_Type5);
+}

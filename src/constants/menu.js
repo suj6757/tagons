@@ -20,5 +20,11 @@ const data = [
     label: 'GROCERIES',
     to: `${adminRoot}/about`,
   },
+  {
+    id: 'PRIME',
+    icon: 'iconsminds-library',
+    label: 'PRIME',
+    to: `${adminRoot}/prime`,
+  },
 ];
 export default data;

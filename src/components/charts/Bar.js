@@ -23,12 +23,16 @@ const Bar = (props) => {
       var colorArrr = [];
       var barlen = 0;
       var chartTypeName = "";
-      //console.log('Bar barSentiName ', props.activeTab , JSON.stringify(store2.iPfactorTrendandfactor) );
       if (!(store2.iPfactorTrendandfactor === null || store2.iPfactorTrendandfactor=== undefined || store2.iPfactorTrendandfactor === "" || JSON.stringify(store2.iPfactorTrendandfactor) === "{}")){
-        
-        if (props.activeTab === '1') {
-          iPfactorTrendandfactor = store2.iPfactorTrendandfactor.SentimentFactorData;
-          chartTypeName = "Sentiment Factor";
+        if (props.activeTab === '1') {          
+          if (store.SearchCondition.activeFirstTab === "1"){
+            iPfactorTrendandfactor = store2.iPfactorTrendandfactor.SentimentFactorData;
+            chartTypeName = "Sentiment Factor"; // ProductFactorData
+          }
+          else{
+            iPfactorTrendandfactor = store2.iPfactorTrendandfactor.ProductFactorData;
+            chartTypeName = "Product FactorData"; // ProductFactorData
+          }     
         }
         else{
           iPfactorTrendandfactor = store2.iPfactorTrendandfactor.BrandFactorData;
@@ -168,8 +172,14 @@ const Bar = (props) => {
       var chartTypeName = "";
       if (!(store2.iPfactorTrendandfactor === null || store2.iPfactorTrendandfactor=== undefined || store2.iPfactorTrendandfactor === "" || JSON.stringify(store2.iPfactorTrendandfactor) === "{}")){
         if (props.activeTab === '1') {
-          iPfactorTrendandfactor = store2.iPfactorTrendandfactor.SentimentFactorData;
-          chartTypeName = "Sentiment Factor";
+          if (store.SearchCondition.activeFirstTab === "1"){
+            iPfactorTrendandfactor = store2.iPfactorTrendandfactor.SentimentFactorData;
+            chartTypeName = "Sentiment Factor"; // ProductFactorData
+          }
+          else{
+            iPfactorTrendandfactor = store2.iPfactorTrendandfactor.ProductFactorData;
+            chartTypeName = "Product FactorData"; // ProductFactorData
+          }  
         }
         else{
           iPfactorTrendandfactor = store2.iPfactorTrendandfactor.BrandFactorData;
@@ -178,7 +188,7 @@ const Bar = (props) => {
         if (iPfactorTrendandfactor === null || iPfactorTrendandfactor=== undefined || iPfactorTrendandfactor === ""  ){
           iPfactorTrendandfactor = [];
         }
-        console.log('data', iPfactorTrendandfactor,store2.iPfactorTrendandfactor.SentimentFactorData,store2.iPfactorTrendandfactor.BrandFactorData );
+        // console.log('data', iPfactorTrendandfactor,store2.iPfactorTrendandfactor.SentimentFactorData,store2.iPfactorTrendandfactor.BrandFactorData );
 
         iPfactorTrendandfactor.map((tData,index) => {
           dataArr.push(tData.Value);

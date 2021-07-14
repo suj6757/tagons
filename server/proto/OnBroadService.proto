@@ -1,0 +1,90 @@
+syntax = "proto3";
+
+package OnBroadService;
+
+message Table_OneInt1 {
+    string date = 1;
+    int64 value = 2;
+}
+
+message Table_TwoInt1 {
+    int64 Price = 1;
+    int64 TotalCount = 2;
+}
+
+message Table_PriceList {
+    string Channel = 1;
+    repeated Table_TwoInt1 Data = 2;
+}
+
+message Table_TwoFloat1 {
+    string Competitors = 1;
+    double Sale = 2;
+    double NotSale = 3;
+}
+
+message Table_TwoFloat2 {
+    string Competitors = 1;
+    double Points = 2;
+    double NotPoints = 3;
+}
+
+message Table_DateValues1 {
+    string Channel = 1;
+    repeated Table_OneInt1 Data = 2;
+}
+
+message Request_Type1 {
+    string FromDate = 1;
+    string ToDate = 2;
+    string Period_Unit = 3;
+    repeated string Competitors = 4;
+    string Keyword = 5;
+}
+
+message Request_Type2 {
+    string FromDate = 1;
+    string ToDate = 2;
+    string Period_Unit = 3;
+    repeated string Competitors = 4;
+    string Keyword = 5;
+    string Tab_Selected = 6;
+}
+
+message Request_Type3 {
+    string FromDate = 1;
+    string ToDate = 2;
+    string Period_Unit = 3;
+    string Keyword = 5;
+    string Selected_Competitors = 6;
+}
+
+message Response_Type1 {
+    string ErrorCode = 1;
+    string Message = 2;
+    repeated Table_DateValues1 Product = 3;
+    repeated Table_DateValues1 Price = 4;
+    repeated Table_DateValues1 Market = 5;
+    repeated Table_DateValues1 Reviews = 6;
+    repeated Table_DateValues1 Carts = 7;
+}
+
+message Response_Type2 {
+    string ErrorCode = 1;
+    string Message = 2;
+    repeated Table_TwoFloat1 Sales = 3;
+    repeated Table_TwoFloat2 Points = 4;
+}
+
+message Response_Type3 {
+    string ErrorCode = 1;
+    string Message = 2;
+    repeated Table_TwoInt1 Total_Price = 3;
+    repeated Table_PriceList Price_List = 4;
+}
+
+service OnBroadServiceInfo {
+    rpc GetBroad_Market(Request_Type1) returns (Response_Type1);
+    rpc GetBenefits_Type(Request_Type2) returns (Response_Type2);
+    rpc GetPrice_Distribution(Request_Type3) returns (Response_Type3);
+}

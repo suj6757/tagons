@@ -1,0 +1,28 @@
+syntax = "proto3";
+
+package CommonService;
+
+message Request_Empty {
+}
+
+message Table_TwoString {
+    string ChannelType = 1;
+    string Channel = 2;
+}
+
+
+message Table_OneString {
+    string Channel = 1;
+}
+
+
+message Response_Type1 {
+    string ErrorCode = 1;
+    string Message = 2;
+    repeated Table_TwoString Social = 3;
+    repeated Table_OneString OnlineShopping = 4;
+}
+
+service CommonInfo {
+    rpc GetChannel_List(Request_Empty) returns (Response_Type1);
+}
