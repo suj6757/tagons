@@ -64,6 +64,7 @@ p {
   position: relative;
 
   main {
+    width: calc(100vw - 330px);
     min-height: calc(100vh - 140px);
     flex-grow: 1;
     flex-direction: column;
@@ -165,12 +166,19 @@ p {
                 margin: 0;
               }
               a {
-                padding-bottom: 5px;
+                padding: 0 0 5px 0;
                 border-bottom: 2px solid transparent;
                 font-size: 20px;
                 color: #fff;
 
+                &.active {
+                  background: transparent;
+                }
+                &:active {
+                  background: transparent;
+                } 
                 &:hover {
+                  background: transparent;
                   border-bottom-color: #444;
                   color: #444;
                 }
@@ -323,22 +331,52 @@ p {
     padding: 0 !important;
 
     .pro-menu-item {
+      position: relative;
 
       > .pro-inner-item {
         height: 60px;
-        padding: 0 26px;
+        padding: 0 !important;
         border-bottom: 1px solid #888;
-      }
+        cursor: default !important;
 
-      &.active {
-        border-left: 5px solid #f9a21b;
+        > .pro-item-content {
+          width: 100%;
+          height: 100%;
 
-        .pro-inner-item {
-          color: #f9a21b;
+          a{
+            display: block;
+            padding: 0 26px;
+            line-height: 60px;
+
+            &:before {
+              content: '';
+              position: absolute;
+              top: 0;
+              left: 0;
+              width: 5px;
+              background-color: transparent;
+            }
+            &.active {
+              color: #f9a21b;
+              &:before {
+                background-color: #f9a21b;
+              }
+            }
+            &:hover {
+              .pro-inner-item {
+                color: #f9a21b;
+              }
+            }
+            &:active {
+              .pro-inner-item {
+                color: #f9a21b;
+              }
+            }
+          }
         }
+
       }
     }
-    
   }
 
   &.collapsed {
@@ -346,8 +384,17 @@ p {
     min-width: 64px !important;
 
     .pro-menu > ul > .pro-menu-item > .pro-inner-item {
-      padding: 8px 28px 8px 27px;
+      padding: 8px 27px 8px 27px !important;
+
+      >.pro-item-content {
+
+        a {
+          padding: 0;
+          line-height: 43px;
+        }
+      }
     }
+
     .pro-menu .pro-menu-item.active {
       border: 0;
 
@@ -356,6 +403,12 @@ p {
         right: auto;
         background-color: #f9a21b;
         cursor: default;
+      }
+      &:hover {
+        color: #f9a21b;
+      }
+      &:active {
+        color: #f9a21b;
       }
     }
 
@@ -983,6 +1036,79 @@ table {
       }
     }
   }
+}
+
+.apexcharts-bar-area.active {
+  fill: #f9a21b;
+}
+
+// 차트 툴팁 스타일
+.apexcharts-tooltip {
+  border-radius: 0 !important;
+  border: 0 !important;
+  margin: 15px 0 0 7px !important;
+  overflow: visible !important;
+}
+.arrow_box {
+  position: relative;
+  padding: 5px;
+  background: #fff;
+  border: 1px solid #4e8ac1;
+}
+.arrow_box::before {
+  content: '';
+  position: absolute;
+  display: block;    
+  width: 0px;        
+  left: 0;
+  top: 50%;
+  border: 7px solid transparent;
+  border-left: 0;
+  border-right: 7px solid #4f8bc1;
+  transform: translate(calc(-100% - 0px), -50%);
+}
+.arrow_box span {
+  color: #4f8bc1;
+}
+
+.tab-list {
+  padding: 0;
+  margin: 25px 0 0 0;
+  overflow: hidden;
+
+  li {
+    position: relative;
+    float: left;
+    min-width: 180px;
+    margin: 0 5px 0 0;
+    padding: 12px 0;
+    border-radius: 7px 7px 0 0;
+    border: 1px solid #d1d1d1;
+    list-style: none;
+    cursor: pointer;
+    text-align: center;
+    z-index: 10;
+    
+    span {
+      font-size: 20px;
+      color: #d1d1d1;
+    }
+    &.active {
+      border-color: #f9a21b;
+
+      span {
+        color: #f9a21b;
+      }
+    }
+  }
+}
+
+.tab-chart-area {
+  margin-top: -1px;
+}
+
+.table-fixed {
+  table-layout: fixed;
 }
 
 @media (max-width: 1906px) { 

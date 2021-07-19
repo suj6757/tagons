@@ -4,6 +4,10 @@ import { Redirect, Route, Switch } from 'react-router-dom';
 const Prime = React.lazy(() =>
   import(/* webpackChunkName: "second" */ './Prime')
 );
+const Channels = React.lazy(() =>
+  import(/* webpackChunkName: "second" */ './Channels')
+);
+
 const PrimeLink = ({ match }) => (
   <Suspense fallback={<div className="loading" />}>
     <Switch>
@@ -11,6 +15,10 @@ const PrimeLink = ({ match }) => (
       <Route
         path={`${match.url}/prime`}
         render={(props) => <Prime {...props} />}
+      />
+      <Route
+        path={`${match.url}/channels`}
+        render={(props) => <Channels {...props} />}
       />
       <Redirect to="/error" />
     </Switch>

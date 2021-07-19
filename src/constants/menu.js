@@ -26,5 +26,11 @@ const data = [
     label: 'PRIME',
     to: `${adminRoot}/prime`,
   },
+  {
+    id: 'TREND',
+    icon: 'iconsminds-library',
+    label: 'TREND',
+    to: `${adminRoot}/trend`,
+  },
 ];
 export default data;

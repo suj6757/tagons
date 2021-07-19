@@ -14,13 +14,15 @@ import {
   DropdownMenu, } from 'reactstrap';
 import { NavLink } from 'react-router-dom';
 import { connect } from 'react-redux';
+import axios from 'axios';
 
 import { Formik, Form, Field } from 'formik';
 import { NotificationManager } from '../../components/common/react-notifications'; // eslint-disable-line no-unused-vars
 
-import { loginUser, logoutUser } from '../../redux/actions';
 import { Colxx } from '../../components/common/CustomBootstrap';
 import IntlMessages from '../../helpers/IntlMessages';
+import { login, UserInfo, logout } from '../../services/LoginService';
+import { setCurrentUser } from '../../helpers/Utils';
 
 const validatePassword = (value) => {
   let error;
@@ -32,20 +34,11 @@ const validatePassword = (value) => {
   return error;
 };
 
-const validateEmail = (value) => {
-  let error;
-  if (!value) {
-    error = 'Please enter your email address';
-  } else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(value)) {
-    error = 'Invalid email address';
-  }
-  return error;
-};
-
 const Login = ({ history, loading, error, loginUserAction , logoutUserAction}) => {
-  const [loginBefore, setLoginBefore] = useState(true);
-  const [email] = useState('demo@gogo.com');
-  const [password] = useState('gogo123');
+  const [loginBefore, setLoginBefore] = useState(UserInfo() !== null);
+  const [email] = useState('testuser');
+  const [password] = useState('1234');
+  const [rememberMe] = useState(false);
 
   useEffect(() => {
     if (error) {
@@ -57,18 +50,47 @@ const Login = ({ history, loading, error, loginUserAction , logoutUserAction}) =
     setLoginBefore(false);
   }
 
+  const onLogout = () => {
+    logout();
+  }
+
   const onUserLogin = (values) => {
+    var requestData = {};
     if (!loading) {
       if (values.email !== '' && values.password !== '') {
-        loginUserAction(values, history);
+        requestData.UserId = values.email;
+        requestData.UserPassword = values.password;
+        axios.post("/login/Login", requestData)
+        .then((response) => {
+          console.log('userLogin ->', response.data);
+          let errCode = response.data.ErrorCode;
+          let errMsg = response.data.Message;
+          if (errCode === "OK") {
+            // 로그인 성공
+            login(response.data.Userinfo, rememberMe);
+            setCurrentUser(response.data.Userinfo);
+            // TODO: Prime -> State 이동
+            history.push('/app/prime/prime');
+            console.log('CompanyName', UserInfo().CompanyName);
+          }
+          else {
+            // 로그인 실패
+            // alert(errMsg);
+            NotificationManager.error(errMsg, '로그인 실패', 3000, null, null, '');
+          }
+        })
+        .catch(function (error1) {
+            console.log(error1);
+        });
       }
     }
   };
 
-  const initialValues = { email, password };
+  const initialValues = { email, password, rememberMe };
 
   const handleLogout = () => {
-    logoutUserAction(history);
+    // logoutUserAction(history);
+    console.log('handleLogout');
   };
 
   return (
@@ -85,10 +107,11 @@ const Login = ({ history, loading, error, loginUserAction , logoutUserAction}) =
             <span>
               <img alt="Profile" src="/assets/img/pic_default.png" />
             </span>
-            <p>관리자</p>
+            <p>{UserInfo() !== null ? UserInfo().CompanyName : ""}</p>
           </div>
           <DropdownItem>MY PAGE</DropdownItem>
           <DropdownItem onClick={() => onLoginView()}>LOGIN</DropdownItem>
+          <DropdownItem onClick={() => onLogout() }>LOGOUT</DropdownItem>
         </DropdownMenu>
       </UncontrolledDropdown>
     </div>
@@ -117,13 +140,7 @@ const Login = ({ history, loading, error, loginUserAction , logoutUserAction}) =
                     <Field
                       className="form-control"
                       name="email"
-                      validate={validateEmail}
                     />
-                    {errors.email && touched.email && (
-                      <div className="invalid-feedback d-block">
-                        {errors.email}
-                      </div>
-                    )}
                   </FormGroup>
                   <FormGroup className="form-group has-float-label">
                     <Field
@@ -163,6 +180,7 @@ const Login = ({ history, loading, error, loginUserAction , logoutUserAction}) =
                     type="checkbox"
                     id="exCustomCheckbox"
                     label="Remember me"
+                    name="rememberMe"
                     className="chk-remember"
                   />
                 </Form>
@@ -177,7 +195,8 @@ const Login = ({ history, loading, error, loginUserAction , logoutUserAction}) =
   </>
   );
 };
-const mapStateToProps = ({ authUser }) => {
+export default Login ;
+/* const mapStateToProps = ({ authUser }) => {
   const { loading, error } = authUser;
   return { loading, error };
 };
@@ -185,4 +204,4 @@ const mapStateToProps = ({ authUser }) => {
 export default connect(mapStateToProps, {
   loginUserAction: loginUser,
   logoutUserAction: logoutUser,
-})(Login);
+})(Login); */

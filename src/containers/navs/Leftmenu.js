@@ -1,4 +1,6 @@
+/* eslint no-unused-vars: "off" */
 import React, { useState } from "react";
+import { Redirect, Route, Switch, Link } from 'react-router-dom';
 import {
   ProSidebar,
   Menu,
@@ -7,10 +9,10 @@ import {
   SidebarContent,
 } from "react-pro-sidebar";
 import "react-pro-sidebar/dist/css/styles.css";
+import {LeftPrime ,LeftTrend, LeftSocial, LeftOnline, LeftSimulator, LeftAbout} from './Leftmenulist';
 
 const LeftMenu = () => {
   const [menuCollapse, setMenuCollapse] = useState(false);
-  const [menu, setMenu] = useState('menu');
 
   const menuIconClick = () => (
     menuCollapse ? setMenuCollapse( false ) : setMenuCollapse( true )
@@ -30,25 +32,15 @@ const LeftMenu = () => {
         </SidebarHeader>
         <SidebarContent>
           <Menu>
-           {/* 메뉴별 컴포넌트 대체 작업 예정 */}
-            {(() => {
-              switch (menu) {
-                case 'prime':
-                  return <MenuItem active>STATES</MenuItem>;
-                case 'trend':
-                  return <MenuItem active>FASHION</MenuItem>;
-                case 'social':
-                  return <MenuItem active>SENTIMENT ANALYSIS</MenuItem>;
-                case 'online':
-                  return <MenuItem active>ON-BROAD</MenuItem>;
-                case 'simulator':
-                  return <MenuItem active>simulator</MenuItem>;
-                case 'about':
-                  return <MenuItem active>about</MenuItem>;
-                default:
-                  return null;
-              }
-            })()}
+            <Switch>
+              <Route path={['/app/prime/prime', '/app/prime/channels']} component={LeftPrime} />
+              <Route exact path={['/app/gogo/start', '/app/trend/overview', '/app/trend/social', '/app/trend/ecommerce', '/app/trend/googleAnalytics']} component={LeftTrend} />
+              <Route path="/app/socialListening" component={LeftSocial} />
+              <Route path="/app/onlineRetailer" component={LeftOnline} />
+              <Route path="/app/simulator" component={LeftSimulator} />
+              <Route path="/app/about" component={LeftAbout} />
+              <Redirect to="/error" />
+            </Switch>
           </Menu>
         </SidebarContent>
       </ProSidebar>

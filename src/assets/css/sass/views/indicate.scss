@@ -64,6 +64,25 @@
 }
 
 .graph-area{
+    &.title-type{
+        position: relative;
+        border: 1px solid #ddd;
+        padding: 60px 100px;
+    }
+
+    .bx_name{
+        position: absolute;
+        top: -1px;
+        left: -1px;
+        height: 60px;
+        border: 1px solid #ddd;
+        background: #f1f1f1;
+        padding: 0 10px;
+        font-size: 20px;
+        text-align: center;
+        line-height: 60px;
+    }
+
     ul{
         display: flex;
         padding: 0;
@@ -169,8 +188,8 @@
         color: #bbb;
 
         &.active{
-            background-color: #bbb;
-            border-color: #bbb;
+            background-color: #f9a21b;
+            border-color: #f9a21b;
             color: #fff;
         }
 
@@ -203,4 +222,100 @@
             }
         }
     }
+}
+
+.tbl-indicator{
+
+    thead{
+        th{
+            text-align: center;
+            color: #666;
+        }
+    }
+    
+
+    tbody{
+        td{
+            font-size: 13px;
+            text-align: center;
+            color: #888;
+        }
+    }
+}
+.overview_area {
+    .table-hover {
+        text-align: center;
+        
+        thead{
+            th{
+                background: #a6a6a6;
+                color: #fff;
+                padding: 23px 0;
+            }
+        }
+
+        tbody{
+            tr:hover{
+                background: #f9a21b;
+                color: #fff;
+                cursor: pointer;
+            }
+            td{
+                padding: 30px 0;
+            }
+        }
+    }
+}
+
+.bx_select_area{
+    position: relative;
+    .select-title{
+        position: absolute;
+        top: 6px;
+        left: 0;
+        font-size: 18px;
+        color: #888;
+    }
+    .select-box{
+        width: 180px;
+        margin-left: 90px;
+    }
+}
+
+.lookup-area{
+    .check-single-box{
+        display: none;
+
+        + label{
+           display: inline-block;
+           position: relative;
+           padding-left: 18px;
+           margin-bottom: 0;
+
+           &::before{
+            content:'';
+            position:absolute;
+            left:0;
+            top:3px;
+            width:12px;
+            height:12px;
+            text-align:center;
+            background:#fff;
+            border:1px solid #ccc;
+            box-sizing:border-box;
+           }
+        }
+        &:checked{
+            + label{
+                &::before{
+                    border-color: #f9a21b;
+                    background-color: #f9a21b;
+                }
+            }
+        }
+    }
+}
+
+.mt0{
+    margin-top: 0 !important;
 }
