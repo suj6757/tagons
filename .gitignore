@@ -12,8 +12,6 @@ logs
 node_modules
 bower_components
 
-eslintcache
-    
 *.sublime*
 
 psd

@@ -22,7 +22,7 @@ class Prime extends React.Component {
     let userData = UserInfo();
     date1.setDate(date1.getDate() - 9);
     date2.setDate(date2.getDate() - 2);
-    console.log('UserInfo -> ', UserInfo());
+
     this.state = {
       barChart : {
         options: {
@@ -115,15 +115,6 @@ class Prime extends React.Component {
       endDate: e
     });  
   }; 
-
-  /* listClickEvt = (evt) => {
-    const getNum = Number(evt.currentTarget.className.replace('item-',''));
-    console.log('listClickEvt !! ' , getNum);
-    this.setState({
-      activeId : getNum
-    });
-    getChartData(getNum);
-  } */
 
   SearchClick = (e) => {
     console.log('SearchClick !!');
