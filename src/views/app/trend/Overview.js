@@ -464,7 +464,17 @@ class Overview extends React.Component {
 
       }
       const getOverviewTotal = (searchCondition) => {
-        post('/trendoverview/GetBasic_Overview_Total', searchCondition).
+        this.setState(prev => ({
+            ...prev,
+            searchCondition : {
+                Selected_Tab : "TOTAL",
+                Selected_Channel : "total"
+            }
+        }),
+        () => {
+          console.log('getOverviewTotal : ' , this.state.searchCondition);
+
+          post('/trendoverview/GetBasic_Overview_Total', this.state.searchCondition).
           then((response) => {
               console.log(response);
               //라인
@@ -529,18 +539,23 @@ class Overview extends React.Component {
                   }
               }));
           });
-
+        });
       }
 
       const getOverviewIDRate = (searchCondition) => {
-        searchCondition.Selected_Tab = "IDRATE";
-        searchCondition.Selected_Channel = "Total";
-        console.log('getOverviewIDRate -> ' , searchCondition);
+        this.setState(prev => ({
+            ...prev,
+            searchCondition : {
+                Selected_Tab : "IDRATE",
+                Selected_Channel : "Total"
+            }
+        }),
+        () => {
+          console.log('getOverviewIDRate : ' , this.state.searchCondition);
 
-        post("/trendoverview/GetBasic_Overview_ID_Rate", searchCondition)
+          post("/trendoverview/GetBasic_Overview_ID_Rate", this.state.searchCondition)
           .then((response) => {
-              if (response.data.ErrorCode === 'OK'){    
-                console.log('getOverviewIDRate ' , response.data );
+              if (response.data.ErrorCode === 'OK') {
                 console.log(response);
                 //바
                 let barSeriesArr = [];
@@ -615,6 +630,7 @@ class Overview extends React.Component {
           .catch(function (error) {
               console.log(error);
           });
+        });
       }
 
       // 날짜 포맷
