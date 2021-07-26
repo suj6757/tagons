@@ -66,7 +66,7 @@ class Overview extends React.Component {
             series: [
                 {
                   name: "Total Graph",
-                  data: [2.4, 4.4, 1.8, 2.8, 2.4, 4.4, 1.8, 4, 2.4, 4.4, 1.8, 2.8, 2.4, 4.4, 1.8, 2.8, 2.4,4.4, 1.8, 2.8, 2.4, 4.4, 1.8, 2.8, 2.4, 4.4, 1.8, 2.8, 2.4, 4.4]
+                  data: []
                 },
               ],
               height: 500,

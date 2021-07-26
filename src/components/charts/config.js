@@ -284,6 +284,7 @@ export const scatterDatetimeChartOptions = {
 
 export const heatMapGraphData = {
     series: [
+      /*
       {
         name: 'Coupang',
         data: [
@@ -572,6 +573,7 @@ export const heatMapGraphData = {
           {x: "1/31", y: 11},
         ]
       },
+      */
     ],
     height: 500,
     options: {
