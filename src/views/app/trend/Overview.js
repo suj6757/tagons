@@ -36,8 +36,10 @@ import {
   gapChartGraph
 } from '../../../components/charts/config';
 import { login, UserInfo, logout } from '../../../services/LoginService';
-import axios from 'axios';
+import { post } from 'axios';
 
+var formData;
+var config;
 class Overview extends React.Component {
     constructor(props) {
       super(props); // React.Component의 생성자 메소드를 먼저 실행
@@ -54,6 +56,9 @@ class Overview extends React.Component {
         searchBtnClick : false ,
         searchStart : false , 
         userInfo : userData ,
+        keyWordtext : "",
+        selectedOptionsBase : [] , 
+        searchCondition: {} ,
         // eslint-disable-next-line react/no-unused-state
         selectedOptions : [],
         // eslint-disable-next-line react/no-unused-state
@@ -128,10 +133,56 @@ class Overview extends React.Component {
                 }, 
                 
               },
-        }, 
+        },
+        idrateGraph : {
+          series: [],
+          height: 350,
+          options: {
+            grid: {
+              show: true,
+            },
+            chart: {
+              type: 'bar',
+              toolbar: {
+                show: false,
+              },
+              zoom: {
+                enabled: false
+              },
+            },
+            colors :['#a5a5a5'],
+            plotOptions: {
+              bar: {
+                colors: {
+                  ranges: [{
+                    from: -9999999,
+                    to: 0,
+                    color: '#2f5597'
+                  }]
+                },
+                columnWidth: '50%',
+              }
+            },
+            dataLabels: {
+              enabled: true,
+              offsetY: 40,
+              style: {
+                fontSize: '12px',
+                colors: ["#000"]
+              }
+            },
+            xaxis: {
+              categories: [],
+            }, 
+            yaxis: {
+              show: false
+            }, 
+            
+          },
+        },
         // eslint-disable-next-line react/no-unused-state
         checkInfo: [
-          { id: 1, value: "Daily", isChecked: false },
+          { id: 1, value: "Daily", isChecked: true },
           { id: 2, value: "Weekly", isChecked: false },
           { id: 3, value: "Monthly", isChecked: false },
           { id: 4, value: "Yearly", isChecked: false }
@@ -148,15 +199,174 @@ class Overview extends React.Component {
           { 'No': 8, 'Channel1': "Coupang", 'Channel2' : 'Naver', "Gap": 0.56,},
           { 'No': 9, 'Channel1': "Coupang", 'Channel2' : 'Naver', "Gap": 0.56,},
           { 'No': 10, 'Channel1': "Coupang", 'Channel2' : 'Naver', "Gap": 0.56,},
-        ]
+        ],
+        call : []
       }
     }
 
+    componentDidMount = () => {
+      //toggle('1');
+    }
+
+    /* componentDidUpdate = (prevProps, prevState) => {
+        //탭 변경시
+        if(this.state.activeTab !== prevState.activeTab) {
+            formData = new FormData();
+            formData.append('param', this.state.call);
+            config = {
+                headers : {
+                    'content-type' : 'multipart/form-data'
+                }
+            }
+
+            //Total
+            if(this.state.activeTab == '1') {
+                post('/trendoverview/GetBasic_Overview_Total', formData, config).
+                then((response) => {
+                    console.log(response);
+                    //라인
+                    let lineSeriesArr = [];
+                    let lineCategoriesArr = [];
+                    let lineXArr = [];
+                    response.data.LineData.map((data) => {
+                        lineSeriesArr.push(data.Value);
+                        lineCategoriesArr.push(Number(data.Date.substr(8, 2)));
+                        lineXArr.push(data.Date);
+                    });
+                    
+                    //히트맵
+                    let heatmapSeriesData = [];
+                    response.data.HeatMapData.map((data, i) => {
+                        let dataArray = [];
+                        data.Data.map((res, j) => {
+                            dataArray.push({
+                                x: res.Date,
+                                y: res.Value
+                            });
+                        });
+        
+                        heatmapSeriesData.push({
+                            name: data.Channel,
+                            data: dataArray
+                        });
+                    });
+        
+                    heatMapGraphData.series = heatmapSeriesData;
+        
+                    this.setState(prev => ({
+                        ...prev,
+                        totalGraph : {
+                            options : {
+                              xaxis: {
+                                  categories: lineCategoriesArr,
+                                  title: {
+                                      text: ''
+                                  },
+                                  tooltip: {
+                                      enabled: false
+                                  }
+                              },
+                              tooltip: {
+                                  x: {
+                                      formatter: function(value) {
+                                          return lineXArr[value - 1];
+                                      }
+                                  }
+                              },
+                              legend: {
+                                  position: 'top',
+                                  horizontalAlign: 'right',
+                                  floating: true
+                              }
+                          },
+                          series: [{
+                              name : 'total',
+                              data : lineSeriesArr
+                          }]
+                        }
+                    }));
+                });
+            }
+            //I/D RATE
+            else if(this.state.activeTab == '2') {
+                post('/trendoverview/GetBasic_Overview_ID_Rate', formData, config).
+                then((response) => {
+                    console.log(response);
+                    //바
+                    let barSeriesArr = [];
+                    let barCategoriesArr = [];
+                    let barXArr = [];
+
+                    response.data.BarData.map((data) => {
+                        console.log(data.Channel);
+                    });
+                    response.data.BarData[0].Data.map((data) => {
+                        barSeriesArr.push(data.Value);
+                        barCategoriesArr.push(Number(data.Date.slice(-2)));
+                        barXArr.push(data.Date);
+                    });
+                  
+                    //히트맵
+                    let heatmapSeriesData = [];
+                    response.data.HeatMapData.map((data, i) => {
+                        let dataArray = [];
+                        data.Data.map((res, j) => {
+                            dataArray.push({
+                                x: res.Date,
+                                y: res.Value
+                            });
+                        });
+    
+                        heatmapSeriesData.push({
+                            name: data.Channel,
+                            data: dataArray
+                        });
+                    });
+    
+                    heatMapGraphData.series = heatmapSeriesData;
+
+                    this.setState(prev => ({
+                        ...prev,
+                        idrateGraph : {
+                            options : {
+                              xaxis: {
+                                  categories: barCategoriesArr,
+                                  title: {
+                                      text: ''
+                                  },
+                                  tooltip: {
+                                      enabled: false
+                                  }
+                              },
+                              tooltip: {
+                                  x: {
+                                      formatter: function(value) {
+                                          return barXArr[value - 1];
+                                      }
+                                  }
+                              },
+                              legend: {
+                                  position: 'top',
+                                  horizontalAlign: 'right',
+                                  floating: true
+                              }
+                          },
+                          series: [{
+                              name : 'Cash Flow',
+                              data : barSeriesArr
+                          }]
+                        }
+                    }));
+                });
+            }
+        }
+    } */
+
     ChangeStartDate = (e) => { 
         this.setState({  
-          startDate: e,
+            startDate: e,
         });
-      };  
+    };  
       
     ChangeEndDate = (e) => { 
         this.setState({  
@@ -164,23 +374,17 @@ class Overview extends React.Component {
         });  
     };
     
-    toggle = (tab) => {
-        const { activeTab } = this.state;
-
-        if(activeTab !== tab){
-            this.setState({
-                activeTab : tab
-            })
-        }
-    }
-
     handleOneChecked = (evt) => {
       // eslint-disable-next-line prefer-const
       let { checkInfo } = this.state;
       checkInfo.forEach(item => {
         if (item.value === evt.target.value){
-          // eslint-disable-next-line no-param-reassign
-          item.isChecked = evt.target.checked;
+          if (!item.isChecked ){
+            item.isChecked = evt.target.checked;
+          }         
+        }
+        else{
+          item.isChecked = false;
         }
       });
       this.setState({ checkInfo });
@@ -237,14 +441,182 @@ class Overview extends React.Component {
         { label: 'Naver_news', value: 'social_val02', key: 1 },
         { label: 'Naver_blog', value: 'social_val03', key: 2 },
       ];
-  
+     const onKeywordChange = (e) =>{
+        this.setState({
+          keyWordtext : e.target.value
+        }); 
+      };
       const validateKeyword = (value) => {
           let error;
-          if (!value) {
+          if (!statesItems.keyWordtext) {
             error = 'No Keywords';
           } 
           return error;
       };
+      const setSelectedOptions = (val) => {
+        var channelList = [] ;
+        var searchCondition = statesItems.searchCondition;
+        channelList.push(val.value);
+        searchCondition.Channel = channelList;
+        this.setState({  
+          selectedOptions: val
+        }); 
+
+      }
+      const getOverviewTotal = (searchCondition) => {
+        post('/trendoverview/GetBasic_Overview_Total', searchCondition).
+          then((response) => {
+              console.log(response);
+              //라인
+              let lineSeriesArr = [];
+              let lineCategoriesArr = [];
+              let lineXArr = [];
+              response.data.LineData.map((data) => {
+                  lineSeriesArr.push(data.Value);
+                  lineCategoriesArr.push(Number(data.Date.substr(8, 2)));
+                  lineXArr.push(data.Date);
+              });
+              
+              //히트맵
+              let heatmapSeriesData = [];
+              response.data.HeatMapData.map((data, i) => {
+                  let dataArray = [];
+                  data.Data.map((res, j) => {
+                      dataArray.push({
+                          x: res.Date,
+                          y: res.Value
+                      });
+                  });
+  
+                  heatmapSeriesData.push({
+                      name: data.Channel,
+                      data: dataArray
+                  });
+              });
+  
+              heatMapGraphData.series = heatmapSeriesData;
+  
+              this.setState(prev => ({
+                  ...prev,
+                  totalGraph : {
+                      options : {
+                        xaxis: {
+                            categories: lineCategoriesArr,
+                            title: {
+                                text: ''
+                            },
+                            tooltip: {
+                                enabled: false
+                            }
+                        },
+                        tooltip: {
+                            x: {
+                                formatter: function(value) {
+                                    return lineXArr[value - 1];
+                                }
+                            }
+                        },
+                        legend: {
+                            position: 'top',
+                            horizontalAlign: 'right',
+                            floating: true
+                        }
+                    },
+                    series: [{
+                        name : 'total',
+                        data : lineSeriesArr
+                    }]
+                  }
+              }));
+          });
+
+      }
+
+      const getOverviewIDRate = (searchCondition) => {
+        searchCondition.Selected_Tab = "IDRATE";
+        searchCondition.Selected_Channel = "Total";
+        console.log('getOverviewIDRate -> ' , searchCondition);
+
+        post("/trendoverview/GetBasic_Overview_ID_Rate", searchCondition)
+          .then((response) => {
+              if (response.data.ErrorCode === 'OK'){    
+                console.log('getOverviewIDRate ' , response.data );
+                console.log(response);
+                //바
+                let barSeriesArr = [];
+                let barCategoriesArr = [];
+                let barXArr = [];
+
+                response.data.BarData.map((data) => {
+                    console.log(data.Channel);
+                });
+                response.data.BarData[0].Data.map((data) => {
+                    barSeriesArr.push(data.Value);
+                    barCategoriesArr.push(Number(data.Date.slice(-2)));
+                    barXArr.push(data.Date);
+                });
+              
+                //히트맵
+                let heatmapSeriesData = [];
+                response.data.HeatMapData.map((data, i) => {
+                    let dataArray = [];
+                    data.Data.map((res, j) => {
+                        dataArray.push({
+                            x: res.Date,
+                            y: res.Value
+                        });
+                    });
+
+                    heatmapSeriesData.push({
+                        name: data.Channel,
+                        data: dataArray
+                    });
+                });
+
+                heatMapGraphData.series = heatmapSeriesData;
+
+                this.setState(prev => ({
+                    ...prev,
+                    idrateGraph : {
+                        options : {
+                          xaxis: {
+                              categories: barCategoriesArr,
+                              title: {
+                                  text: ''
+                              },
+                              tooltip: {
+                                  enabled: false
+                              }
+                          },
+                          tooltip: {
+                              x: {
+                                  formatter: function(value) {
+                                      return barXArr[value - 1];
+                                  }
+                              }
+                          },
+                          legend: {
+                              position: 'top',
+                              horizontalAlign: 'right',
+                              floating: true
+                          }
+                      },
+                      series: [{
+                          name : 'Cash Flow',
+                          data : barSeriesArr
+                      }]
+                    }
+                }));
+              }
+              else{
+                console.log('getOverviewIDRate error');
+              }
+          })
+          .catch(function (error) {
+              console.log(error);
+          });
+      }
+
       // 날짜 포맷
       const dateString = (dateValue) => {
         let retStr = '';
@@ -270,6 +642,8 @@ class Overview extends React.Component {
         var searchCondition = {} ;
         var ChannelUpper = [];
         var ChannelLower = [];
+        var selectList = [];
+        var periodUnit = "";
         this.setState({  
           searchBtnClick: false
         });
@@ -278,14 +652,24 @@ class Overview extends React.Component {
           searchStart : false , 
         });
         if (searchChannel.length > 0 ){
+           selectList.push({ label: 'Total', value: 'Total' , channelUp : "Total" , key: 0 });
            searchChannel.forEach(function(item,idx){
              ChannelUpper.push(item.type);
              ChannelLower.push(item.name);
+             selectList.push({ label: item.name, value: item.name, channelUp : item.type , key: idx + 1});
            });
         }
         else{
           console.log('채널 선택 없음');
         }
+        statesItems.checkInfo.forEach(item => {
+          if (item.isChecked){
+            periodUnit = item.value;
+          }
+        });
+        this.setState({  
+          selectedOptionsBase: selectList ,
+        });
         searchCondition.FromDate = dateString(statesItems.startDate); 
         searchCondition.ToDate = dateString(statesItems.endDate); 
         searchCondition.Period_Unit = "Daily";
@@ -298,9 +682,40 @@ class Overview extends React.Component {
         this.setState({  
           searchCondition: searchCondition ,
           searchStart : true , 
+          selectedOptions: { label: 'Total', value: 'Total' , channelUp : "Total" , key: 0 } ,
         });
-        ////여기서 조회 API 구현하면 됨
+        //여기서 조회 API 구현하면 됨
+        if (statesItems.activeTab === '1'){
+          // 
+          console.log('Total');
+        }
+        else if (statesItems.activeTab === '2'){
+          //
+          getOverviewIDRate(searchCondition);
+        }
+        else if (statesItems.activeTab === '3'){
+          //
+          console.log('GAP');
+        }
+        
       };
+      const toggle = (tab) => {
+        const { activeTab } = this.state;
+        if(activeTab !== tab){
+            if (tab === "1"){
+              getOverviewTotal(statesItems.searchCondition);
+            }
+            else if (tab === "2"){
+              getOverviewIDRate(statesItems.searchCondition);
+            }
+            else if (tab === "3"){
+              console.log('GAP');
+            }
+            this.setState({
+                activeTab : tab
+            })
+        }
+      }
       return(
           <div className='overview_area'>
               <Row>
@@ -381,6 +796,8 @@ class Overview extends React.Component {
                                           <Field
                                               className="form-control"
                                               name="keyword"
+                                              value={statesItems.keyWordtext}
+                                              onChange={onKeywordChange}
                                               validate={validateKeyword}
                                           />
                                           {errors.keyword && touched.keyword && (
@@ -415,7 +832,7 @@ class Overview extends React.Component {
                                   <NavItem>
                                   <NavLink
                                       className={classnames({ active: statesItems.activeTab === '1' })}
-                                      onClick={() => { this.toggle('1'); }}
+                                      onClick={() => { toggle('1'); }}
                                   >
                                       Total
                                   </NavLink>
@@ -423,7 +840,7 @@ class Overview extends React.Component {
                                   <NavItem>
                                       <NavLink
                                           className={classnames({ active: statesItems.activeTab === '2' })}
-                                          onClick={() => { this.toggle('2'); }}
+                                          onClick={() => { toggle('2'); }}
                                       >
                                           I/D RATE
                                       </NavLink>
@@ -431,7 +848,7 @@ class Overview extends React.Component {
                                   <NavItem>
                                       <NavLink
                                           className={classnames({ active: statesItems.activeTab === '3' })}
-                                          onClick={() => { this.toggle('3'); }}
+                                          onClick={() => { toggle('3'); }}
                                       >
                                           GAP
                                       </NavLink>
@@ -481,13 +898,13 @@ class Overview extends React.Component {
                                                           name="form-field-name"
                                                           value={statesItems.selectedOptions}
                                                           onChange={(val) => this.setSelectedOptions(val)}
-                                                          options={selectedOptionsBase}
+                                                          options={statesItems.selectedOptionsBase}
                                                         />
                                                       </FormGroup>
                                                     </div>
                                                     <div className='graph-area negative-chart title-type'>
                                                       <p className='bx_name'>{statesItems.selectedOptions.label}</p>
-                                                      <NegativeBar options={columeNegativeGraph.options} series={columeNegativeGraph.series} height={columeNegativeGraph.height} />
+                                                      <NegativeBar options={statesItems.idrateGraph.options} series={statesItems.idrateGraph.series} height={statesItems.idrateGraph.height} />
                                                     </div>
                                                   </CardBody>
                                               </Card>

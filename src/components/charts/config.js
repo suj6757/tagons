@@ -591,38 +591,44 @@ export const heatMapGraphData = {
         }, 
       },
       plotOptions: {
-        heatmap: {
-          shadeIntensity: 0.5,
-          radius: 0,
-          useFillColorAsStroke: true,
-          colorScale: {
-            ranges: [{
-                from: -30,
-                to: 5,
-                name: 'low',
-                color: '#00A100'
-              },
-              {
-                from: 6,
-                to: 20,
-                name: 'medium',
-                color: '#128FD9'
-              },
-              {
-                from: 21,
-                to: 45,
-                name: 'high',
-                color: '#FFB200'
-              },
-              {
-                from: 46,
-                to: 55,
-                name: 'extreme',
-                color: '#FF0000'
+          heatmap: {
+              shadeIntensity: 0.5,
+              radius: 0,
+              useFillColorAsStroke: true,
+              colorScale: {
+                  ranges: [{
+                      from: 0.00,
+                      to: 0.19,
+                      name: 'min',
+                      color: '#00A100'
+                  },
+                  {
+                      from: 0.20,
+                      to: 0.39,
+                      name: 'low',
+                      color: '#a6d082'
+                  },
+                  {
+                      from: 0.40,
+                      to: 0.59,
+                      name: 'medium',
+                      color: '#ffea89'
+                  },
+                  {
+                      from: 0.60,
+                      to: 0.79,
+                      name: 'high',
+                      color: '#FFB200'
+                  },
+                  {
+                      from: 0.80,
+                      to: 1.00,
+                      name: 'extreme',
+                      color: '#FF0000'
+                  }
+                  ]
               }
-            ]
           }
-        }
       },
       dataLabels: {
         enabled: false

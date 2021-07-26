@@ -13,7 +13,6 @@ import {LeftPrime ,LeftTrend, LeftSocial, LeftOnline, LeftSimulator, LeftAbout} 
 
 const LeftMenu = () => {
   const [menuCollapse, setMenuCollapse] = useState(false);
-
   const menuIconClick = () => (
     menuCollapse ? setMenuCollapse( false ) : setMenuCollapse( true )
   )

@@ -1092,6 +1092,7 @@ table {
     span {
       font-size: 20px;
       color: #d1d1d1;
+      z-index: 1;
     }
     &.active {
       border-color: #f9a21b;
@@ -1110,6 +1111,143 @@ table {
 .table-fixed {
   table-layout: fixed;
 }
+
+.graph-area.bar {
+  .graph-list {
+    li {
+      &:first-child { 
+        margin-left: 0 !important;
+      }
+      &:last-child { 
+        margin-right: 0 !important;
+      }
+    }
+    
+  } 
+}
+
+.box-area {
+  content: '';
+  display: block;
+  clear: both;
+  margin-top: 30px;
+
+  .box-left {
+    float: left;
+    width: 49%;
+    border: 1px solid #d1d1d1;
+    padding: 60px 40px 40px;
+  }
+  .box-right {
+    float: right;
+    width: 49%;
+    border: 1px solid #d1d1d1;
+    padding: 60px 40px 40px;
+  }
+  .cont-noti {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    margin: 0;
+    font-size: 15px;
+    color: #888;
+  }
+}
+
+.keyword-gap-tab {
+  &.nav-tabs {
+    margin-top: 25px;
+
+    .nav-item {
+      .nav-link {
+        border-bottom: 1px solid #d1d1d1;
+        z-index: 10;
+
+        &.active {
+          border-color: #f9a21b;
+        }
+      }
+    }
+  }
+
+}
+.keyword-gap-graph {
+  margin-top: -1px;
+
+  .graph-area.title-type {
+    padding: 50px 70px;
+  }
+  .cont-noti {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    margin: 0;
+    font-size: 15px;
+    color: #888;
+  }
+}
+
+.keyword-chart-area {
+  display: flex;
+  justify-content: flex-start;
+
+  .chart-area {
+    width: 25%;
+    border: 0;
+  }
+}
+
+.analysis-tab-list {
+  margin: 0;
+  padding: 0;
+
+  &:after {
+    content: '';
+    display: block;
+    clear: both;
+  }
+
+  li {
+    float: left;
+    margin: 27px 0 0 0;
+    padding: 0 16px 0 16px;
+    border-left: 1px solid #d1d1d1;
+    list-style: none;
+    
+    &:first-child {
+      padding-left: 0;
+      border: 0;
+    }
+    
+    span {
+      cursor: pointer;
+    }
+
+    &.active {
+      span {
+        color: #f9a21b;
+      }
+    }
+  }
+}
+
+.bor-none {
+  border: 0 !important;
+}
+
+.comparison-select-area {
+  padding: 30px 0;
+  
+  > span , .select-box {
+    display: inline-block;
+    vertical-align: middle;
+  }
+  .select-box {
+    min-width: 150px;
+    margin: 0 40px 0 9px;
+  }
+}
+
 
 @media (max-width: 1906px) { 
   .navbar {

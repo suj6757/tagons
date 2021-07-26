@@ -1,6 +1,6 @@
-// /* eslint-disable jsx-a11y/label-has-for */
-// /* eslint-disable jsx-a11y/label-has-associated-control */
-// /* eslint-disable jsx-a11y/no-noninteractive-element-interactions */
+/* eslint-disable jsx-a11y/label-has-for */
+/* eslint-disable jsx-a11y/label-has-associated-control */
+/* eslint-disable jsx-a11y/no-noninteractive-element-interactions */
 import React from 'react';
 import { Row,
      Card,

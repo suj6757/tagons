@@ -11,9 +11,9 @@ const Social = React.lazy(() =>
 const Ecommerce = React.lazy(() =>
   import(/* webpackChunkName: "Ecommerce" */ './Ecommerce')
 );
-// const GoogleAnalytics = React.lazy(() =>
-//   import(/* webpackChunkName: "googleAnalytics" */ './googleAnalytics')
-// );
+const GoogleAnalytics = React.lazy(() =>
+  import(/* webpackChunkName: "googleAnalytics" */ './googleAnalytics')
+);
 
 const OverViewLink = ({ match }) => (
   <Suspense fallback={<div className="loading" />}>
@@ -31,10 +31,10 @@ const OverViewLink = ({ match }) => (
         path={`${match.url}/ecommerce`}
         render={(props) => <Ecommerce {...props} />}
       />
-      {/* <Route
+      <Route
         path={`${match.url}/googleAnalytics`}
         render={(props) => <GoogleAnalytics {...props} />}
-      /> */}
+      />
       <Redirect to="/error" />
     </Switch>
   </Suspense>
