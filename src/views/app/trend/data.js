@@ -109,3 +109,228 @@ export const TableData = [
     satisfaction: '12,987',
   },
 ];
+
+
+export const TableData2 = [
+  {
+    id: 1,
+    Total: ['블라우스', 'up', 3 ],
+    naverNews: ['선명하다', 'down', 3],
+    naverCafe: ['선명하다', '', '-' ],
+    naverBlog: ['선명하다', '' , '-' ],
+    instagram: ['세련되다', 'up', 7],
+    facebook: ['세련되다', 'down', 7],
+    youtube: ['독특하다', 'up', 7],
+  },
+  {
+    id: 2,
+    Total: ['블라우스', 'up', 3 ],
+    naverNews: ['선명하다', 'down', 3],
+    naverCafe: ['선명하다', '', '-' ],
+    naverBlog: ['선명하다', '' , '-' ],
+    instagram: ['세련되다', 'up', 7],
+    facebook: ['세련되다', 'down', 7],
+    youtube: ['독특하다', 'up', 7],
+  },
+  {
+    id: 3,
+    Total: ['블라우스', 'up', 3 ],
+    naverNews: ['선명하다', 'down', 3],
+    naverCafe: ['선명하다', '', '-' ],
+    naverBlog: ['선명하다', '' , '-' ],
+    instagram: ['세련되다', 'up', 7],
+    facebook: ['세련되다', 'down', 7],
+    youtube: ['독특하다', 'up', 7],
+  },
+  {
+    id: 4,
+    Total: ['블라우스', 'up', 3 ],
+    naverNews: ['선명하다', 'down', 3],
+    naverCafe: ['선명하다', '', '-' ],
+    naverBlog: ['선명하다', '' , '-' ],
+    instagram: ['세련되다', 'up', 7],
+    facebook: ['세련되다', 'down', 7],
+    youtube: ['독특하다', 'up', 7],
+  },
+  {
+    id: 5,
+    Total: ['블라우스', 'up', 3 ],
+    naverNews: ['선명하다', 'down', 3],
+    naverCafe: ['선명하다', '', '-' ],
+    naverBlog: ['선명하다', '' , '-' ],
+    instagram: ['세련되다', 'up', 7],
+    facebook: ['세련되다', 'down', 7],
+    youtube: ['독특하다', 'up', 7],
+  },
+  {
+    id: 6,
+    Total: ['블라우스', 'up', 3 ],
+    naverNews: ['선명하다', 'down', 3],
+    naverCafe: ['선명하다', '', '-' ],
+    naverBlog: ['선명하다', '' , '-' ],
+    instagram: ['세련되다', 'up', 7],
+    facebook: ['세련되다', 'down', 7],
+    youtube: ['독특하다', 'up', 7],
+  },
+  {
+    id: 7,
+    Total: ['블라우스', 'up', 3 ],
+    naverNews: ['선명하다', 'down', 3],
+    naverCafe: ['선명하다', '', '-' ],
+    naverBlog: ['선명하다', '' , '-' ],
+    instagram: ['세련되다', 'up', 7],
+    facebook: ['세련되다', 'down', 7],
+    youtube: ['독특하다', 'up', 7],
+  },
+  {
+    id: 8,
+    Total: ['블라우스', 'up', 3 ],
+    naverNews: ['선명하다', 'down', 3],
+    naverCafe: ['선명하다', '', '-' ],
+    naverBlog: ['선명하다', '' , '-' ],
+    instagram: ['세련되다', 'up', 7],
+    facebook: ['세련되다', 'down', 7],
+    youtube: ['독특하다', 'up', 7],
+  },
+  {
+    id: 9,
+    Total: ['블라우스', 'up', 3 ],
+    naverNews: ['선명하다', 'down', 3],
+    naverCafe: ['선명하다', '', '-' ],
+    naverBlog: ['선명하다', '' , '-' ],
+    instagram: ['세련되다', 'up', 7],
+    facebook: ['세련되다', 'down', 7],
+    youtube: ['독특하다', 'up', 7],
+  },
+  {
+    id: 10,
+    Total: ['블라우스', 'up', 3 ],
+    naverNews: ['선명하다', 'down', 3],
+    naverCafe: ['선명하다', '', '-' ],
+    naverBlog: ['선명하다', '' , '-' ],
+    instagram: ['세련되다', 'up', 7],
+    facebook: ['세련되다', 'down', 7],
+    youtube: ['독특하다', 'up', 7],
+  },
+];
+
+
+export const TableRowData = [
+  {
+    channelCategory: 'Search Volume',
+    channel: 'Naver',
+    post : 477,
+    comment : '-', 
+    view : '-', 
+    like : '-',
+    press : '-',
+    positiveRate : '-',
+    negativeRate : '-'
+  },
+  {
+    channelCategory: 'Social',
+    channel: 'Naver News',
+    post : 496,
+    comment : 38, 
+    view : 456, 
+    like : 12,
+    press : '-',
+    positiveRate : 56,
+    negativeRate : '-'
+  },
+  {
+    channelCategory: 'Social',
+    channel: 'Naver blog',
+    post : 1298,
+    comment : 38, 
+    view : 456, 
+    like : 12,
+    press : 189,
+    positiveRate : 13,
+    negativeRate : 53.8
+  },
+  {
+    channelCategory: 'Social',
+    channel: 'instgram',
+  },
+  {
+    channelCategory: 'Social',
+    channel: 'facebook',
+    post : 496,
+    comment : 38, 
+    view : 456, 
+    like : 12,
+    press : '-',
+    positiveRate : 56,
+    negativeRate : '-'
+  },
+  {
+    channelCategory: 'Social',
+    channel: 'youtube',
+    post : 496,
+    comment : 38, 
+    view : 456, 
+    like : 12,
+    press : '-',
+    positiveRate : 7,
+    negativeRate : 3
+  },
+  {
+    channelCategory: 'Shopping',
+    channel: 'Naver Shopping',
+    post : 496,
+    comment : 38, 
+    view : 456, 
+    like : 12,
+    press : '-',
+    positiveRate : 7,
+    negativeRate : 3
+  },
+  {
+    channelCategory: 'E-Commerce',
+    channel: 'Coupang',
+    post : 12358,
+    comment : 38, 
+    view : 456, 
+    like : 12,
+    press : '-',
+    positiveRate : 7,
+    negativeRate : 3
+  },
+]
+
+export const TableHeatMapData = [
+  {
+    channelCategory: 'Search Volume',
+    channel: 'Naver',
+  },
+  {
+    channelCategory: 'Social',
+    channel: 'Naver News',
+  },
+  {
+    channelCategory: 'Social',
+    channel: 'Naver blog',
+  },
+  {
+    channelCategory: 'Social',
+    channel: 'instgram',
+  },
+  {
+    channelCategory: 'Social',
+    channel: 'facebook',
+  },
+  {
+    channelCategory: 'Social',
+    channel: 'youtube',
+  },
+  {
+    channelCategory: 'Shopping',
+    channel: 'Naver Shopping',
+  },
+  {
+    channelCategory: 'E-Commerce',
+    channel: 'Coupang',
+  },
+]
+

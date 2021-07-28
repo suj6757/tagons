@@ -1126,10 +1126,13 @@ table {
   } 
 }
 
-.box-area {
+.box-area:after {
   content: '';
   display: block;
   clear: both;
+}
+
+.box-area {
   margin-top: 30px;
 
   .box-left {
@@ -1248,6 +1251,51 @@ table {
   }
 }
 
+.response-area {
+  .box-left {
+    position: relative;
+    width: 70%;
+  }
+  .box-right {
+    width: 29%;
+    min-height: 500px;
+    padding: 40px 38px;
+
+    .tit {
+      margin-bottom: 15px;
+      font-size: 20px;
+      color: #888;
+    }
+    .channel_cont {
+      display: block;
+      
+      .list_tag {
+        flex-flow: wrap;
+        margin: 0;
+        padding-bottom: 29px;
+
+        li {
+          min-width: auto;
+          margin: 0 10px 10px 0;
+          border-color: #bbb;
+          cursor: pointer;
+
+          &.active , &:hover {
+            background-color: #f9a21b;
+            border-color: #f9a21b;
+            color: #fff;
+  
+            .close {
+              color: #fff;
+              opacity: 1;
+            }
+          }
+        }
+      }
+    }
+  }
+  
+}
 
 @media (max-width: 1906px) { 
   .navbar {

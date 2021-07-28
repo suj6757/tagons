@@ -33,7 +33,7 @@ const LeftMenu = () => {
           <Menu>
             <Switch>
               <Route path={['/app/prime/prime', '/app/prime/channels']} component={LeftPrime} />
-              <Route exact path={['/app/gogo/start', '/app/trend/overview', '/app/trend/social', '/app/trend/ecommerce', '/app/trend/googleAnalytics']} component={LeftTrend} />
+              <Route exact path={['/app/gogo/start', '/app/trend/overview', '/app/trend/social', '/app/trend/ecommerce', '/app/trend/googleAnalytics', '/app/trend/response']} component={LeftTrend} />
               <Route path="/app/socialListening" component={LeftSocial} />
               <Route path="/app/onlineRetailer" component={LeftOnline} />
               <Route path="/app/simulator" component={LeftSimulator} />

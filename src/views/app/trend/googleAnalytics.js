@@ -14,7 +14,7 @@ import classnames from 'classnames';
 import { Formik, Field } from 'formik';
 import Select from 'react-select';
 import { Colxx } from '../../../components/common/CustomBootstrap';
-//import {ReactTable} from '../../../containers/ui/ReactTableCards';
+import {ReactTable} from '../../../containers/ui/ReactTableCards';
 import CustomSelectInput from '../../../components/common/CustomSelectInput';
 import CompareBar from '../../../components/charts/CompareBar';
 import CompareLine from '../../../components/charts/CompareLine';
@@ -1138,10 +1138,10 @@ class GoogleAnalytics extends React.Component {
                       />
                     </FormGroup>
                   </div>
-                  {/* <ReactTable
+                  <ReactTable
                     data={TableData}
                     columns={columns}
-                  /> */}
+                  />
                 </div>
               </CardBody>
             </Card>

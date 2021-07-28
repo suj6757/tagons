@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import {
   MenuItem,
 } from "react-pro-sidebar";
-import { NavLink, Link } from 'react-router-dom';
+import { NavLink } from 'react-router-dom';
 
 export const LeftPrime = ({match}) => {
   return (
@@ -22,7 +22,7 @@ export const LeftTrend = ({match}) => {
       <MenuItem><NavLink to="/app/trend/social" activeClassName="active">SOCIAL</NavLink></MenuItem>
       <MenuItem><NavLink to="/app/trend/ecommerce" activeClassName="active">E-COMMERCE</NavLink></MenuItem>
       <MenuItem><NavLink to="/app/trend/googleAnalytics" activeClassName="active">GOOGLE ANALYTICS</NavLink></MenuItem>
-      {/* <MenuItem><NavLink to="#" activeClassName="active">TREND-RESPONSE</NavLink></MenuItem> */}
+      <MenuItem><NavLink to="/app/trend/response" activeClassName="active">TREND-RESPONSE</NavLink></MenuItem>
     </>
   )
 }

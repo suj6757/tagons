@@ -14,6 +14,9 @@ const Ecommerce = React.lazy(() =>
 const GoogleAnalytics = React.lazy(() =>
   import(/* webpackChunkName: "googleAnalytics" */ './googleAnalytics')
 );
+const Response = React.lazy(() =>
+  import(/* webpackChunkName: "Response" */ './Response')
+);
 
 const OverViewLink = ({ match }) => (
   <Suspense fallback={<div className="loading" />}>
@@ -34,6 +37,10 @@ const OverViewLink = ({ match }) => (
       <Route
         path={`${match.url}/googleAnalytics`}
         render={(props) => <GoogleAnalytics {...props} />}
+      />
+      <Route
+        path={`${match.url}/response`}
+        render={(props) => <Response {...props} />}
       />
       <Redirect to="/error" />
     </Switch>
