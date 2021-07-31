@@ -284,7 +284,6 @@ export const scatterDatetimeChartOptions = {
 
 export const heatMapGraphData = {
     series: [
-      /*
       {
         name: 'Coupang',
         data: [
@@ -395,6 +394,7 @@ export const heatMapGraphData = {
       },
       {
         name: 'Facebook',
+        catagory: 'social',
         data: [
           {x: "1/1", y: -9},
           {x: "1/2", y: 43},
@@ -431,6 +431,7 @@ export const heatMapGraphData = {
       },
       {
         name: 'Instagram',
+        catagory: 'social',
         data: [
           {x: "1/1", y: -30},
           {x: "1/2", y: 10},
@@ -467,6 +468,7 @@ export const heatMapGraphData = {
       },
       {
         name: 'Naver Blog',
+        catagory: 'social',
         data: [
           {x: "1/1", y: -9},
           {x: "1/2", y: 43},
@@ -503,6 +505,7 @@ export const heatMapGraphData = {
       },
       {
         name: 'Naver News',
+        catagory: 'social',
         data: [
           {x: "1/1", y: -30},
           {x: "1/2", y: 10},
@@ -539,6 +542,7 @@ export const heatMapGraphData = {
       },
       {
         name: 'Naver',
+        catagory: 'search volume',
         data: [
           {x: "1/1", y: -9},
           {x: "1/2", y: 43},
@@ -573,7 +577,6 @@ export const heatMapGraphData = {
           {x: "1/31", y: 11},
         ]
       },
-      */
     ],
     height: 500,
     options: {

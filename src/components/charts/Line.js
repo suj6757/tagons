@@ -13,6 +13,7 @@ const Line = (props) => {
   
     useEffect(() => {
         var categoryArr = [];
+        var toolCate = [];
         var postArr = [];
         var preArr = [];
 
@@ -70,6 +71,8 @@ const Line = (props) => {
                 else{
                     categoryArr.push("");
                 }
+
+                toolCate.push(dateString);
             });
 
             setLineOptions({
@@ -81,6 +84,13 @@ const Line = (props) => {
                     xaxis : {
                         categories : categoryArr,
                         show : false
+                    },
+                    tooltip: {
+                        x: {
+                            formatter: function(value) {
+                                return toolCate[value - 1];
+                            }
+                        }
                     },
                     grid : {
                         padding : {

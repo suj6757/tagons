@@ -20,6 +20,9 @@ const PrimeLink = React.lazy(() =>
 const OverViewLink = React.lazy(() =>
   import(/* webpackChunkName: "viwes-blank-page" */ './trend')
 );
+const SocialLink = React.lazy(() =>
+  import(/* webpackChunkName: "viwes-blank-page" */ './socialListening')
+);
 
 const App = ({ match }) => {
   return (
@@ -47,6 +50,10 @@ const App = ({ match }) => {
             <Route
               path={`${match.url}/trend`}
               render={(props) => <OverViewLink {...props} />}
+            />
+            <Route
+              path={`${match.url}/socialListening`}
+              render={(props) => <SocialLink {...props} />}
             />
             <Redirect to="/error" />
           </Switch>

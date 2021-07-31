@@ -610,6 +610,13 @@ class Overview extends React.Component {
                                   }
                               }
                           },
+                          grid: {
+                            yaxis: {
+                              lines: {
+                                show: false
+                              }
+                            },
+                          },
                           legend: {
                               position: 'top',
                               horizontalAlign: 'right',

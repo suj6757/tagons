@@ -277,6 +277,7 @@ export const ReactTable = ({columns,data}) => {
       <Table 
         columns={columns} 
         data={data}
+        defaultPageSize={data.length}
         rowProps={( row ) => ({
           onClick: () => {
             console.log('1: ', row , '2: ', row.original);

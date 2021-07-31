@@ -46,6 +46,13 @@ class Prime extends React.Component {
           legend: {
             show: false
           },
+          grid: {
+            yaxis: {
+              lines: {
+                show: false
+              }
+            },
+          },
           xaxis: {
             categories: ['Past', 'Present'],
             labels: {
@@ -68,6 +75,11 @@ class Prime extends React.Component {
             }
           },
           yaxis: {
+            labels: {
+              formatter: function(val, index) {
+                return '';
+              }
+            },
             title : {
               text : 'Post',
               offsetX: 0,
