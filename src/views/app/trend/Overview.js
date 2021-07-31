@@ -161,11 +161,14 @@ class Overview extends React.Component {
                   }]
                 },
                 columnWidth: '50%',
+                dataLabels: {
+                  position: 'top',
+                }
               }
             },
             dataLabels: {
               enabled: true,
-              offsetY: 40,
+              offsetY: -22,
               style: {
                 fontSize: '12px',
                 colors: ["#000"]
@@ -175,9 +178,14 @@ class Overview extends React.Component {
               categories: [],
             }, 
             yaxis: {
-              show: false
-            }, 
-            
+              show: false,
+              max: function (val) {
+                return val + 0.1;
+              },
+              min: function (val) {
+                return val - 0.1;
+              },
+            }
           },
         },
         // eslint-disable-next-line react/no-unused-state
