@@ -334,3 +334,82 @@ export const TableHeatMapData = [
   },
 ]
 
+export const TableSentimantData = [
+  {
+    id: '-',
+    title: '원피스',
+    TF: '',
+    DF: '',
+    'TF-IDF': ''
+  },
+  {
+    id: 1,
+    title: '폴라니트',
+    TF: '',
+    DF: '',
+    'TF-IDF': ''
+  },
+  {
+    id: 2,
+    title: '플로랄원피스',
+    TF: '',
+    DF: '',
+    'TF-IDF': ''
+  },
+  {
+    id: 3,
+    title: '하객룩',
+    TF: '',
+    DF: '',
+    'TF-IDF': ''
+  },
+  {
+    id: 4,
+    title: '여름옷',
+    TF: '',
+    DF: '',
+    'TF-IDF': ''
+  },
+  {
+    id: 5,
+    title: '여름스커트',
+    TF: '',
+    DF: '',
+    'TF-IDF': ''
+  },
+  {
+    id: 6,
+    title: '샤스커트',
+    TF: '',
+    DF: '',
+    'TF-IDF': ''
+  },
+  {
+    id: 7,
+    title: '여름슬랙스',
+    TF: '',
+    DF: '',
+    'TF-IDF': ''
+  },
+  {
+    id: 8,
+    title: '블라우스',
+    TF: '',
+    DF: '',
+    'TF-IDF': ''
+  },
+  {
+    id: 9,
+    title: '스커트',
+    TF: '',
+    DF: '',
+    'TF-IDF': ''
+  },
+  {
+    id: 10,
+    title: '원피스',
+    TF: '',
+    DF: '',
+    'TF-IDF': ''
+  },
+];

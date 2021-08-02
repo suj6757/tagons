@@ -464,11 +464,20 @@ class Prime extends React.Component {
       } 
       return error;
     };
+
     const onKeywordChange = (e) =>{
       this.setState({
         keyWordtext : e.target.value
       }); 
     };
+
+    const onKeywordpress = (e) =>{
+      if (e.keyCode === 13){
+        e.preventDefault();
+        // 여기서 Search 로 이동
+      }
+    };
+
     // eslint-disable-next-line prefer-const
     return (
       <>
@@ -531,6 +540,7 @@ class Prime extends React.Component {
                                   name="keyword"
                                   value={statesItems.keyWordtext}
                                   onChange={onKeywordChange}
+                                  onKeyDown={onKeywordpress}
                                   validate={validateKeyword}
                                 />
                                 {errors.keyword && touched.keyword && (

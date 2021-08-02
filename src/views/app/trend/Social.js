@@ -592,7 +592,7 @@ class Social extends React.Component {
       const setSelectedOptions = (val) => {
         var channelList = [] ;
         var searchCondition = statesItems.searchCondition;
-        console.log("setSelectedOptions " , val , searchCondition);
+        //console.log("setSelectedOptions " , val , searchCondition);
         channelList.push(val.value);
         searchCondition.Channel = channelList;
         this.setState({  
@@ -663,6 +663,13 @@ class Social extends React.Component {
       const keyWordClick = (clickItem) => {
         console.log('keyWordClick -> ' , clickItem);
       }
+
+      const onKeywordpress = (e) =>{
+        if (e.keyCode === 13){
+          e.preventDefault();
+          // 여기서 Search 로 이동
+        }
+      };
 
       return(
           <div className='social_area'>
@@ -746,6 +753,7 @@ class Social extends React.Component {
                                               name="keyword"
                                               value={statesItems.keyWordtext}
                                               onChange={onKeywordChange}
+                                              onKeyDown={onKeywordpress}
                                               validate={validateKeyword}
                                           />
                                           {errors.keyword && touched.keyword && (

@@ -24,6 +24,7 @@ import CompareBar from '../../../components/charts/CompareBar';
 import CompareLine from '../../../components/charts/CompareLine';
 // import {ReactTable} from '../../../containers/ui/ReactTable';
 import { TableData } from './tableData';
+import { post } from 'axios';
 import 'react-datepicker/dist/react-datepicker.css';
 
 // eslint-disable-next-line react/prefer-stateless-function
@@ -34,53 +35,78 @@ class Needspatterns extends React.Component {
     this.state = {
       startDate: new Date(),
       endDate: new Date(),
-      treemap : {
-        series: [
-          {
-            data: [
-              {
-                x: 'Group1',
-                y: 35.8
-              },
-              {
-                x: 'Group2',
-                y: 25.8
-              },
-              {
-                x: 'Group3',
-                y: 10.9
-              },
-              {
-                x: 'Group4',
-                y: 25
-              },
-              {
-                x: 'Group5',
-                y: 5
-              },
-              {
-                x: 'Group6',
-                y: 25
-              },
-              {
-                x: 'Group7',
-                y: 8
-              },
-              {
-                x: 'Group8',
-                y: 13
-              },
-              {
-                x: 'Group9',
-                y: 23
-              },
-              {
-                x: 'Group10',
-                y: 15
-              },
-            ]
-          }
-        ],
+      treemapTotal : {
+        series: [],
+        height: 540,
+        options: {
+          chart: {
+            type: 'treemap',
+            toolbar: {
+              show: false
+            }, 
+            zoom: {
+              enabled: false,
+            }
+          },
+          legend: {
+            show: false,
+          },
+          colors: [
+            '#58a3b2',
+            '#f8c360',
+            '#b9decf',
+            '#ef597c',
+            '#d4ddc1',
+            '#da5ca6',
+            '#40759d',
+            '#caf77d',
+            '#5e355f',
+            '#f17c55',
+          ],
+          dataLabels: {
+            enabled: true,
+            style: {
+              fontSize: '14px',
+              fontFamily: 'Helvetica, Arial, sans-serif',
+              fontWeight: 'bold',
+              colors: ['#fff'],
+            },
+            formatter: (text, op) => {
+              return [text, op.value + '%']
+            },
+            offsetY: -4
+          },
+          plotOptions: {
+            treemap: {
+              distributed: true,
+              enableShades: false
+            }
+          },
+          tooltip: {
+            custom: ({ series, seriesIndex, dataPointIndex, w }) => {
+              return (
+                "<div class='tootip-box'>" +
+                w.globals.categoryLabels[dataPointIndex] +
+                ": " +
+                series[seriesIndex][dataPointIndex] +"%" +
+                "</div>"
+              );
+            }
+          },
+          noData: {
+            text: '데이터 없음',
+            align: 'center',
+            verticalAlign: 'middle',
+            offsetX: 0,
+            offsetY: 0,
+            style: {
+              fontSize: '16px',
+            }
+          },
+        }
+      },
+      treemapSelect : {
+        series: [],
         height: 540,
         options: {
           chart: {
@@ -149,13 +175,64 @@ class Needspatterns extends React.Component {
               fontSize: '16px',
             }
           },
-
         },
       },
-
       selectedOptions: null,
     };
   }
+
+  //test용도
+  componentDidMount = () => {
+    console.log('search : ', this.state.searchCondition);
+
+    let responseTotal = [
+      {
+        data: [
+          { x: 'Group1', y: 80 },
+          { x: 'Group2', y: 5 },
+          { x: 'Group3', y: 10 },
+          { x: 'Group4', y: 20 },
+          { x: 'Group5', y: 5 },
+          { x: 'Group6', y: 25 },
+          { x: 'Group7', y: 5 },
+          { x: 'Group8', y: 10 },
+          { x: 'Group9', y: 15 },
+          { x: 'Group10', y: 10 }
+        ]
+      }
+    ]
+
+    let responseSelect = [
+      {
+        data: [
+          { x: 'Group1', y: 35.8 },
+          { x: 'Group2', y: 25.8 },
+          { x: 'Group3', y: 10.9 },
+          { x: 'Group4', y: 25 },
+          { x: 'Group5', y: 5 },
+          { x: 'Group6', y: 25 },
+          { x: 'Group7', y: 8 },
+          { x: 'Group8', y: 13 },
+          { x: 'Group9', y: 23 },
+          { x: 'Group10', y: 15 }
+        ]
+      }
+    ]
+
+    this.setState(prev => ({
+      ...prev,
+      treemapTotal : {
+        ...prev.treemapTotal,
+        series : responseTotal
+      },
+      treemapSelect : {
+        ...prev.treemapSelect,
+        series : responseSelect
+      }
+    }), () => {
+      console.log('setting : ', this.state);
+    });
+  };
 
   ChangeStartDate = (e) => { 
     this.setState({  
@@ -187,6 +264,25 @@ class Needspatterns extends React.Component {
     const statesItems = this.state;
     const { channelOptionSelected } = this.state;
 
+    const getNeedPatternInit = (searchCondition) => {
+      /*
+      this.setState(prev => ({
+          ...prev,
+          searchCondition : {
+
+          }
+      }),
+      () => {
+        console.log('search : ' , this.state.searchCondition);
+
+        post('/sociallistening/GetNeeds_Pattern_Init', this.state.searchCondition).
+        then((response) => {
+            console.log(response);
+        });
+      });
+      */
+    }
+
     const columns = [
       {
         Header: 'Channel Category',
@@ -205,6 +301,7 @@ class Needspatterns extends React.Component {
     const channelOption = [
       { label: 'Naver Blog', value: 'naverblog', key: 0 },
       { label: 'Coupang', value: 'Coupang', key: 1 },
+      { label: 'Test', value: 'test', key: 2 }
     ]
 
     return (
@@ -304,7 +401,7 @@ class Needspatterns extends React.Component {
                 <div className="box-area pattern-map-area">
                   <div className="box-left">
                     <div className="pattern-tit"><span>Total</span></div>
-                    <ReactApexChart options={statesItems.treemap.options} series={statesItems.treemap.series} type="treemap" height={540} className="chart-box" />
+                    <ReactApexChart options={statesItems.treemapTotal.options} series={statesItems.treemapTotal.series} type="treemap" height={540} className="chart-box" />
                   </div>
                   <div className="box-right">
                     <div className="comparison-select-area pattern-tit">
@@ -321,9 +418,9 @@ class Needspatterns extends React.Component {
                         />
                       </FormGroup>
                     </div>
-                    <ReactApexChart options={statesItems.treemap.options} series={statesItems.treemap.series} type="treemap" height={540} className="chart-box" />
+                    <ReactApexChart options={statesItems.treemapSelect.options} series={statesItems.treemapSelect.series} type="treemap" height={540} className="chart-box" />
                   </div>
-                </div>
+                </div>2
                 <div className="box-area tbl-no-page">
                   <div className="box-left">
                     <ReactTable

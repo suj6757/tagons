@@ -245,7 +245,7 @@ export const ReactTableDivided = () => {
   );
 };
 
-export const ReactTable = ({columns,data}) => {
+export const ReactTable = ({columns,data,defaultPageSize = 8}) => {
 
   const rowStyles = [
     {
@@ -277,7 +277,7 @@ export const ReactTable = ({columns,data}) => {
       <Table 
         columns={columns} 
         data={data}
-        defaultPageSize={data.length}
+        defaultPageSize={defaultPageSize}
         rowProps={( row ) => ({
           onClick: () => {
             console.log('1: ', row , '2: ', row.original);

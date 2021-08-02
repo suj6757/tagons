@@ -8,6 +8,7 @@
 /* eslint prefer-template: "off" */
 /* eslint react/no-array-index-key: "off" */
 /* eslint-disable jsx-a11y/label-has-for */
+/* eslint-disable no-underscore-dangle */
 import React from 'react';
 import { Row, Card, CardBody, Form, Button, FormGroup, Input, Nav, NavLink, NavItem, TabContent, TabPane, } from 'reactstrap';
 import classnames from 'classnames';
@@ -19,15 +20,67 @@ import CustomSelectInput from '../../../components/common/CustomSelectInput';
 import CompareBar from '../../../components/charts/CompareBar';
 import CompareLine from '../../../components/charts/CompareLine';
 import { TableData } from './data';
-
+import { login, UserInfo, logout } from '../../../services/LoginService';
+import axios from 'axios';
 // eslint-disable-next-line react/prefer-stateless-function
 class GoogleAnalytics extends React.Component {
   
   constructor(props) {
     super(props); // React.Component의 생성자 메소드를 먼저 실행
-
+    let loginYN = (UserInfo() !== null);
+    let userData = UserInfo();
     this.state = {
-      
+      activeId: 1,
+      listActiveId: 1,
+      selectedOptions: null,
+      activeTab: '1',
+      keyWordtext :'',
+      userInfo : userData ,
+      internalIndexSelected : '',
+      externalSelected : '', 
+      UsersSessionsSeries: [] ,
+      ConversionBounceRateSeries : [] ,
+      checkInfo: [
+        { id: 1, value: "1Month", view : "1 Month",isChecked: true },
+        { id: 2, value: "3Months", view: "3 Months", isChecked: false },
+        { id: 3, value: "6Months", view: "6 Months",isChecked: false },
+        { id: 4, value: "12Months", view: "12 Months",isChecked: false }
+      ],   
+      chartDataArray : [] ,  
+      AnalysisChartArray : [],
+      GASocialComparison : {
+        CategoryData : [] ,
+        UsersData : [] , 
+        SessionsData : [] ,  
+        ConversionRateData : [] ,
+        BounceRateData : [] , 
+        BuzzData : [] , 
+        SearchVolumeData : [] , 
+        ProductsData : [] ,
+      } ,
+      TableDataSocial : [],
+      columns : [
+      {
+        Header: 'Rank',
+        accessor: 'id',
+        cellClass: 'list-item-heading text-center w-10',
+      },
+      {
+        Header: 'GA Inflow Keyword',
+        accessor: 'title',
+        cellClass: 'text-muted text-center w-30',
+      },
+      {
+        Header: 'Users',
+        accessor: 'purchase',
+        cellClass: 'text-muted text-center w-30',
+      },
+      {
+        Header: 'Buzz',
+        accessor: 'satisfaction',
+        cellClass: 'text-muted text-center w-30',
+      },
+    ],
       horizontal: {
         options: {
           chart: {
@@ -209,7 +262,22 @@ class GoogleAnalytics extends React.Component {
             
           },
       },
-
+      bounceOpt :{}, 
+      conversionOpt :{},
+      inflowOpt :{},
+      mostVisitedPageOpt :{},
+      bounceSeries :[], 
+      conversionSeries :[],
+      inflowSeries :[],
+      mostVisitedPageSeries :[],
+      GaUserBarGenOpt :{}, 
+      GaUserBarAgeOpt :{}, 
+      GaUserBarDeviceOpt :{}, 
+      GaUserBarRegionOpt :{}, 
+      GaUserBarGenSeries :[],
+      GaUserAgeGenSeries :[],
+      GaUserAgeDeviceSeries :[],
+      GaUserAgeRegionSeries :[],      
       keywordGap : {
         series: [
           {
@@ -295,17 +363,81 @@ class GoogleAnalytics extends React.Component {
             
           },
       }, 
+    
+      GaAnalysisOption : {options: {
+          chart: {
+            width: '45%',
+            redrawOnParentResize: true,
+            toolbar: {
+              show: false,
+            },
+            zoom: {
+              enabled: false
+            },
+          },
+          legend: {
+            show: false,
+          },
+          fill: {
+            colors: ['#8faadc' ,'#fb9874'],
+          },
+          plotOptions: {
+            bar: {
+              columnWidth: '45%',
+              distributed: true,
+            }
+          },
+          grid: {
+            show: false,
+          },
+          xaxis: {
+            axisTicks: {
+              show: false,
+            },
+            categories: ['Male', 'Female',],
+            labels: {
+              style: {
+                colors: ['#8faadc' ,'#fb9874'],
+                fontSize: '12px'
+              }
+            },
+            title : {
+              text : '',
+              offsetX: 100,
+              offsetY: 0,
+              style: {
+                fontSize: '14px',
+                fontFamily: 'Helvetica, Arial, sans-serif',
+                fontWeight: 600,
+                cssClass: 'apexcharts-xaxis-title',
+              },
+            }
+          },
+          yaxis: {
+            axisTicks: {
+              show: false
+            },
+            axisBorder: {
+              show: true,
+            },
+            title : {
+              text: '',
+              offsetX: 0,
+              offsetY: -110,
+              style: {
+                color: undefined,
+                fontSize: '14px',
+                fontFamily: 'Helvetica, Arial, sans-serif',
+                fontWeight: 600,
+                cssClass: 'apexcharts-xaxis-title',
+              },
+            }
+          },
+        },
+        series: []
+      },
 
-      activeId: 1,
-      listActiveId: 1,
-      selectedOptions: null,
-      activeTab: '1',
-      checkInfo: [
-        { id: 1, value: "Daily", isChecked: false },
-        { id: 2, value: "Weekly", isChecked: false },
-        { id: 3, value: "Monthly", isChecked: false },
-        { id: 4, value: "Yearly", isChecked: false }
-      ], 
+
     };
 
   }
@@ -336,18 +468,97 @@ class GoogleAnalytics extends React.Component {
     });
   }
 
-  validateKeyword = (value) => {
-    let error;
-    if (!value) {
-      error = 'No Keywords';
-    } 
-    return error;
-  }
   
-  changeOption = (...args) => {
+  
+  inchangeOption = (...args) => {
+    var tableData = [];
+    var data1 = 0 ;
+    var data2 = 0 ;
+    const statesItems = this.state ;
+
+    var Columns = JSON.parse(JSON.stringify(statesItems.columns));
+    Columns[2].Header = args[0].label;
+   
+    
+    if (statesItems.TableDataSocial.length > 0){
+      statesItems.GASocialComparison.CategoryData.forEach(function(item,idx){
+        if (args[0].value === "Users"){
+          data1 = statesItems.GASocialComparison.UsersData[idx];
+        }
+        else if (args[0].value === "Sessions"){
+          data1 = statesItems.GASocialComparison.SessionsData[idx];
+        }
+        else if (args[0].value === "Conversion"){
+          data1 = statesItems.GASocialComparison.ConversionRateData[idx];
+        }
+        else if (args[0].value === "Bounce"){
+          data1 = statesItems.GASocialComparison.BounceRateData[idx];
+        }
+
+        if (statesItems.externalSelected.value === "Buzz"){
+          data2 = statesItems.GASocialComparison.BuzzData[idx];
+        }
+        else if (statesItems.externalSelected.value === "Product"){
+          data2 = statesItems.GASocialComparison.ProductsData[idx];
+        }
+        else if (statesItems.externalSelected.value === "SearchVolume"){
+          data2 = statesItems.GASocialComparison.SearchVolumeData[idx];
+        }
+        tableData.push({id:idx + 1 , title:item , purchase : data1, satisfaction:data2,});
+      }); 
+    }
     this.setState({
-      selectedOptions: [args[0]]
+      internalIndexSelected: [args[0]],
+      TableDataSocial: tableData ,
+      columns : Columns ,  
     });
+
+  }
+
+  exchangeOption = (...args) => {
+    var tableData = [];
+    var data1 = 0 ;
+    var data2 = 0 ;
+    const statesItems = this.state ;
+    var Columns = JSON.parse(JSON.stringify(statesItems.columns));
+    Columns[3].Header = args[0].label;
+
+    //console.log('exchangeOption',Columns1 , statesItems.internalIndexSelected );
+    if (statesItems.TableDataSocial.length > 0){
+      statesItems.GASocialComparison.CategoryData.forEach(function(item,idx){
+        if (statesItems.internalIndexSelected.value === "Users"){
+          data1 = statesItems.GASocialComparison.UsersData[idx];
+        }
+        else if (statesItems.internalIndexSelected.value === "Sessions"){
+          data1 = statesItems.GASocialComparison.SessionsData[idx];
+        }
+        else if (statesItems.internalIndexSelected.value === "Conversion"){
+          data1 = statesItems.GASocialComparison.ConversionRateData[idx];
+        }
+        else if (statesItems.internalIndexSelected.value === "Bounce"){
+          data1 = statesItems.GASocialComparison.BounceRateData[idx];
+        }
+
+        if (args[0].value === "Buzz"){
+          data2 = statesItems.GASocialComparison.BuzzData[idx];
+        }
+        else if (args[0].value === "Product"){
+          data2 = statesItems.GASocialComparison.ProductsData[idx];
+        }
+        else if (args[0].value === "SearchVolume"){
+          data2 = statesItems.GASocialComparison.SearchVolumeData[idx];
+        }
+        tableData.push({id:idx + 1 , title:item , purchase : data1, satisfaction:data2,});
+      });
+    }
+
+    this.setState({
+      externalSelected: [args[0]],
+      TableDataSocial: tableData ,
+      columns : Columns ,  
+    });
+
+    
   }
 
   handleOneChecked = (evt) => {
@@ -355,8 +566,12 @@ class GoogleAnalytics extends React.Component {
     let { checkInfo } = this.state;
     checkInfo.forEach(item => {
       if (item.value === evt.target.value){
-        // eslint-disable-next-line no-param-reassign
-        item.isChecked = evt.target.checked;
+        if (!item.isChecked ){
+            item.isChecked = evt.target.checked;
+          } 
+      }
+      else{
+        item.isChecked = false;
       }
     });
     this.setState({ checkInfo });
@@ -365,17 +580,19 @@ class GoogleAnalytics extends React.Component {
   render() {
     const statesChart = this.state;
     const statesItems = this.state;
-    const { internalIndexSelected , externalSelected } = this.state;
-
+    // const { internalIndexSelected , externalSelected } = this.state;
     const internalIndex = [
-      { label: 'Users', value: 'internal1', key: 0 },
-      { label: 'Buzz', value: 'interna12', key: 1 },
+      { label: 'Users', value: 'Users', key: 0 },
+      { label: 'Sessions', value: 'Sessions', key: 1 },
+      { label: 'Conversion Rate', value: 'Conversion', key: 2 },
+      { label: 'Bounce Rate', value: 'Bounce', key: 3 },
     ];
 
     const externalIndex = [
-      { label: 'Users', value: 'external1', key: 0 },
-      { label: 'Buzz', value: 'external2', key: 1 },
-    ];
+      { label: 'Buzz', value: 'Buzz', key: 0 },
+      { label: 'Num of Product', value: 'Product', key: 1 },
+      { label: 'Search Volume', value: 'SearchVolume', key: 2 },
+    ]; 
 
     const indiCont = [
       {id: 1, title :  'Users',},
@@ -384,24 +601,6 @@ class GoogleAnalytics extends React.Component {
       {id: 4, title :  'Bounce',},
     ]
 
-    const usersChartData = [
-      {id: 1, series: [{data: [17, 15, 50, 120, 30], title: 'Users', average: [5, 50, 20, 1.5, 45.3],}]},
-    ]
-
-    const sessionsChartData = [
-      {id: 1, series: [{data: [50, 20, 55, 100, 140], title: 'Sessions', average: [5, 50, 20, 1.5, 45.3],}]},
-    ]
-
-    const conversionChartData = [
-      {id: 1, series: [{data: [23, 10, 82, 35, 100], title: 'Conversion', average: [5, 50, 20, 1.5, 45.3],}]},
-    ]
-
-    const bounceChartData = [
-      {id: 1, series: [{data: [10, 20, 30, 40, 50], title: 'Bounce', average: [5, 50, 20, 1.5, 45.3],}]},
-    ]
-
-    const chartDataArray = [usersChartData, sessionsChartData, conversionChartData, bounceChartData];
-
     const initDemoAnalysis = [
       {id: 1, title :  'Gender',},
       {id: 2, title :  'Ages',},
@@ -409,549 +608,566 @@ class GoogleAnalytics extends React.Component {
       {id: 4, title :  'Region',},
     ]
 
-    const genderChartData = [
-      {
-        options: {
-          chart: {
-            width: '45%',
-            redrawOnParentResize: true,
-            toolbar: {
-              show: false,
-            },
-            zoom: {
-              enabled: false
-            },
-          },
-          legend: {
-            show: false,
-          },
-          fill: {
-            colors: ['#8faadc' ,'#fb9874'],
-          },
-          plotOptions: {
-            bar: {
-              columnWidth: '45%',
-              distributed: true,
-            }
-          },
-          grid: {
-            show: false,
-          },
-          xaxis: {
-            axisTicks: {
-              show: false,
-            },
-            categories: ['Male', 'Female',],
-            labels: {
-              style: {
-                colors: ['#8faadc' ,'#fb9874'],
-                fontSize: '12px'
-              }
-            },
-            title : {
-              text : 'dwew',
-              offsetX: 100,
-              offsetY: 0,
-              style: {
-                fontSize: '14px',
-                fontFamily: 'Helvetica, Arial, sans-serif',
-                fontWeight: 600,
-                cssClass: 'apexcharts-xaxis-title',
-              },
-            }
-          },
-          yaxis: {
-            axisTicks: {
-              show: false
-            },
-            axisBorder: {
-              show: true,
-            },
-            title : {
-              text: 'sss',
-              offsetX: 0,
-              offsetY: -110,
-              style: {
-                color: undefined,
-                fontSize: '14px',
-                fontFamily: 'Helvetica, Arial, sans-serif',
-                fontWeight: 600,
-                cssClass: 'apexcharts-xaxis-title',
-              },
-            }
-          },
-        },
-        series: [{data: [17, 50], title: 'Gender', average: [5, 50, ],}]
-      },
-      {
-        options: {
-          chart: {
-            width: '45%',
-            redrawOnParentResize: true,
-            toolbar: {
-              show: false,
-            },
-            zoom: {
-              enabled: false
-            },
-          },
-          legend: {
-            show: false,
-          },
-          fill: {
-            colors: ['#8faadc' ,'#fb9874'],
-          },
-          plotOptions: {
-            bar: {
-              columnWidth: '45%',
-              distributed: true,
-            }
-          },
-          grid: {
-            show: false,
-          },
-          xaxis: {
-            axisTicks: {
-              show: false,
-            },
-            categories: ['Male', 'Female',],
-            labels: {
-              style: {
-                colors: ['#8faadc' ,'#fb9874'],
-                fontSize: '12px'
-              }
-            },
-            title : {
-              text : 'hghgh',
-              offsetX: 100,
-              offsetY: 0,
-              style: {
-                fontSize: '14px',
-                fontFamily: 'Helvetica, Arial, sans-serif',
-                fontWeight: 600,
-                cssClass: 'apexcharts-xaxis-title',
-              },
-            }
-          },
-          yaxis: {
-            axisTicks: {
-              show: false
-            },
-            axisBorder: {
-              show: true,
-            },
-            title : {
-              text: 'erer',
-              offsetX: 0,
-              offsetY: -110,
-              style: {
-                color: undefined,
-                fontSize: '14px',
-                fontFamily: 'Helvetica, Arial, sans-serif',
-                fontWeight: 600,
-                cssClass: 'apexcharts-xaxis-title',
-              },
-            }
-          },
-        },
-        series: [{data: [15, 30], title: 'Gender', average: [5, 50, ],}]},
-      {
-        options: {
-          chart: {
-            width: '45%',
-            redrawOnParentResize: true,
-            toolbar: {
-              show: false,
-            },
-            zoom: {
-              enabled: false
-            },
-          },
-          legend: {
-            show: false,
-          },
-          fill: {
-            colors: ['#8faadc' ,'#fb9874'],
-          },
-          plotOptions: {
-            bar: {
-              columnWidth: '45%',
-              distributed: true,
-            }
-          },
-          grid: {
-            show: false,
-          },
-          xaxis: {
-            axisTicks: {
-              show: false,
-            },
-            categories: ['Male', 'Female',],
-            labels: {
-              style: {
-                colors: ['#8faadc' ,'#fb9874'],
-                fontSize: '12px'
-              }
-            },
-            title : {
-              text : 'ggbvn',
-              offsetX: 100,
-              offsetY: 0,
-              style: {
-                fontSize: '14px',
-                fontFamily: 'Helvetica, Arial, sans-serif',
-                fontWeight: 600,
-                cssClass: 'apexcharts-xaxis-title',
-              },
-            }
-          },
-          yaxis: {
-            axisTicks: {
-              show: false
-            },
-            axisBorder: {
-              show: true,
-            },
-            title : {
-              text: 'eeee',
-              offsetX: 0,
-              offsetY: -110,
-              style: {
-                color: undefined,
-                fontSize: '14px',
-                fontFamily: 'Helvetica, Arial, sans-serif',
-                fontWeight: 600,
-                cssClass: 'apexcharts-xaxis-title',
-              },
-            }
-          },
-        },
-        series: [{data: [50, 30], title: 'Gender', average: [5, 50, ],}]},
-      {
-        options: {
-          chart: {
-            width: '45%',
-            redrawOnParentResize: true,
-            toolbar: {
-              show: false,
-            },
-            zoom: {
-              enabled: false
-            },
-          },
-          legend: {
-            show: false,
-          },
-          fill: {
-            colors: ['#8faadc' ,'#fb9874'],
-          },
-          plotOptions: {
-            bar: {
-              columnWidth: '45%',
-              distributed: true,
-            }
-          },
-          grid: {
-            show: false,
-          },
-          xaxis: {
-            axisTicks: {
-              show: false,
-            },
-            categories: ['Male', 'Female',],
-            labels: {
-              style: {
-                colors: ['#8faadc' ,'#fb9874'],
-                fontSize: '12px'
-              }
-            },
-            title : {
-              text : '222',
-              offsetX: 100,
-              offsetY: 0,
-              style: {
-                fontSize: '14px',
-                fontFamily: 'Helvetica, Arial, sans-serif',
-                fontWeight: 600,
-                cssClass: 'apexcharts-xaxis-title',
-              },
-            }
-          },
-          yaxis: {
-            axisTicks: {
-              show: false
-            },
-            axisBorder: {
-              show: true,
-            },
-            title : {
-              text: 'dddd',
-              offsetX: 0,
-              offsetY: -110,
-              style: {
-                color: undefined,
-                fontSize: '14px',
-                fontFamily: 'Helvetica, Arial, sans-serif',
-                fontWeight: 600,
-                cssClass: 'apexcharts-xaxis-title',
-              },
-            }
-          },
-        },
-        series: [{data: [17, 15], title: 'Gender', average: [5, 50, ],}]
-      },
-    ]
+    const validateKeyword = (value) => {
+      let error;
+      if (!statesItems.keyWordtext) {
+        error = 'No Keywords';
+      } 
+      return error;
+    }
 
-    const agesChartData = [
-      {
-        options: {
-          chart: {
-            width: '45%',
-            toolbar: {
-              show: false,
-            },
-            zoom: {
-              enabled: false
-            },
-          },
-          legend: {
-            show: false,
-          },
-          fill: {
-            colors: ['#8faadc' ,'#fb9874'],
-          },
-          plotOptions: {
-            bar: {
-              columnWidth: '45%',
-              distributed: true,
-            }
-          },
-          grid: {
-            show: false,
-          },
-          xaxis: {
-            axisTicks: {
-              show: false,
-            },
-            categories: ['Male', 'Female',],
-            labels: {
-              style: {
-                colors: ['#8faadc' ,'#fb9874'],
-                fontSize: '12px'
-              }
-            },
-            title : {
-              text : 'sds',
-              offsetX: 100,
-              offsetY: 0,
-              style: {
-                fontSize: '14px',
-                fontFamily: 'Helvetica, Arial, sans-serif',
-                fontWeight: 600,
-                cssClass: 'apexcharts-xaxis-title',
-              },
-            }
-          },
-          yaxis: {
-            axisTicks: {
-              show: false
-            },
-            axisBorder: {
-              show: true,
-            },
-            title : {
-              text: 'www',
-              offsetX: 0,
-              offsetY: -110,
-              style: {
-                color: undefined,
-                fontSize: '14px',
-                fontFamily: 'Helvetica, Arial, sans-serif',
-                fontWeight: 600,
-                cssClass: 'apexcharts-xaxis-title',
-              },
-            }
-          },
-        },
-        series: [{data: [50, 20], title: 'Sessions', average: [5, 50, ],}]
-      },
-    ]
-
-    const deviceChartData = [
-      {
-        options: {
-          chart: {
-            width: '45%',
-            toolbar: {
-              show: false,
-            },
-            zoom: {
-              enabled: false
-            },
-          },
-          legend: {
-            show: false,
-          },
-          fill: {
-            colors: ['#8faadc' ,'#fb9874'],
-          },
-          plotOptions: {
-            bar: {
-              columnWidth: '45%',
-              distributed: true,
-            }
-          },
-          grid: {
-            show: false,
-          },
-          xaxis: {
-            axisTicks: {
-              show: false,
-            },
-            categories: ['Male', 'Female',],
-            labels: {
-              style: {
-                colors: ['#8faadc' ,'#fb9874'],
-                fontSize: '12px'
-              }
-            },
-            title : {
-              text : 'wqwq',
-              offsetX: 100,
-              offsetY: 0,
-              style: {
-                fontSize: '14px',
-                fontFamily: 'Helvetica, Arial, sans-serif',
-                fontWeight: 600,
-                cssClass: 'apexcharts-xaxis-title',
-              },
-            }
-          },
-          yaxis: {
-            axisTicks: {
-              show: false
-            },
-            axisBorder: {
-              show: true,
-            },
-            title : {
-              text: 'ccc',
-              offsetX: 0,
-              offsetY: -110,
-              style: {
-                color: undefined,
-                fontSize: '14px',
-                fontFamily: 'Helvetica, Arial, sans-serif',
-                fontWeight: 600,
-                cssClass: 'apexcharts-xaxis-title',
-              },
-            }
-          },
-        },
-        series: [{data: [23, 10], title: 'Conversion', average: [5, 50,],}]
-      },
-    ]
-
-    const regionChartData = [
-      {
-        options: {
-          chart: {
-            width: '45%',
-            toolbar: {
-              show: false,
-            },
-            zoom: {
-              enabled: false
-            },
-          },
-          legend: {
-            show: false,
-          },
-          fill: {
-            colors: ['#8faadc' ,'#fb9874'],
-          },
-          plotOptions: {
-            bar: {
-              columnWidth: '45%',
-              distributed: true,
-            }
-          },
-          grid: {
-            show: false,
-          },
-          xaxis: {
-            axisTicks: {
-              show: false,
-            },
-            categories: ['Male', 'Female',],
-            labels: {
-              style: {
-                colors: ['#8faadc' ,'#fb9874'],
-                fontSize: '12px'
-              }
-            },
-            title : {
-              text : 'asaa',
-              offsetX: 100,
-              offsetY: 0,
-              style: {
-                fontSize: '14px',
-                fontFamily: 'Helvetica, Arial, sans-serif',
-                fontWeight: 600,
-                cssClass: 'apexcharts-xaxis-title',
-              },
-            }
-          },
-          yaxis: {
-            axisTicks: {
-              show: false
-            },
-            axisBorder: {
-              show: true,
-            },
-            title : {
-              text: 'hhhh',
-              offsetX: 0,
-              offsetY: -110,
-              style: {
-                color: undefined,
-                fontSize: '14px',
-                fontFamily: 'Helvetica, Arial, sans-serif',
-                fontWeight: 600,
-                cssClass: 'apexcharts-xaxis-title',
-              },
-            }
-          },
-        },
-        series: [{data: [10, 20], title: 'Bounce', average: [5, 50,],}]
-      },
-    ]
-
-    const analysisChartArray = [genderChartData, agesChartData, deviceChartData, regionChartData];
+    const onKeywordChange = (e) =>{
+      
+      this.setState({
+        keyWordtext : e.target.value
+      }); 
+    };
 
 
-    const columns = [
-      {
-        Header: 'Rank',
-        accessor: 'id',
-        cellClass: 'list-item-heading text-center w-10',
-      },
-      {
-        Header: 'GA Inflow Keyword',
-        accessor: 'title',
-        cellClass: 'text-muted text-center w-30',
-      },
-      {
-        Header: 'Users',
-        accessor: 'purchase',
-        cellClass: 'text-muted text-center w-30',
-      },
-      {
-        Header: 'Buzz',
-        accessor: 'satisfaction',
-        cellClass: 'text-muted text-center w-30',
-      },
-    ]
+
+    /*  Start LJJ*/
+    const setGAUserIndicatorsBar = (recvData) => {
+
+      var gaUserBarGenOpt = JSON.parse(JSON.stringify(statesItems.GaAnalysisOption));
+      var gaUserBarAgeOpt = JSON.parse(JSON.stringify(statesItems.GaAnalysisOption));
+      var gaUserBarDeviceOpt = JSON.parse(JSON.stringify(statesItems.GaAnalysisOption));
+      var gaUserBarRegionOpt = JSON.parse(JSON.stringify(statesItems.GaAnalysisOption));
+      
+      var gaUserBarGenSeries = [{data: [recvData.gender.Male, recvData.gender.Female], title: 'Users',}];
+      var gaUserAgeGenSeries = [{data: [recvData.age._18and24, recvData.age._24and34,recvData.age._35and44,recvData.age._45and54,recvData.age._55and64,recvData.age._65plus], title: 'Users',}];
+      var gaUserAgeDeviceSeries = [{data: [recvData.device_category.Desktop, recvData.device_category.Mobile,recvData.device_category.Tablet,], title: 'Users',}];
+      var gaUserAgeRegionSeries = [{data: [recvData.region.Region1, recvData.region.Region2,recvData.region.Region3,recvData.region.Region4,recvData.region.Region5,], title: 'Users',}];
+
+      gaUserBarGenOpt.options.xaxis.categories = ['Male', 'Female',];
+      gaUserBarGenOpt.options.xaxis.title.text = '성별';
+      gaUserBarGenOpt.options.yaxis.title.text = 'Users';
+
+      gaUserBarAgeOpt.options.xaxis.categories =  ['10s','20s','30s','40s','50s','60+',];
+      gaUserBarAgeOpt.options.xaxis.title.text = '연령';
+      gaUserBarAgeOpt.options.yaxis.title.text = 'Users';
+ 
+      gaUserBarDeviceOpt.options.xaxis.categories =   ['Desktop','Mobile','Tablet',];
+      gaUserBarDeviceOpt.options.xaxis.title.text = '디바이스';
+      gaUserBarDeviceOpt.options.yaxis.title.text = 'Users';
+
+      gaUserBarRegionOpt.options.xaxis.categories =  recvData.region.Regions;
+      gaUserBarRegionOpt.options.xaxis.title.text = '지역';
+      gaUserBarRegionOpt.options.yaxis.title.text = 'Users';
+
+      this.setState({
+        GaUserBarGenOpt : gaUserBarGenOpt.options,
+        GaUserBarAgeOpt : gaUserBarAgeOpt.options,
+        GaUserBarDeviceOpt : gaUserBarDeviceOpt.options ,
+        GaUserBarRegionOpt : gaUserBarRegionOpt.options , 
+        GaUserBarGenSeries : gaUserBarGenSeries ,
+        GaUserAgeGenSeries : gaUserAgeGenSeries ,
+        GaUserAgeDeviceSeries : gaUserAgeDeviceSeries ,
+        GaUserAgeRegionSeries : gaUserAgeRegionSeries ,
+      }); 
+    }
+    
+    const setGAUserIndicatorsLine = (recvData) => {
+      var inflowDataopt = JSON.parse(JSON.stringify(statesItems.keywordGap.options));
+      var bounceopt = JSON.parse(JSON.stringify(statesItems.keywordGap.options));
+      var mostVisitedPageopt = JSON.parse(JSON.stringify(statesItems.keywordGap.options));
+      var conversionopt = JSON.parse(JSON.stringify(statesItems.keywordGap.options));
+      var bounceseries = [];
+      var conversionseries = [];
+      var inflowseries = [];
+      var mostVisitedPageseries = [];
+      var inflowLine = [];
+      var inflowCategory = [];
+      var inflowSource1 = {name:"Source1" ,data:[], };
+      var inflowSource2 = {name:"Source2" ,data:[], };
+      var inflowSource3 = {name:"Source3" ,data:[], };
+      var inflowSource4 = {name:"Source4" ,data:[], };
+
+      var bounceLine = [];
+      var bounceCategory = [];
+      var bounceSource1 = {name:"Source1" ,data:[], };
+      var bounceSource2 = {name:"Source2" ,data:[], };
+      var bounceSource3 = {name:"Source3" ,data:[], };
+      var bounceSource4 = {name:"Source4" ,data:[], };
+
+      var mostVisitedPageLine = [];
+      var mostVisitedPageCategory = [];
+      var mostVisitedPageSource1 = {name:"Source1" ,data:[], };
+      var mostVisitedPageSource2 = {name:"Source2" ,data:[], };
+      var mostVisitedPageSource3 = {name:"Source3" ,data:[], };
+      var mostVisitedPageSource4 = {name:"Source4" ,data:[], };
+
+      var conversionLine = [];
+      var conversionCategory = [];
+      var conversionSource1 = {name:"Source1" ,data:[], };
+      var conversionSource2 = {name:"Source2" ,data:[], };
+      var conversionSource3 = {name:"Source3" ,data:[], };
+
+      recvData.inflow.forEach(function(item,idx){
+        inflowSource1.data.push(item.legend1);
+        inflowSource2.data.push(item.legend2);
+        inflowSource3.data.push(item.legend3);
+        inflowSource4.data.push(item.legend4);
+        inflowCategory.push(item.Date.substring(8,10));
+      });
+      inflowSource1.name = recvData.legend_names.inflow_names[0] ;
+      inflowSource2.name = recvData.legend_names.inflow_names[1] ;
+      inflowSource3.name = recvData.legend_names.inflow_names[2] ;
+      inflowSource4.name = recvData.legend_names.inflow_names[3] ;
+
+      recvData.bounce.forEach(function(item,idx){
+        bounceSource1.data.push(item.legend1);
+        bounceSource2.data.push(item.legend2);
+        bounceSource3.data.push(item.legend3);
+        bounceSource4.data.push(item.legend4);
+        bounceCategory.push(item.Date.substring(8,10));
+      });
+      bounceSource1.name = recvData.legend_names.bounce_names[0] ;
+      bounceSource2.name = recvData.legend_names.bounce_names[1] ;
+      bounceSource3.name = recvData.legend_names.bounce_names[2] ;
+      bounceSource4.name = recvData.legend_names.bounce_names[3] ;
+
+      recvData.mostVisitedPage.forEach(function(item,idx){
+        mostVisitedPageSource1.data.push(item.legend1);
+        mostVisitedPageSource2.data.push(item.legend2);
+        mostVisitedPageSource3.data.push(item.legend3);
+        mostVisitedPageSource4.data.push(item.legend4);
+        mostVisitedPageCategory.push(item.Date.substring(8,10));
+      });
+      mostVisitedPageSource1.name = recvData.legend_names.mvp_names[0];
+      mostVisitedPageSource2.name = recvData.legend_names.mvp_names[1];
+      mostVisitedPageSource3.name = recvData.legend_names.mvp_names[2];
+      mostVisitedPageSource4.name = recvData.legend_names.mvp_names[3];
+
+      recvData.conversion.forEach(function(item,idx){
+        conversionSource1.data.push(item.legend1);
+        conversionSource2.data.push(item.legend2);
+        conversionSource3.data.push(item.legend3);
+        conversionCategory.push(item.Date.substring(8,10));
+      });
+      conversionSource1.name = recvData.legend_names.conversion_names[0];
+      conversionSource2.name = recvData.legend_names.conversion_names[1];
+      conversionSource3.name = recvData.legend_names.conversion_names[2];
+
+      inflowseries.push(inflowSource1);
+      inflowseries.push(inflowSource2);
+      inflowseries.push(inflowSource3);
+      inflowseries.push(inflowSource4);
+      bounceseries.push(bounceSource1);
+      bounceseries.push(bounceSource2);
+      bounceseries.push(bounceSource3);
+      bounceseries.push(bounceSource4);
+      mostVisitedPageseries.push(mostVisitedPageSource1);
+      mostVisitedPageseries.push(mostVisitedPageSource2);
+      mostVisitedPageseries.push(mostVisitedPageSource3);
+      mostVisitedPageseries.push(mostVisitedPageSource4);
+      conversionseries.push(conversionSource1);
+      conversionseries.push(conversionSource2);
+      conversionseries.push(conversionSource3);
+      
+
+      inflowDataopt.xaxis.categories = inflowCategory;
+      bounceopt.xaxis.categories = bounceCategory;
+      mostVisitedPageopt.xaxis.categories = mostVisitedPageCategory;
+      conversionopt.xaxis.categories = conversionCategory;
+      this.setState({
+        bounceOpt : bounceopt,
+        conversionOpt : conversionopt,
+        inflowOpt : inflowDataopt ,
+        mostVisitedPageOpt : mostVisitedPageopt, 
+        bounceSeries  : bounceseries,
+        conversionSeries  : conversionseries ,
+        inflowSeries  : inflowseries,
+        mostVisitedPageSeries  : mostVisitedPageseries, 
+      });
+    }
+    
+    const setGABoardTrend = (recvData) => {
+      var UserChartData = {name:"User", data : [] ,};
+      var SessionsChartData = {name:"Sessions",data : [] ,};
+      var ConversionChartData = {name:"Conversion", data : [] ,};
+      var BounceChartData = {name:"Bounce",data : [] ,};
+      var userSessionData = [];
+      var conversionBounceData = [];
+      var category = [];
+      recvData.items.forEach(function(item,idx){
+        category.push(item.Date.substring(8,11));
+        UserChartData.data.push(item.Users);
+        SessionsChartData.data.push(item.Sessions);
+        ConversionChartData.data.push(item.Conversion_Rate);
+        BounceChartData.data.push(item.Bounce_Rate);
+      });
+      userSessionData.push(UserChartData);
+      userSessionData.push(SessionsChartData);
+      conversionBounceData.push(ConversionChartData);
+      conversionBounceData.push(BounceChartData);
+      this.setState({
+        UsersSessionsSeries : userSessionData,
+        ConversionBounceRateSeries : conversionBounceData,
+      });
+      this.setState(prev =>({  
+        ...prev,
+        totalGraph : {
+          options : {
+            xaxis : {
+              categories: category,
+            }
+          }
+        },              
+      }));
+    }
+
+    const setGADemographicsAnalysis = (recvData) => {
+      var analysisChartArr = [];
+
+      var Genders = ['Male', 'Female',];
+      var genderUserSeries = [{data: [recvData.gender.Users.Male, recvData.gender.Users.Female], title: 'Users',}];
+      var genderSessionsSeries = [{data: [recvData.gender.Sessions.Male, recvData.gender.Sessions.Female], title: 'Sessions'}];
+      var genderConversionSeries = [{data: [recvData.gender.Conversion_Rate.Male, recvData.gender.Conversion_Rate.Female], title: 'Conversion', }];
+      var genderBounceSeries = [{data: [recvData.gender.Bounce_Rate.Male, recvData.gender.Bounce_Rate.Female], title: 'Bounce', }];
+
+      var Ages = ['10s','20s','30s','40s','50s','60+',];
+      var ageUserSeries = [{data: [recvData.age.Users._18and24, recvData.age.Users._24and34,recvData.age.Users._35and44,recvData.age.Users._45and54,recvData.age.Users._55and64,recvData.age.Users._65plus], title: 'Users',}];
+      var ageSessionsSeries = [{data: [recvData.age.Sessions._18and24, recvData.age.Sessions._24and34,recvData.age.Sessions._35and44,recvData.age.Sessions._45and54,recvData.age.Sessions._55and64,recvData.age.Sessions._65plus], title: 'Sessions'}];
+      var ageConversionSeries = [{data: [recvData.age.Conversion_Rate._18and24, recvData.age.Conversion_Rate._24and34,recvData.age.Conversion_Rate._35and44,recvData.age.Conversion_Rate._45and54,recvData.age.Conversion_Rate._55and64,recvData.age.Conversion_Rate._65plus], title: 'Conversion', }];
+      var ageBounceSeries = [{data: [recvData.age.Bounce_Rate._18and24, recvData.age.Bounce_Rate._24and34,recvData.age.Bounce_Rate._35and44,recvData.age.Bounce_Rate._45and54,recvData.age.Bounce_Rate._55and64,recvData.age.Bounce_Rate._65plus], title: 'Bounce', }];
+
+      var Devices = ['Desktop','Mobile','Tablet',];
+      var deviceUserSeries = [{data: [recvData.device_category.Users.Desktop, recvData.device_category.Users.Mobile,recvData.device_category.Users.Tablet,], title: 'Users',}];
+      var deviceSessionsSeries = [{data: [recvData.device_category.Sessions.Desktop, recvData.device_category.Sessions.Mobile,recvData.device_category.Sessions.Tablet,], title: 'Sessions'}];
+      var deviceConversionSeries = [{data: [recvData.device_category.Conversion_Rate.Desktop, recvData.device_category.Conversion_Rate.Mobile,recvData.device_category.Conversion_Rate.Tablet,], title: 'Conversion', }];
+      var deviceBounceSeries = [{data: [recvData.device_category.Bounce_Rate.Desktop, recvData.device_category.Bounce_Rate.Mobile,recvData.device_category.Bounce_Rate.Tablet,], title: 'Bounce', }];
+
+      var Regions = recvData.region.Regions;
+      var regionUserSeries = [{data: [recvData.region.Users.Region1, recvData.region.Users.Region2,recvData.region.Users.Region3,recvData.region.Users.Region4,recvData.region.Users.Region5,], title: 'Users',}];
+      var regionSessionsSeries = [{data: [recvData.region.Sessions.Region1, recvData.region.Sessions.Region2,recvData.region.Sessions.Region3,recvData.region.Sessions.Region4,recvData.region.Sessions.Region5,], title: 'Sessions'}];
+      var regionConversionSeries = [{data: [recvData.region.Conversion_Rate.Region1, recvData.region.Conversion_Rate.Region2,recvData.region.Conversion_Rate.Region3,recvData.region.Conversion_Rate.Region4,recvData.region.Conversion_Rate.Region5,], title: 'Conversion', }];
+      var regionBounceSeries = [{data: [recvData.region.Bounce_Rate.Region1, recvData.region.Bounce_Rate.Region2,recvData.region.Bounce_Rate.Region3,recvData.region.Bounce_Rate.Region4,recvData.region.Bounce_Rate.Region5,], title: 'Bounce', }];
+
+      var genderChartDataDemo = [];
+      var genderChartDataopt1 = JSON.parse(JSON.stringify(statesItems.GaAnalysisOption));
+      var genderChartDataopt2 = JSON.parse(JSON.stringify(statesItems.GaAnalysisOption));
+      var genderChartDataopt3 = JSON.parse(JSON.stringify(statesItems.GaAnalysisOption));
+      var genderChartDataopt4 = JSON.parse(JSON.stringify(statesItems.GaAnalysisOption));
+
+      var agesChartDataDemo = [];
+      var agesChartDataopt1 = JSON.parse(JSON.stringify(statesItems.GaAnalysisOption));
+      var agesChartDataopt2 = JSON.parse(JSON.stringify(statesItems.GaAnalysisOption));
+      var agesChartDataopt3 = JSON.parse(JSON.stringify(statesItems.GaAnalysisOption));
+      var agesChartDataopt4 = JSON.parse(JSON.stringify(statesItems.GaAnalysisOption));
+
+      var devicesChartDataDemo = [];
+      var devicesChartDataopt1 = JSON.parse(JSON.stringify(statesItems.GaAnalysisOption));
+      var devicesChartDataopt2 = JSON.parse(JSON.stringify(statesItems.GaAnalysisOption));
+      var devicesChartDataopt3 = JSON.parse(JSON.stringify(statesItems.GaAnalysisOption));
+      var devicesChartDataopt4 = JSON.parse(JSON.stringify(statesItems.GaAnalysisOption));
+
+      var regionChartDataDemo = [];
+      var regionChartDataopt1 = JSON.parse(JSON.stringify(statesItems.GaAnalysisOption));
+      var regionChartDataopt2 = JSON.parse(JSON.stringify(statesItems.GaAnalysisOption));
+      var regionChartDataopt3 = JSON.parse(JSON.stringify(statesItems.GaAnalysisOption));
+      var regionChartDataopt4 = JSON.parse(JSON.stringify(statesItems.GaAnalysisOption));
+
+      genderChartDataopt1.options.xaxis.categories = Genders;
+      genderChartDataopt1.options.xaxis.title.text = '성별';
+      genderChartDataopt1.options.yaxis.title.text = 'Users';
+      genderChartDataopt1.series = genderUserSeries;
+
+      genderChartDataopt2.options.xaxis.categories = Genders;
+      genderChartDataopt2.options.xaxis.title.text = '성별';
+      genderChartDataopt2.options.yaxis.title.text = 'Sessions';
+      genderChartDataopt2.series = genderSessionsSeries;
+
+      genderChartDataopt3.options.xaxis.categories = Genders;
+      genderChartDataopt3.options.xaxis.title.text = '성별';
+      genderChartDataopt3.options.yaxis.title.text = 'Conversion';
+      genderChartDataopt3.series = genderConversionSeries;
+
+      genderChartDataopt4.options.xaxis.categories = Genders;
+      genderChartDataopt4.options.xaxis.title.text = '성별';
+      genderChartDataopt4.options.yaxis.title.text = 'Bounce';
+      genderChartDataopt4.series = genderBounceSeries;
+      
+      genderChartDataDemo.push(genderChartDataopt1);
+      genderChartDataDemo.push(genderChartDataopt2);
+      genderChartDataDemo.push(genderChartDataopt3);
+      genderChartDataDemo.push(genderChartDataopt4);
+
+      agesChartDataopt1.options.xaxis.categories = Ages;
+      agesChartDataopt1.options.xaxis.title.text = '';
+      agesChartDataopt1.options.yaxis.title.text = 'Users';
+      agesChartDataopt1.series = ageUserSeries;
+
+      agesChartDataopt2.options.xaxis.categories = Ages;
+      agesChartDataopt2.options.xaxis.title.text = '';
+      agesChartDataopt2.options.yaxis.title.text = 'Sessions';
+      agesChartDataopt2.series = ageSessionsSeries;
+
+      agesChartDataopt3.options.xaxis.categories = Ages;
+      agesChartDataopt3.options.xaxis.title.text = '';
+      agesChartDataopt3.options.yaxis.title.text = 'Conversion';
+      agesChartDataopt3.series = ageConversionSeries;
+
+      agesChartDataopt4.options.xaxis.categories = Ages;
+      agesChartDataopt4.options.xaxis.title.text = '';
+      agesChartDataopt4.options.yaxis.title.text = 'Bounce';
+      agesChartDataopt4.series = ageBounceSeries;
+
+      agesChartDataDemo.push(agesChartDataopt1);
+      agesChartDataDemo.push(agesChartDataopt2);
+      agesChartDataDemo.push(agesChartDataopt3);
+      agesChartDataDemo.push(agesChartDataopt4);
+
+
+      devicesChartDataopt1.options.xaxis.categories = Devices;
+      devicesChartDataopt1.options.xaxis.title.text = '';
+      devicesChartDataopt1.options.yaxis.title.text = 'Users';
+      devicesChartDataopt1.series = deviceUserSeries;
+
+      devicesChartDataopt2.options.xaxis.categories = Devices;
+      devicesChartDataopt2.options.xaxis.title.text = '';
+      devicesChartDataopt2.options.yaxis.title.text = 'Sessions';
+      devicesChartDataopt2.series = deviceSessionsSeries;
+
+      devicesChartDataopt3.options.xaxis.categories = Devices;
+      devicesChartDataopt3.options.xaxis.title.text = '';
+      devicesChartDataopt3.options.yaxis.title.text = 'Conversion';
+      devicesChartDataopt3.series = deviceConversionSeries;
+
+      devicesChartDataopt4.options.xaxis.categories = Devices;
+      devicesChartDataopt4.options.xaxis.title.text = '';
+      devicesChartDataopt4.options.yaxis.title.text = 'Bounce';
+      devicesChartDataopt4.series = deviceBounceSeries;
+
+      devicesChartDataDemo.push(devicesChartDataopt1);
+      devicesChartDataDemo.push(devicesChartDataopt2);
+      devicesChartDataDemo.push(devicesChartDataopt3);
+      devicesChartDataDemo.push(devicesChartDataopt4);
+
+
+      regionChartDataopt1.options.xaxis.categories = Regions;
+      regionChartDataopt1.options.xaxis.title.text = '';
+      regionChartDataopt1.options.yaxis.title.text = 'Users';
+      regionChartDataopt1.series = regionUserSeries;
+
+      regionChartDataopt2.options.xaxis.categories = Regions;
+      regionChartDataopt2.options.xaxis.title.text = '';
+      regionChartDataopt2.options.yaxis.title.text = 'Sessions';
+      regionChartDataopt2.series = regionSessionsSeries;
+
+      regionChartDataopt3.options.xaxis.categories = Regions;
+      regionChartDataopt3.options.xaxis.title.text = '';
+      regionChartDataopt3.options.yaxis.title.text = 'Conversion';
+      regionChartDataopt3.series = regionConversionSeries;
+
+      regionChartDataopt4.options.xaxis.categories = Regions;
+      regionChartDataopt4.options.xaxis.title.text = '';
+      regionChartDataopt4.options.yaxis.title.text = 'Bounce';
+      regionChartDataopt4.series = regionBounceSeries;
+
+      regionChartDataDemo.push(regionChartDataopt1);
+      regionChartDataDemo.push(regionChartDataopt2);
+      regionChartDataDemo.push(regionChartDataopt3);
+      regionChartDataDemo.push(regionChartDataopt4);
+
+      analysisChartArr.push(genderChartDataDemo);
+      analysisChartArr.push(agesChartDataDemo);
+      analysisChartArr.push(devicesChartDataDemo);
+      analysisChartArr.push(regionChartDataDemo);
+      console.log('setGADemographicsAnalysis',analysisChartArr);
+      this.setState({  
+        AnalysisChartArray : analysisChartArr ,
+      }); 
+     
+    }
+
+    const setGASocialComparison = (recvData) => {
+      var category = [];
+      var Users = [];
+      var Sessions = [];
+      var ConversionRate = [];
+      var BounceRate = [];
+      var Buzz = [];
+      var SearchVolume = [];
+      var Products = [];
+      var tableData = [];
+      recvData.items.forEach(function(item,idx){
+        category.push(item.Keyword);
+        Users.push(item.Users);
+        Sessions.push(item.Sessions);
+        ConversionRate.push(item.Conversion_Rate);
+        BounceRate.push(item.Bounce_Rate);
+        Buzz.push(item.Buzz);
+        SearchVolume.push(item.SearchVolume);
+        Products.push(item.Products);
+        tableData.push({id:idx + 1 , title:item.Keyword , purchase : item.Users, satisfaction:item.Buzz,});
+          
+      });    
+
+      this.setState({  
+        TableDataSocial: tableData ,
+        internalIndexSelected  : { label: 'Users', value: 'Users', key: 0 } ,
+        externalSelected : { label: 'Buzz', value: 'Buzz', key: 0 },
+        GASocialComparison : {
+          CategoryData : category ,
+          UsersData : Users , 
+          SessionsData : Sessions ,  
+          ConversionRateData : ConversionRate ,
+          BounceRateData : BounceRate , 
+          BuzzData : Buzz , 
+          SearchVolumeData : SearchVolume , 
+          ProductsData : Products ,
+        } ,
+      }); 
+    }
+
+    const setGAKeywordGap = (recvData) => {
+      var category = [];
+      var BounceRate = [];
+      var ConversionRate = [];
+      var Sessions = [];
+      var SessionsRatio = [];
+      var Users = [];
+      var UsersRatio = [];
+      var usersChartDataGap = [];
+      var sessionsChartDataGap  = [];
+      var conversionChartDataGap   = [];
+      var bounceChartDataGap    = [];
+      var chartDataArrayGap = [];
+      // console.log('setGAKeywordGap',recvData);
+      
+      recvData.items.forEach(function(item,idx){
+        category.push(item.Keyword);
+        BounceRate.push(item.Bounce_Rate);
+        ConversionRate.push(item.Conversion_Rate);
+        Sessions.push(item.Sessions);
+        SessionsRatio.push(item.Sessions_Ratio);
+        Users.push(item.Users);
+        UsersRatio.push(item.Users_Ratio);
+      });
+      // console.log('setGAKeywordGap',category);
+      usersChartDataGap.push({id: 1, series: [{data: Users, title: 'Users', average: UsersRatio,}]});
+      sessionsChartDataGap.push({id: 1, series: [{data: Sessions, title: 'Sessions', average: SessionsRatio,}]});
+      conversionChartDataGap.push( {id: 1, series: [{data: ConversionRate , title: 'Conversion',average: [], }]});
+      bounceChartDataGap.push( {id: 1, series: [{data: BounceRate, title: 'Bounce', average: [],}]});
+      chartDataArrayGap.push(usersChartDataGap);
+      chartDataArrayGap.push(sessionsChartDataGap);
+      chartDataArrayGap.push(conversionChartDataGap);
+      chartDataArrayGap.push(bounceChartDataGap);
+      // console.log('setGAKeywordGap',chartDataArray);
+      this.setState({  
+          chartDataArray: chartDataArrayGap ,
+        });
+
+      this.setState(prev =>({  
+           ...prev,
+           horizontal : {
+              options : {
+                xaxis : {
+                  categories: category,
+                }
+              }
+           }, 
+             
+      }));
+    }
+
+
+    const getGAUserIndicatorsBar = (searchCondition) => {
+      axios.post("/trendga/GetGA_User_Indicators_Bar",searchCondition)
+      .then((response) => {
+          console.log('getGAUserIndicatorsBar ' , response.data );
+          setGAUserIndicatorsBar(response.data);
+      })
+      .catch(function (error) {
+          console.log(error);         
+      });
+    }   
+
+    const getGAUserIndicatorsLine = (searchCondition) => {
+      axios.post("/trendga/GetGA_User_Indicators_Line",searchCondition)
+      .then((response) => {
+          console.log('getGAUserIndicatorsLine ' , response.data );
+          setGAUserIndicatorsLine(response.data );
+      })
+      .catch(function (error) {
+          console.log(error);
+      });
+    }   
+
+    const getGABoardTrend = (searchCondition) => {
+      axios.post("/trendga/GetGA_Board_Trend",searchCondition)
+      .then((response) => {
+          console.log('getGABoardTrend ' , response.data );
+          setGABoardTrend(response.data);
+      })
+      .catch(function (error) {
+          console.log(error);
+      });
+    }   
+
+    const getGADemographicsAnalysis = (searchCondition) => {
+      axios.post("/trendga/GetGA_Demographics_Analysis",searchCondition)
+      .then((response) => {
+        console.log('getGADemographicsAnalysis ' , response.data );
+        setGADemographicsAnalysis(response.data);
+      })
+      .catch(function (error) {
+          console.log(error);
+      });
+    }   
+
+    const getGASocialComparison = (searchCondition) => {
+      axios.post("/trendga/GetGA_Social_Comparison",searchCondition)
+      .then((response) => {
+        console.log('getGASocialComparison ' , response.data );
+        setGASocialComparison(response.data);
+      })
+      .catch(function (error) {
+          console.log(error);
+      });
+    }   
+    
+    const getGAKeywordGap = (searchCondition) => {
+      axios.post("/trendga/GetGA_Keyword_GAP",searchCondition)
+      .then((response) => {
+         console.log('getGAKeywordGap ' , response.data );
+         setGAKeywordGap(response.data);
+      })
+      .catch(function (error) {
+          console.log(error);
+      });
+
+    }
+
+    const searchStart = () =>{
+      var searchCondition = {} ;
+      let periodUnit = '';
+      statesItems.checkInfo.forEach(item => {
+        if (item.isChecked){
+          periodUnit = item.value;
+        }
+      });
+      searchCondition.Period_Unit = periodUnit;
+      searchCondition.Company = statesItems.userInfo.CompanyName;
+      searchCondition.CompanyCode = statesItems.userInfo.CompanyCode;
+      searchCondition.Keyword = statesItems.keyWordtext;
+
+      console.log("googleAnalytics  searchStart" , searchCondition );
+      
+      getGAKeywordGap(searchCondition);
+      getGASocialComparison(searchCondition);
+      getGADemographicsAnalysis(searchCondition);
+      getGABoardTrend(searchCondition);
+      getGAUserIndicatorsLine(searchCondition);
+      getGAUserIndicatorsBar(searchCondition);
+    }
+
+    const onKeywordpress = (e) =>{
+      if (e.keyCode === 13){
+        e.preventDefault();
+        // 여기서 Search 로 이동
+      }
+    };
 
     return (
       
@@ -980,7 +1196,7 @@ class GoogleAnalytics extends React.Component {
                                   className='check-single-box'
                                   />{' '}
                                   <label htmlFor={items.id} className='bx_check_oran'>
-                                    <span>{items.value}</span>
+                                    <span>{items.view}</span>
                                   </label>
                                 </FormGroup>
                               )
@@ -1025,7 +1241,10 @@ class GoogleAnalytics extends React.Component {
                                 <Field
                                   className="form-control"
                                   name="keyword"
-                                  validate={this.validateKeyword}
+                                  validate={validateKeyword}
+                                  onChange={onKeywordChange}
+                                  onKeyDown={onKeywordpress}
+                                  value={statesItems.keyWordtext}
                                 />
                                 {errors.keyword && touched.keyword && (
                                   <div className="d-block noti-text">
@@ -1041,7 +1260,7 @@ class GoogleAnalytics extends React.Component {
                     </table>
                   </div>
                   <div className="text-center">
-                    <Button className="btn-xl mt-4" color="gray" type="submit">
+                    <Button className="btn-xl mt-4" color="gray" onClick={searchStart}>
                       ENTER
                     </Button>
                   </div>
@@ -1076,7 +1295,7 @@ class GoogleAnalytics extends React.Component {
                 </ul>
 
                 <div className="tab-chart-area">
-                  {chartDataArray.map((list , indx) => {
+                  {statesItems.chartDataArray.map((list , indx) => {
                       return(
                         <div 
                           key={indx} 
@@ -1120,8 +1339,8 @@ class GoogleAnalytics extends React.Component {
                         className="react-select"
                         classNamePrefix="react-select"
                         name="form-field-name"
-                        value={internalIndexSelected}
-                        onChange={this.changeOption}
+                        value={statesItems.internalIndexSelected}
+                        onChange={this.inchangeOption}
                         options={internalIndex}
                       />
                     </FormGroup>
@@ -1132,15 +1351,16 @@ class GoogleAnalytics extends React.Component {
                         className="react-select"
                         classNamePrefix="react-select"
                         name="form-field-name"
-                        value={externalSelected}
-                        onChange={this.changeOption}
+                        value={statesItems.externalSelected}
+                        onChange={this.exchangeOption}
                         options={externalIndex}
                       />
                     </FormGroup>
                   </div>
                   <ReactTable
-                    data={TableData}
-                    columns={columns}
+                    data={statesItems.TableDataSocial}
+                    columns={statesItems.columns}
+                    defaultPageSize="6"
                   />
                 </div>
               </CardBody>
@@ -1174,7 +1394,7 @@ class GoogleAnalytics extends React.Component {
                 </ul>
 
                 <div className="graph-area bar">
-                  {analysisChartArray.map((list , indx) => {
+                  {statesItems.AnalysisChartArray.map((list , indx) => {
                       return(
                         <ul 
                           key={indx} 
@@ -1215,12 +1435,12 @@ class GoogleAnalytics extends React.Component {
                   <div className='graph-area total-area title-type box-left'>
                     <p className='bx_name'>Users / Sessions</p>
                     <p className='cont-noti'>* 지수화하여 표시</p>
-                    <CompareLine options={statesItems.totalGraph.options} series={statesItems.totalGraph.series} height={statesItems.totalGraph.height} />
+                    <CompareLine options={statesItems.totalGraph.options} series={statesItems.UsersSessionsSeries} height={statesItems.totalGraph.height} />
                   </div>
                   <div className='graph-area total-area title-type box-right'>
                     <p className='bx_name'>Conversion rate / Bounce rate</p>
                     <p className='cont-noti'>* 지수화하여 표시</p>
-                    <CompareLine options={statesItems.totalGraph.options} series={statesItems.totalGraph.series} height={statesItems.totalGraph.height} />
+                    <CompareLine options={statesItems.totalGraph.options} series={statesItems.ConversionBounceRateSeries} height={statesItems.totalGraph.height} />
                   </div>
                 </div>
               </CardBody>
@@ -1229,13 +1449,13 @@ class GoogleAnalytics extends React.Component {
         </Row>
         {/* e: GA Broad Trend Chart */}
 
-        {/* s: GA Keyword Gap */}
+        {/* s: GA User Indicators */}
         <Row className="mt-5">
           <Colxx xxs="12">
             <Card>
               <CardBody>
                 <div className="box-title">
-                  <h2>GA Keyword Gap</h2>
+                  <h2>GA User Indicators</h2>
                 </div>
                 {/* s: 탭메뉴 */}
                 <Nav tabs className="card-header-tabs keyword-gap-tab">
@@ -1276,7 +1496,7 @@ class GoogleAnalytics extends React.Component {
                       })}
                       onClick={() => { this.tabToggle('4'); }}
                     >
-                      Bounce
+                      Conversion
                     </NavLink>
                   </NavItem>
                 </Nav>
@@ -1288,22 +1508,8 @@ class GoogleAnalytics extends React.Component {
                       <>
                       <div className='graph-area total-area title-type'>
                         <p className='cont-noti'>단위: 건</p>
-                        <CompareLine options={statesItems.keywordGap.options} series={statesItems.keywordGap.series} height={statesItems.keywordGap.height} />
-                      </div>
-                      <div className="graph-area total-area title-type keyword-gap-type mt-2">
-                        <div className="keyword-chart-area">
-                          {genderChartData.map((item, idx) => {
-                            return(
-                              <div
-                                key={idx}
-                                className='chart-area'
-                              >
-                                <CompareBar options={item.options} series={item.series} type="bar" height={350} width='100%' className="analysis-chart-bar" />
-                              </div>
-                            );
-                          })}
-                        </div>
-                      </div>
+                        <CompareLine options={statesItems.inflowOpt} series={statesItems.inflowSeries} height={statesItems.keywordGap.height} />
+                      </div>                      
                       </>
                     }
                   </TabPane>
@@ -1312,22 +1518,9 @@ class GoogleAnalytics extends React.Component {
                       <>
                       <div className='graph-area total-area title-type'>
                         <p className='cont-noti'>단위: 건</p>
-                        <CompareLine options={statesItems.keywordGap.options} series={statesItems.keywordGap.series} height={statesItems.keywordGap.height} />
+                        <CompareLine options={statesItems.bounceOpt} series={statesItems.bounceSeries} height={statesItems.keywordGap.height} />
                       </div>
-                      <div className="graph-area total-area title-type keyword-gap-type mt-2">
-                        <div className="keyword-chart-area">
-                          {agesChartData.map((item, idx) => {
-                            return(
-                              <div
-                                key={idx}
-                                className='chart-area'
-                              >
-                                <CompareBar options={item.options} series={item.series} type="bar" height={350} width='100%' className="analysis-chart-bar" />
-                              </div>
-                            );
-                          })}
-                        </div>
-                      </div>
+                      
                       </>
                     }
                   </TabPane>
@@ -1336,22 +1529,9 @@ class GoogleAnalytics extends React.Component {
                       <>
                       <div className='graph-area total-area title-type'>
                         <p className='cont-noti'>단위: 건</p>
-                        <CompareLine options={statesItems.keywordGap.options} series={statesItems.keywordGap.series} height={statesItems.keywordGap.height} />
+                        <CompareLine options={statesItems.mostVisitedPageOpt} series={statesItems.mostVisitedPageSeries} height={statesItems.keywordGap.height} />
                       </div>
-                      <div className="graph-area total-area title-type keyword-gap-type mt-2">
-                        <div className="keyword-chart-area">
-                          {genderChartData.map((item, idx) => {
-                            return(
-                              <div
-                                key={idx}
-                                className='chart-area'
-                              >
-                                <CompareBar options={item.options} series={item.series} type="bar" height={350} width='100%' className="analysis-chart-bar" />
-                              </div>
-                            );
-                          })}
-                        </div>
-                      </div>
+                      
                       </>
                     }
                   </TabPane>
@@ -1360,7 +1540,7 @@ class GoogleAnalytics extends React.Component {
                       <>
                       <div className='graph-area total-area title-type'>
                         <p className='cont-noti'>단위: 건</p>
-                        <CompareLine options={statesItems.keywordGap.options} series={statesItems.keywordGap.series} height={statesItems.keywordGap.height} />
+                        <CompareLine options={statesItems.conversionOpt} series={statesItems.conversionSeries} height={statesItems.keywordGap.height} />
                       </div>
                       <div className="graph-area total-area title-type keyword-gap-type mt-2">
                         <div className="keyword-chart-area">
@@ -1380,12 +1560,30 @@ class GoogleAnalytics extends React.Component {
                     }
                   </TabPane>
                 </TabContent>
+                
+                <div className="graph-area total-area title-type keyword-gap-type mt-2">
+                  <div className="keyword-chart-area">
+                    <div  className='chart-area'>
+                      <CompareBar options={statesItems.GaUserBarGenOpt} series={statesItems.GaUserBarGenSeries} type="bar" height={350} width='100%' className="analysis-chart-bar" />
+                    </div>
+                    <div  className='chart-area'> 
+                      <CompareBar options={statesItems.GaUserBarAgeOpt} series={statesItems.GaUserAgeGenSeries} type="bar" height={350} width='100%' className="analysis-chart-bar" />
+                    </div>
+                    <div  className='chart-area'> 
+                      <CompareBar options={statesItems.GaUserBarDeviceOpt} series={statesItems.GaUserAgeDeviceSeries} type="bar" height={350} width='100%' className="analysis-chart-bar" />
+                    </div>
+                    <div className='chart-area'> 
+                      <CompareBar options={statesItems.GaUserBarRegionOpt} series={statesItems.GaUserAgeRegionSeries} type="bar" height={350} width='100%' className="analysis-chart-bar" />
+                    </div>
+                  </div>
+                </div>
+               
                 {/* e: 탭메뉴 */}
               </CardBody>
             </Card>
           </Colxx>
         </Row>
-        {/* e: GA Keyword Gap */}
+        {/* e: GA User Indicators */}
 
       </>
     )

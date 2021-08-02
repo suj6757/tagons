@@ -747,6 +747,14 @@ class Overview extends React.Component {
             })
         }
       }
+
+      const onKeywordpress = (e) =>{
+        if (e.keyCode === 13){
+          e.preventDefault();
+          // 여기서 Search 로 이동
+        }
+      };
+
       return(
           <div className='overview_area'>
               <Row>
@@ -829,6 +837,7 @@ class Overview extends React.Component {
                                               name="keyword"
                                               value={statesItems.keyWordtext}
                                               onChange={onKeywordChange}
+                                              onKeyDown={onKeywordpress}
                                               validate={validateKeyword}
                                           />
                                           {errors.keyword && touched.keyword && (

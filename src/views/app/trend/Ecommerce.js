@@ -1,3 +1,6 @@
+/* eslint-disable react/no-unused-state */
+/* eslint-disable no-param-reassign */
+/* eslint-disable jsx-a11y/label-has-for */
 import React from 'react';
 import { Row,
      Card,
@@ -228,6 +231,13 @@ class Ecommerce extends React.Component {
         });
         //여기서 조회 API 구현하면 됨
       }; 
+
+      const onKeywordpress = (e) =>{
+        if (e.keyCode === 13){
+          e.preventDefault();
+          // 여기서 Search 로 이동
+        }
+      };
       return(
           <div className='social_area'>
               <Row>
@@ -287,6 +297,7 @@ class Ecommerce extends React.Component {
                                           <Field
                                               className="form-control"
                                               name="keyword"
+                                              onKeyDown={onKeywordpress}
                                               validate={validateKeyword}
                                           />
                                           {errors.keyword && touched.keyword && (

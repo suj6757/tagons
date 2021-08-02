@@ -1,8 +1,10 @@
+/* eslint-disable react/no-unused-state */
 import React from 'react';
 import { Row, Card, CardBody, Form, Button, FormGroup } from 'reactstrap';
 import { Formik, Field } from 'formik';
 import DatePicker from 'react-datepicker';
 import { ko } from "date-fns/esm/locale";
+import TableRowspan from '../../../components/applications/TableRowspan';
 import { Colxx } from '../../../components/common/CustomBootstrap';
 import 'react-datepicker/dist/react-datepicker.css';
 import ChannelButton from '../../../components/applications/ChannelButton'
@@ -126,7 +128,12 @@ class Channels extends React.Component {
 
 
       };
-
+      const onKeywordpress = (e) =>{
+        if (e.keyCode === 13){
+          e.preventDefault();
+          // 여기서 Search 로 이동
+        }
+      };
       return(
         <>
           <Row>
@@ -186,6 +193,7 @@ class Channels extends React.Component {
                                   <Field
                                       className="form-control"
                                       name="keyword"
+                                      onKeyDown={onKeywordpress}
                                       validate={validateKeyword}
                                   />
                                   {errors.keyword && touched.keyword && (
