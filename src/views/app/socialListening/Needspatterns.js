@@ -185,6 +185,11 @@ class Needspatterns extends React.Component {
   componentDidMount = () => {
     console.log('search : ', this.state.searchCondition);
 
+    post('/sociallistening/GetNeeds_Pattern_Init', this.state.searchCondition).
+    then((response) => {
+        console.log(response);
+    });
+
     let responseTotal = [
       {
         data: [
