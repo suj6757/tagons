@@ -14,7 +14,7 @@ router.use('/', (req, res) => {
     var serverIpOld = '203.245.41.17:50052';
     var serverIpNew = '211.206.127.139:50052';
     var path =  require("path");
-    var PROTO_PATH_TEST = path.join(__dirname,'../proto/OnDetailOverviewService.proto') ;
+    var PROTO_PATH_TEST = path.join(__dirname,'../proto/SocialListeningService.proto') ;
 
     var packageDefinition = protoLoader.loadSync(PROTO_PATH_TEST,
     {

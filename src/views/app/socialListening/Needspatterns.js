@@ -24,6 +24,7 @@ import CompareBar from '../../../components/charts/CompareBar';
 import CompareLine from '../../../components/charts/CompareLine';
 // import {ReactTable} from '../../../containers/ui/ReactTable';
 import { TableData } from './tableData';
+import { login, UserInfo, logout } from '../../../services/LoginService';
 import { post } from 'axios';
 import 'react-datepicker/dist/react-datepicker.css';
 
@@ -32,9 +33,26 @@ class Needspatterns extends React.Component {
   constructor(props) {
     super(props); // React.Component의 생성자 메소드를 먼저 실행
 
+    let date1 = new Date();
+    let date2 = new Date();
+    let loginYN = (UserInfo() !== null);
+    let userData = UserInfo();
+    date1.setDate(date1.getDate() - 9);
+    date2.setDate(date2.getDate() - 2);
+
     this.state = {
-      startDate: new Date(),
-      endDate: new Date(),
+      startDate: date1,
+      endDate: date2,
+      searchBtnClick : false,
+      searchStart : false,
+      userInfo : userData,
+      keyWordtext : "",
+      selectedOptionsBase : [],
+      searchCondition: {},
+      // eslint-disable-next-line react/no-unused-state
+      selectedOptions : [],
+      // eslint-disable-next-line react/no-unused-state
+      channelOption : [],
       treemapTotal : {
         series: [],
         height: 540,
@@ -105,6 +123,7 @@ class Needspatterns extends React.Component {
           },
         }
       },
+      treemapTotalTable : [],
       treemapSelect : {
         series: [],
         height: 540,
@@ -177,68 +196,10 @@ class Needspatterns extends React.Component {
           },
         },
       },
-      selectedOptions: null,
+      treemapSelectTable : []
     };
   }
-
-  //test용도
-  componentDidMount = () => {
-    console.log('search : ', this.state.searchCondition);
-
-    post('/sociallistening/GetNeeds_Pattern_Init', this.state.searchCondition).
-    then((response) => {
-        console.log(response);
-    });
-
-    let responseTotal = [
-      {
-        data: [
-          { x: 'Group1', y: 80 },
-          { x: 'Group2', y: 5 },
-          { x: 'Group3', y: 10 },
-          { x: 'Group4', y: 20 },
-          { x: 'Group5', y: 5 },
-          { x: 'Group6', y: 25 },
-          { x: 'Group7', y: 5 },
-          { x: 'Group8', y: 10 },
-          { x: 'Group9', y: 15 },
-          { x: 'Group10', y: 10 }
-        ]
-      }
-    ]
-
-    let responseSelect = [
-      {
-        data: [
-          { x: 'Group1', y: 35.8 },
-          { x: 'Group2', y: 25.8 },
-          { x: 'Group3', y: 10.9 },
-          { x: 'Group4', y: 25 },
-          { x: 'Group5', y: 5 },
-          { x: 'Group6', y: 25 },
-          { x: 'Group7', y: 8 },
-          { x: 'Group8', y: 13 },
-          { x: 'Group9', y: 23 },
-          { x: 'Group10', y: 15 }
-        ]
-      }
-    ]
-
-    this.setState(prev => ({
-      ...prev,
-      treemapTotal : {
-        ...prev.treemapTotal,
-        series : responseTotal
-      },
-      treemapSelect : {
-        ...prev.treemapSelect,
-        series : responseSelect
-      }
-    }), () => {
-      console.log('setting : ', this.state);
-    });
-  };
-
+  
   ChangeStartDate = (e) => { 
     this.setState({  
       startDate: e,
@@ -251,41 +212,211 @@ class Needspatterns extends React.Component {
     });  
   }
 
-  validateKeyword = (value) => {
-    let error;
-    if (!value) {
-      error = 'No Keywords';
-    } 
-    return error;
+  
+
+  setSelectedOptions = (val) => {
+    this.setState({  
+      selectedOptions: val
+    }); 
   }
 
-  changeOption = (...args) => {
-    this.setState({
-      selectedOptions: [args[0]]
-    });
+  SearchClick = (e) => {
+    console.log('socialListening SearchClick !!');
+    this.setState({  
+      searchBtnClick: true
+    }); 
   }
   
   render() {
     const statesItems = this.state;
     const { channelOptionSelected } = this.state;
 
-    const getNeedPatternInit = (searchCondition) => {
-      /*
-      this.setState(prev => ({
-          ...prev,
-          searchCondition : {
+    const onKeywordChange = (e) =>{
+      this.setState({
+        keyWordtext : e.target.value
+      }); 
+    };
+    const validateKeyword = (value) => {
+      let error;
+      if (!statesItems.keyWordtext) {
+        error = 'No Keywords';
+      } 
+      return error;
+    };
 
-          }
-      }),
-      () => {
-        console.log('search : ' , this.state.searchCondition);
+    // 날짜 포맷
+    const dateString = (dateValue) => {
+      let retStr = '';
+      //Year
+      retStr = retStr.concat(dateValue.getFullYear());
+      //Month
+      if(dateValue.getMonth() < 10) {
+          retStr = retStr.concat('-0', dateValue.getMonth() + 1);
+      }
+      else {
+          retStr = retStr.concat('-', dateValue.getMonth() + 1);
+      }
+      //Date
+      if(dateValue.getDate() < 10) {
+          retStr = retStr.concat('-0', dateValue.getDate());
+      }
+      else {
+          retStr = retStr.concat('-', dateValue.getDate());
+      }
+      return retStr;
+    }
+    
+    const searchStart = (searchChannel) =>{
+      var searchCondition = {} ;
+      var ChannelUpper = [];
+      var ChannelLower = [];
+      var selectList = [];
+      var periodUnit = "";
+      let ChannelOptions = [];
 
-        post('/sociallistening/GetNeeds_Pattern_Init', this.state.searchCondition).
-        then((response) => {
-            console.log(response);
+      this.setState({  
+        searchBtnClick: false
+      });
+      this.setState({  
+        searchCondition: {} ,
+        searchStart : false , 
+      });
+      if (searchChannel.length > 0 ){
+        selectList.push({ label: 'Total', value: 'Total' , channelUp : "Total" , key: 0 });
+        searchChannel.forEach(function(item,idx){
+          ChannelUpper.push(item.type);
+          ChannelLower.push(item.name);
+          ChannelOptions.push({
+            label : item.name
+          , value : item.name
+          , key : idx
+          })
+          selectList.push({ label: item.name, value: item.name, channelUp : item.type , key: idx + 1});
         });
+      }
+      else{
+        console.log('채널 선택 없음');
+      }
+
+      this.setState({  
+        selectedOptionsBase: selectList ,
+      });
+      searchCondition.FromDate = dateString(statesItems.startDate); 
+      searchCondition.ToDate = dateString(statesItems.endDate); 
+      searchCondition.Period_Unit = "Daily";
+      searchCondition.Channel_Upper = ChannelUpper;
+      searchCondition.Channel_Lower = ChannelLower;
+      searchCondition.Keyword = statesItems.keyWordtext;
+      searchCondition.Company = statesItems.userInfo.CompanyName;
+      searchCondition.CompanyCode = statesItems.userInfo.CompanyCode;
+      // console.log('searchCondition',searchCondition);
+
+      this.setState({  
+        searchCondition: searchCondition ,
+        searchStart : true , 
+        selectedOptions: { label: 'Total', value: 'Total' , channelUp : "Total" , key: 0 } ,
+        channelOption : ChannelOptions
+      }, () => {
+        //여기서 조회 API 구현하면 됨
+        getNeedPatternInit();
+      });
+    };
+
+    const getNeedPatternInit = () => {
+      post('/sociallistening/GetNeeds_Pattern_Init', this.state.searchCondition).
+      then((response) => {
+          let responseTotal = [];
+          let responseTable = [];
+
+          if(response.status == "200") {
+            response.data.Data.map((data) => {
+              responseTotal.push({
+                x : data.name,
+                y : data.value
+              });
+            });
+
+            response.data.TableData.map((data, idx) => {
+              responseTable.push({
+                id : idx
+              , category : data.Name
+              , keywords : data.Value
+              });
+            });
+
+            this.setState(prev => ({
+              ...prev,
+              treemapTotal : {
+                ...prev.treemapTotal,
+                series : [{
+                  data : responseTotal
+                }]
+              },
+              treemapTotalTable : responseTable
+            }), () => {
+              //console.log(this.state);
+            });
+          }
+      });
+    }
+
+    const changeOption = (...args) => {
+      /*
+      this.setState({
+        selectedOptions: [args[0]]
+      }, () => {
+        console.log(this.state);
       });
       */
+      let searchParam = { ...this.state.searchCondition };
+      this.state.searchCondition.Channel_Lower.map((data, idx) => {
+        if(args[0].value == data) {
+          searchParam.Channel_Upper = this.state.searchCondition.Channel_Upper[idx];
+          searchParam.Channel_Lower = data;
+        }
+      });
+  
+      getNeedPatternSelected(searchParam);
+    }
+
+    const getNeedPatternSelected = (searchCondition) => {
+      post('/sociallistening/GetNeeds_Pattern_Selected', searchCondition).
+      then((response) => {
+          console.log(response);
+
+          let responseSelect = [];
+          let responseTable = [];
+
+          if(response.status == "200") {
+            response.data.Data.map((data) => {
+              responseSelect.push({
+                x : data.name,
+                y : data.value
+              });
+            });
+
+            response.data.TableData.map((data, idx) => {
+              responseTable.push({
+                id : idx
+              , category : data.Name
+              , keywords : data.Value
+              });
+            });
+
+            this.setState(prev => ({
+              ...prev,
+              treemapSelect : {
+                ...prev.treemapSelect,
+                series : [{
+                  data : responseSelect
+                }]
+              },
+              treemapSelectTable : responseTable
+            }), () => {
+              //console.log(this.state);
+            });
+          }
+      });
     }
 
     const columns = [
@@ -303,11 +434,11 @@ class Needspatterns extends React.Component {
       },
     ]
 
-    const channelOption = [
-      { label: 'Naver Blog', value: 'naverblog', key: 0 },
-      { label: 'Coupang', value: 'Coupang', key: 1 },
-      { label: 'Test', value: 'test', key: 2 }
-    ]
+    const searchClick = (data) => {
+      this.setState({  
+        searchBtnClick: true
+      });
+    }
 
     return (
       <>
@@ -351,7 +482,7 @@ class Needspatterns extends React.Component {
                         <tr>
                           <th style={{ width:'10%' }}>Channel</th>
                           <td style={{ width:'90%' }}>
-                          <ChannelButton />                             
+                          <ChannelButton searchStart={searchStart} searchBtnClick={statesItems.searchBtnClick} />                             
                           </td>
                         </tr>
                         <tr>
@@ -368,7 +499,9 @@ class Needspatterns extends React.Component {
                                   <Field
                                       className="form-control"
                                       name="keyword"
-                                      validate={this.validateKeyword}
+                                      value={statesItems.keyWordtext}
+                                      onChange={onKeywordChange}
+                                      validate={validateKeyword}
                                   />
                                   {errors.keyword && touched.keyword && (
                                       <div className="d-block noti-text">
@@ -384,7 +517,7 @@ class Needspatterns extends React.Component {
                     </table>
                   </div>
                   <div className="text-center">
-                    <Button className="btn-xl mt-4" color="gray" type="submit">
+                    <Button className="btn-xl mt-4" color="gray" onClick={searchClick}>
                       ENTER
                     </Button>
                   </div>
@@ -418,19 +551,19 @@ class Needspatterns extends React.Component {
                           classNamePrefix="react-select"
                           name="form-field-name"
                           value={channelOptionSelected}
-                          onChange={this.changeOption}
-                          options={channelOption}
+                          onChange={changeOption}
+                          options={this.state.channelOption}
                         />
                       </FormGroup>
                     </div>
                     <ReactApexChart options={statesItems.treemapSelect.options} series={statesItems.treemapSelect.series} type="treemap" height={540} className="chart-box" />
                   </div>
-                </div>2
+                </div>
                 <div className="box-area tbl-no-page">
                   <div className="box-left">
                     <ReactTable
                       className='table'
-                      data={TableData}
+                      data={this.state.treemapTotalTable}
                       columns={columns}
                       defaultPageSize={10}
                       sortable={false}
@@ -439,7 +572,7 @@ class Needspatterns extends React.Component {
                   <div className="box-right">
                     <ReactTable
                       className='table'
-                      data={TableData}
+                      data={this.state.treemapSelectTable}
                       columns={columns}
                       defaultPageSize={10}
                       sortable={false}

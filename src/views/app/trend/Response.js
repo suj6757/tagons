@@ -34,13 +34,15 @@ import { changeDate } from "../../../helpers/DevUtils";
 class Response extends React.Component {
   constructor(props) {
     super(props); // React.Component의 생성자 메소드를 먼저 실행
-
+    let loginYN = (UserInfo() !== null);
+    let userData = UserInfo();
     /// Default 6개월 전
     const startDate = addMonths(new Date(), -6);
     const endDate = new Date();
     this.state = {
       startDate: startDate,
       endDate: endDate,
+      loginCheck : loginYN,
       checkInfo: [
         { id: 1, value: "7days", isChecked: false },
         { id: 2, value: "15days", isChecked: true },   /// Default
@@ -132,6 +134,13 @@ class Response extends React.Component {
       },
 
     }; // State
+  }
+
+  componentDidMount = () => {
+    const stateItem = this.state;
+    if (!stateItem.loginCheck){
+      document.location.href = "/user/login";
+    }
   }
 
   ChangeStartDate = (e) => {
