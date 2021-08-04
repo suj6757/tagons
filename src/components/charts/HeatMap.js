@@ -57,7 +57,7 @@ class HeatMap extends Component {
       <>
          <TableRowspan 
             tClass='heatmap_wrap_table r-table'
-            tData={Object.assign([],stateItem.tData)} 
+            tData={Object.assign([],this.props.tData)} 
             tColumns={columns}
           />
          <HeatMapChart className='heatmap_cont' options={heatMapGraphData.options} series={heatMapGraphData.series} height={heatMapGraphData.height} />

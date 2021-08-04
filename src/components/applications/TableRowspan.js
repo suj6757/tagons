@@ -12,75 +12,69 @@ import React, { Component} from 'react';
 import RowTable from './Row';
 
 class TableRowspan extends Component {
-  constructor(props, context) { 
-    super(props, context);
-    const myProps=this.getDataModelled();
-    const propsToPass=this.getDataWithSpanCount(myProps);
-    this.state={
-      tableNewData:propsToPass
+  render() {
+    const getDataModelled = () => {
+      const data = this.props.tData;
+      const newRowData=[];
+      for(let i=0;i<data.length;i++){
+        const obj = data[i];
+        const newColData=[];
+          for (const item in obj){
+            newColData.push(new Object({
+              key:item,
+              value:obj[item],
+              rowspan:1,
+              print:true
+            }));
+          };
+          newRowData.push(newColData);
+      };
+      return newRowData;
     }
-  }
 
-getDataModelled(){
-    const data = this.props.tData;
-    const newRowData=[];
-    for(let i=0;i<data.length;i++){
-      const obj = data[i];
-      const newColData=[];
-        for (const item in obj){
-          newColData.push(new Object({
-            key:item,
-            value:obj[item],
-            rowspan:1,
-            print:true
-          }));
-        };
-         newRowData.push(newColData);
-    };
-    return newRowData;
-  }
-  getDataWithSpanCount(myProps){
-    for(let i=1;i<myProps.length;i++)
-    {
-      for(let j=0;j<myProps[i].length;j++)
+    const getDataWithSpanCount = (myProps) => {
+      for(let i=1;i<myProps.length;i++)
       {
-        for(let k= i-1; k>=0 && myProps[i][j].value === myProps[k][j].value;k--){
-          switch (myProps[k][j].key) {
-            case'post' :
-              myProps[k][j].print = true;
-              break;
-            case 'comment' :
-              myProps[k][j].print = true;
-              break;
-            case 'view' :
-              myProps[k][j].print = true;
-              break;
-            case 'like' :
-              myProps[k][j].print = true;
-              break;
-            case 'press' :
-              myProps[k][j].print = true;
-              break;
-            case 'positiveRate' :
-              myProps[k][j].print = true;
-              break;
-            case 'negativeRate' :
-              myProps[k][j].print = true;
-              break;
-            default: 
-              myProps[k][j].rowspan = myProps[k][j].rowspan + 1;
-              myProps[k+1][j].print = false;
-              break;
+        for(let j=0;j<myProps[i].length;j++)
+        {
+          for(let k= i-1; k>=0 && myProps[i][j].value === myProps[k][j].value;k--){
+            switch (myProps[k][j].key) {
+              case'post' :
+                myProps[k][j].print = true;
+                break;
+              case 'comment' :
+                myProps[k][j].print = true;
+                break;
+              case 'view' :
+                myProps[k][j].print = true;
+                break;
+              case 'like' :
+                myProps[k][j].print = true;
+                break;
+              case 'press' :
+                myProps[k][j].print = true;
+                break;
+              case 'positiveRate' :
+                myProps[k][j].print = true;
+                break;
+              case 'negativeRate' :
+                myProps[k][j].print = true;
+                break;
+              default: 
+                myProps[k][j].rowspan = myProps[k][j].rowspan + 1;
+                myProps[k+1][j].print = false;
+                break;
+            }
           }
         }
+      }
+      return myProps;
     }
-  }
-  return myProps;
-}
-  render() {
-    const stateItem = this.state;
+
+    let tData = getDataModelled();
+    tData = getDataWithSpanCount(tData);
     const propsItem = this.props;
-    console.log(propsItem);
+
     return (
       <table className={propsItem.tClass}>
           <thead className='ar-table-thead'>
@@ -90,8 +84,8 @@ getDataModelled(){
           </tr>
           </thead>
           <tbody>
-          {stateItem.tableNewData.map((rData, idx) =>
-            <RowTable rData={rData} key={idx}/>
+          {tData.map((data, idx) =>
+            <RowTable rData={data} key={idx}/>
           )}
           </tbody>
       </table>
