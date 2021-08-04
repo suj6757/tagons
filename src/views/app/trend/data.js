@@ -299,7 +299,8 @@ export const TableRowData = [
   },
 ]
 
-export const TableHeatMapData = [
+export const TableHeatMapData = {
+  data : [
   {
     channelCategory: 'Search Volume',
     channel: 'Naver',
@@ -333,6 +334,7 @@ export const TableHeatMapData = [
     channel: 'Coupang',
   },
 ]
+}
 
 export const TableSentimantData = [
   {

@@ -27,6 +27,7 @@ import NegativeBar from '../../../components/charts/NegativeBar';
 import HeatMap from '../../../components/charts/HeatMap';
 import ChannelButton from '../../../components/applications/ChannelButton'
 import CustomSelectInput from '../../../components/common/CustomSelectInput';
+import { TableHeatMapData } from './data';
 import { 
   heatMapGraphData,
   columeNegativeGraph, 
@@ -61,6 +62,7 @@ class Overview extends React.Component {
         searchCondition: {} ,
         // eslint-disable-next-line react/no-unused-state
         selectedOptions : [],
+        heatMapTableData : [],
         // eslint-disable-next-line react/no-unused-state
         totalGraph : {
             series: [
@@ -212,6 +214,164 @@ class Overview extends React.Component {
       }
     }
 
+    componentDidMount = () => {
+      //toggle('1');
+    }
+
+    /* componentDidUpdate = (prevProps, prevState) => {
+        //탭 변경시
+        if(this.state.activeTab !== prevState.activeTab) {
+            formData = new FormData();
+            formData.append('param', this.state.call);
+            config = {
+                headers : {
+                    'content-type' : 'multipart/form-data'
+                }
+            }
+
+            //Total
+            if(this.state.activeTab == '1') {
+                post('/trendoverview/GetBasic_Overview_Total', formData, config).
+                then((response) => {
+                    console.log(response);
+                    //라인
+                    let lineSeriesArr = [];
+                    let lineCategoriesArr = [];
+                    let lineXArr = [];
+                    response.data.LineData.map((data) => {
+                        lineSeriesArr.push(data.Value);
+                        lineCategoriesArr.push(Number(data.Date.substr(8, 2)));
+                        lineXArr.push(data.Date);
+                    });
+                    
+                    //히트맵
+                    let heatmapSeriesData = [];
+                    response.data.HeatMapData.map((data, i) => {
+                        let dataArray = [];
+                        data.Data.map((res, j) => {
+                            dataArray.push({
+                                x: res.Date,
+                                y: res.Value
+                            });
+                        });
+        
+                        heatmapSeriesData.push({
+                            name: data.Channel,
+                            data: dataArray
+                        });
+                    });
+        
+                    heatMapGraphData.series = heatmapSeriesData;
+        
+                    this.setState(prev => ({
+                        ...prev,
+                        totalGraph : {
+                            options : {
+                              xaxis: {
+                                  categories: lineCategoriesArr,
+                                  title: {
+                                      text: ''
+                                  },
+                                  tooltip: {
+                                      enabled: false
+                                  }
+                              },
+                              tooltip: {
+                                  x: {
+                                      formatter: function(value) {
+                                          return lineXArr[value - 1];
+                                      }
+                                  }
+                              },
+                              legend: {
+                                  position: 'top',
+                                  horizontalAlign: 'right',
+                                  floating: true
+                              }
+                          },
+                          series: [{
+                              name : 'total',
+                              data : lineSeriesArr
+                          }]
+                        }
+                    }));
+                });
+            }
+            //I/D RATE
+            else if(this.state.activeTab == '2') {
+                post('/trendoverview/GetBasic_Overview_ID_Rate', formData, config).
+                then((response) => {
+                    console.log(response);
+                    //바
+                    let barSeriesArr = [];
+                    let barCategoriesArr = [];
+                    let barXArr = [];
+
+                    response.data.BarData.map((data) => {
+                        console.log(data.Channel);
+                    });
+                    response.data.BarData[0].Data.map((data) => {
+                        barSeriesArr.push(data.Value);
+                        barCategoriesArr.push(Number(data.Date.slice(-2)));
+                        barXArr.push(data.Date);
+                    });
+                  
+                    //히트맵
+                    let heatmapSeriesData = [];
+                    response.data.HeatMapData.map((data, i) => {
+                        let dataArray = [];
+                        data.Data.map((res, j) => {
+                            dataArray.push({
+                                x: res.Date,
+                                y: res.Value
+                            });
+                        });
+    
+                        heatmapSeriesData.push({
+                            name: data.Channel,
+                            data: dataArray
+                        });
+                    });
+    
+                    heatMapGraphData.series = heatmapSeriesData;
+
+                    this.setState(prev => ({
+                        ...prev,
+                        idrateGraph : {
+                            options : {
+                              xaxis: {
+                                  categories: barCategoriesArr,
+                                  title: {
+                                      text: ''
+                                  },
+                                  tooltip: {
+                                      enabled: false
+                                  }
+                              },
+                              tooltip: {
+                                  x: {
+                                      formatter: function(value) {
+                                          return barXArr[value - 1];
+                                      }
+                                  }
+                              },
+                              legend: {
+                                  position: 'top',
+                                  horizontalAlign: 'right',
+                                  floating: true
+                              }
+                          },
+                          series: [{
+                              name : 'Cash Flow',
+                              data : barSeriesArr
+                          }]
+                        }
+                    }));
+                });
+            }
+        }
+    } */
+
     ChangeStartDate = (e) => { 
         this.setState({  
             startDate: e,
@@ -323,6 +483,7 @@ class Overview extends React.Component {
         }),
         () => {
           console.log('getOverviewTotal : ' , this.state.searchCondition);
+          console.log('getOverviewTotal2 : ' , searchCondition);
 
           post('/trendoverview/GetBasic_Overview_Total', this.state.searchCondition).
           then((response) => {
@@ -337,7 +498,20 @@ class Overview extends React.Component {
                   lineXArr.push(data.Date);
               });
               
-              //히트맵
+              //히트맵 좌측
+              let heatmapData = [];
+              searchCondition.Channel_Upper.map((data, i) => {
+                heatmapData.push({
+                  channelCategory: data,
+                  channel: searchCondition.Channel_Lower[i],
+                });
+              });
+
+              // TableHeatMapData.data = heatmapData;
+              // 아래 setState할때 넣어주는거로 바꿔서 주석
+              // heatMapTableData = heatmapData;
+              
+              //히트맵 우측
               let heatmapSeriesData = [];
               response.data.HeatMapData.map((data, i) => {
                   let dataArray = [];
@@ -358,6 +532,7 @@ class Overview extends React.Component {
   
               this.setState(prev => ({
                   ...prev,
+                  heatMapTableData : heatmapData,
                   totalGraph : {
                       options : {
                         xaxis: {
@@ -394,14 +569,15 @@ class Overview extends React.Component {
 
       const getOverviewIDRate = (searchCondition) => {
         this.setState(prev => ({
-            ...prev,
-            searchCondition : {
-                Selected_Tab : "IDRATE",
-                Selected_Channel : "Total"
-            }
+          ...prev,
+          searchCondition : {
+            Selected_Tab : "IDRATE",
+            Selected_Channel : "Total"
+          }
         }),
         () => {
           console.log('getOverviewIDRate : ' , this.state.searchCondition);
+          console.log(this.state.selectedOptionsBase);
 
           post("/trendoverview/GetBasic_Overview_ID_Rate", this.state.searchCondition)
           .then((response) => {
@@ -531,6 +707,8 @@ class Overview extends React.Component {
              ChannelLower.push(item.name);
              selectList.push({ label: item.name, value: item.name, channelUp : item.type , key: idx + 1});
            });
+           console.log("어..:");
+           console.log(selectList);
         }
         else{
           console.log('채널 선택 없음');
@@ -560,10 +738,12 @@ class Overview extends React.Component {
         //여기서 조회 API 구현하면 됨
         if (statesItems.activeTab === '1'){
           // 
-          console.log('Total');
+          searchCondition.Selected_Tab = 'Total'
+          getOverviewTotal(searchCondition);
         }
         else if (statesItems.activeTab === '2'){
           //
+          searchCondition.Selected_Tab = 'IDRATE'
           getOverviewIDRate(searchCondition);
         }
         else if (statesItems.activeTab === '3'){
@@ -575,11 +755,11 @@ class Overview extends React.Component {
       const toggle = (tab) => {
         const { activeTab } = this.state;
         if(activeTab !== tab){
-            if (tab === "1"){
-              getOverviewTotal(statesItems.searchCondition);
+          if (tab === "1"){
+              console.log('Total');
             }
             else if (tab === "2"){
-              getOverviewIDRate(statesItems.searchCondition);
+              //getOverviewIDRate(statesItems.searchCondition);
             }
             else if (tab === "3"){
               console.log('GAP');
@@ -589,14 +769,6 @@ class Overview extends React.Component {
             })
         }
       }
-
-      const onKeywordpress = (e) =>{
-        if (e.keyCode === 13){
-          e.preventDefault();
-          // 여기서 Search 로 이동
-        }
-      };
-
       return(
           <div className='overview_area'>
               <Row>
@@ -679,7 +851,6 @@ class Overview extends React.Component {
                                               name="keyword"
                                               value={statesItems.keyWordtext}
                                               onChange={onKeywordChange}
-                                              onKeyDown={onKeywordpress}
                                               validate={validateKeyword}
                                           />
                                           {errors.keyword && touched.keyword && (
@@ -758,7 +929,7 @@ class Overview extends React.Component {
                                                           <h2>Heat Map</h2>
                                                       </div>
                                                       <div className='graph-area Heat-Map'>
-                                                        <HeatMap options={heatMapGraphData.options} series={heatMapGraphData.series} height={heatMapGraphData.height} />
+                                                        <HeatMap tData={statesItems.heatMapTableData} options={heatMapGraphData.options} series={heatMapGraphData.series} height={heatMapGraphData.height} />
                                                       </div>
                                                   </CardBody>
                                               </Card>
@@ -800,7 +971,7 @@ class Overview extends React.Component {
                                                           <h2>Heat Map</h2>
                                                       </div>
                                                       <div className='graph-area Heat-Map'>
-                                                          <HeatMap options={heatMapGraphData.options} series={heatMapGraphData.series} height={heatMapGraphData.height} />
+                                                          <HeatMap tData={statesItems.heatMapTableData} options={heatMapGraphData.options} series={heatMapGraphData.series} height={heatMapGraphData.height} />
                                                       </div>
                                                   </CardBody>
                                               </Card>
