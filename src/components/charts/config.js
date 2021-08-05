@@ -644,6 +644,9 @@ export const heatMapGraphData = {
       xaxis: {
         position: 'top',
       },
+      yaxis: {
+        show: false,
+      },
       legend: {
         show : false
       }
