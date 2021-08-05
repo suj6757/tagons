@@ -485,7 +485,7 @@ class Overview extends React.Component {
           console.log('getOverviewTotal : ' , this.state.searchCondition);
           console.log('getOverviewTotal2 : ' , searchCondition);
 
-          post('/trendoverview/GetBasic_Overview_Total', this.state.searchCondition).
+          post('/trendoverview/GetBasic_Overview_Total', searchCondition).
           then((response) => {
               console.log(response);
               //라인
@@ -507,32 +507,46 @@ class Overview extends React.Component {
                 });
               });
 
-              // TableHeatMapData.data = heatmapData;
-              // 아래 setState할때 넣어주는거로 바꿔서 주석
-              // heatMapTableData = heatmapData;
-              
+              TableHeatMapData.data = heatmapData;
+            
               //히트맵 우측
               let heatmapSeriesData = [];
-              response.data.HeatMapData.map((data, i) => {
-                  let dataArray = [];
-                  data.Data.map((res, j) => {
-                      dataArray.push({
-                          x: res.Date,
-                          y: res.Value
-                      });
-                  });
-  
+              
+              searchCondition.Channel_Lower.map((lowerData, i) => {
+                let existSameName = false;
+
+                response.data.HeatMapData.map((data, j) => {
+                  if(lowerData == data.Channel) {
+                    let dataArray = [];
+                    data.Data.map((res) => {
+                        dataArray.push({
+                            x: res.Date,
+                            y: res.Value
+                        });
+                    });
+
+                    heatmapSeriesData.push({
+                        name: data.Channel,
+                        data: dataArray
+                    });
+
+                    existSameName = true;
+                  }
+                });
+                
+                if(!existSameName) {
                   heatmapSeriesData.push({
-                      name: data.Channel,
-                      data: dataArray
+                    name: lowerData,
+                    data: []
                   });
-              });
-  
+                }
+              })
+
               heatMapGraphData.series = heatmapSeriesData;
   
               this.setState(prev => ({
                   ...prev,
-                  heatMapTableData : heatmapData,
+                  // heatMapTableData : heatmapData,
                   totalGraph : {
                       options : {
                         xaxis: {
@@ -579,7 +593,7 @@ class Overview extends React.Component {
           console.log('getOverviewIDRate : ' , this.state.searchCondition);
           console.log(this.state.selectedOptionsBase);
 
-          post("/trendoverview/GetBasic_Overview_ID_Rate", this.state.searchCondition)
+          post("/trendoverview/GetBasic_Overview_ID_Rate", searchCondition)
           .then((response) => {
               if (response.data.ErrorCode === 'OK') {
                 console.log(response);
@@ -596,23 +610,50 @@ class Overview extends React.Component {
                     barCategoriesArr.push(Number(data.Date.slice(-2)));
                     barXArr.push(data.Date);
                 });
-              
-                //히트맵
-                let heatmapSeriesData = [];
-                response.data.HeatMapData.map((data, i) => {
-                    let dataArray = [];
-                    data.Data.map((res, j) => {
-                        dataArray.push({
-                            x: res.Date,
-                            y: res.Value
-                        });
-                    });
 
-                    heatmapSeriesData.push({
-                        name: data.Channel,
-                        data: dataArray
-                    });
+                //히트맵 좌측
+                let heatmapData = [];
+                searchCondition.Channel_Upper.map((data, i) => {
+                  heatmapData.push({
+                    channelCategory: data,
+                    channel: searchCondition.Channel_Lower[i],
+                  });
                 });
+
+                TableHeatMapData.data = heatmapData;
+              
+                //히트맵 우측
+                let heatmapSeriesData = [];
+                
+                searchCondition.Channel_Lower.map((lowerData, i) => {
+                  let existSameName = false;
+
+                  response.data.HeatMapData.map((data, j) => {
+                    if(lowerData == data.Channel) {
+                      let dataArray = [];
+                      data.Data.map((res) => {
+                          dataArray.push({
+                              x: res.Date,
+                              y: res.Value
+                          });
+                      });
+  
+                      heatmapSeriesData.push({
+                          name: data.Channel,
+                          data: dataArray
+                      });
+
+                      existSameName = true;
+                    }
+                  });
+                  
+                  if(!existSameName) {
+                    heatmapSeriesData.push({
+                      name: lowerData,
+                      data: []
+                    });
+                  }
+                })
 
                 heatMapGraphData.series = heatmapSeriesData;
 
@@ -929,7 +970,7 @@ class Overview extends React.Component {
                                                           <h2>Heat Map</h2>
                                                       </div>
                                                       <div className='graph-area Heat-Map'>
-                                                        <HeatMap tData={statesItems.heatMapTableData} options={heatMapGraphData.options} series={heatMapGraphData.series} height={heatMapGraphData.height} />
+                                                        <HeatMap tData={TableHeatMapData.data} options={heatMapGraphData.options} series={heatMapGraphData.series} height={heatMapGraphData.height} />
                                                       </div>
                                                   </CardBody>
                                               </Card>
@@ -971,7 +1012,7 @@ class Overview extends React.Component {
                                                           <h2>Heat Map</h2>
                                                       </div>
                                                       <div className='graph-area Heat-Map'>
-                                                          <HeatMap tData={statesItems.heatMapTableData} options={heatMapGraphData.options} series={heatMapGraphData.series} height={heatMapGraphData.height} />
+                                                          <HeatMap tData={TableHeatMapData.data} options={heatMapGraphData.options} series={heatMapGraphData.series} height={heatMapGraphData.height} />
                                                       </div>
                                                   </CardBody>
                                               </Card>
