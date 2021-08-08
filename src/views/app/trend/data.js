@@ -301,6 +301,7 @@ export const TableRowData = [
 
 export const TableHeatMapData = {
   data : [
+  /*
   {
     channelCategory: 'Search Volume',
     channel: 'Naver',
@@ -333,6 +334,7 @@ export const TableHeatMapData = {
     channelCategory: 'E-Commerce',
     channel: 'Coupang',
   },
+  */
 ]
 }
 

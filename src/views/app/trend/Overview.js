@@ -140,7 +140,7 @@ class Overview extends React.Component {
           height: 350,
           options: {
             grid: {
-              show: true,
+              show: false,
             },
             chart: {
               type: 'bar',
@@ -213,10 +213,6 @@ class Overview extends React.Component {
       }
     }
 
-    componentDidMount = () => {
-      //toggle('1');
-    }
-
     ChangeStartDate = (e) => { 
         this.setState({  
             startDate: e,
@@ -263,12 +259,6 @@ class Overview extends React.Component {
       return series;
     }
 
-    setSelectedOptions = (val) => {
-      this.setState({  
-        selectedOptions: val
-      }); 
-    }
-
     getKeys = () => {
       const { overviewTableData } = this.state;
       return Object.keys(overviewTableData[0]);
@@ -308,247 +298,234 @@ class Overview extends React.Component {
           } 
           return error;
       };
+
       const setSelectedOptions = (val) => {
-        var channelList = [] ;
-        var searchCondition = statesItems.searchCondition;
-        channelList.push(val.value);
-        searchCondition.Channel = channelList;
         this.setState({  
           selectedOptions: val
-        }); 
-
-      }
-      const getOverviewTotal = (searchCondition) => {
-        this.setState(prev => ({
-            ...prev,
+        }, () => {
+          this.setState(prev => ({
             searchCondition : {
-                Selected_Tab : "TOTAL",
-                Selected_Channel : "total"
+              ...prev.searchCondition,
+              Selected_Tab : 'IDRATE',
+              Selected_Channel : val.value
             }
-        }),
-        () => {
-          console.log('getOverviewTotal : ' , this.state.searchCondition);
-          console.log('getOverviewTotal2 : ' , searchCondition);
+          }), () => {
+            getOverviewIDRate(this.state.searchCondition);
+          });
+        });
+      }
 
-          post('/trendoverview/GetBasic_Overview_Total', searchCondition).
-          then((response) => {
-              console.log(response);
-              //라인
-              let lineSeriesArr = [];
-              let lineCategoriesArr = [];
-              let lineXArr = [];
-              response.data.LineData.map((data) => {
-                  lineSeriesArr.push(data.Value);
-                  lineCategoriesArr.push(Number(data.Date.substr(8, 2)));
-                  lineXArr.push(data.Date);
-              });
-              
-              //히트맵 좌측
-              let heatmapData = [];
-              searchCondition.Channel_Upper.map((data, i) => {
-                heatmapData.push({
-                  channelCategory: data,
-                  channel: searchCondition.Channel_Lower[i],
-                });
-              });
-
-              TableHeatMapData.data = heatmapData;
+      const getOverviewTotal = (searchCondition) => {
+        post('/trendoverview/GetBasic_Overview_Total', searchCondition).
+        then((response) => {
+            console.log(response);
+            //라인
+            let lineSeriesArr = [];
+            let lineCategoriesArr = [];
+            let lineXArr = [];
+            response.data.LineData.map((data) => {
+                lineSeriesArr.push(data.Value);
+                lineCategoriesArr.push(Number(data.Date.substr(8, 2)));
+                lineXArr.push(data.Date);
+            });
             
-              //히트맵 우측
-              let heatmapSeriesData = [];
-              
-              searchCondition.Channel_Lower.map((lowerData, i) => {
-                let existSameName = false;
+            //히트맵 좌측
+            let heatmapData = [];
+            searchCondition.Channel_Upper.map((data, i) => {
+              heatmapData.push({
+                channelCategory: data,
+                channel: searchCondition.Channel_Lower[i],
+              });
+            });
 
-                response.data.HeatMapData.map((data, j) => {
-                  if(lowerData == data.Channel) {
-                    let dataArray = [];
-                    data.Data.map((res) => {
-                        dataArray.push({
-                            x: res.Date,
-                            y: res.Value
-                        });
-                    });
+            TableHeatMapData.data = heatmapData;
+          
+            //히트맵 우측
+            let heatmapSeriesData = [];
+            
+            searchCondition.Channel_Lower.map((lowerData, i) => {
+              let existSameName = false;
 
-                    heatmapSeriesData.push({
-                        name: data.Channel,
-                        data: dataArray
-                    });
-
-                    existSameName = true;
-                  }
-                });
-                
-                if(!existSameName) {
-                  heatmapSeriesData.push({
-                    name: lowerData,
-                    data: []
+              response.data.HeatMapData.map((data, j) => {
+                if(lowerData == data.Channel) {
+                  let dataArray = [];
+                  data.Data.map((res) => {
+                      dataArray.push({
+                          x: res.Date,
+                          y: res.Value
+                      });
                   });
+
+                  heatmapSeriesData.push({
+                      name: data.Channel,
+                      data: dataArray
+                  });
+
+                  existSameName = true;
                 }
               });
+              
+              if(!existSameName) {
+                heatmapSeriesData.push({
+                  name: lowerData,
+                  data: []
+                });
+              }
+            });
 
-              heatMapGraphData.series = heatmapSeriesData.reverse();
+            heatMapGraphData.series = heatmapSeriesData.reverse();
   
-              this.setState(prev => ({
-                  ...prev,
-                  totalGraph : {
-                      options : {
-                        xaxis: {
-                            categories: lineCategoriesArr,
-                            title: {
-                                text: ''
-                            },
-                            tooltip: {
-                                enabled: false
-                            }
-                        },
-                        tooltip: {
-                            x: {
-                                formatter: function(value) {
-                                    return lineXArr[value - 1];
-                                }
-                            }
-                        },
-                        legend: {
-                            position: 'top',
-                            horizontalAlign: 'right',
-                            floating: true
-                        }
-                    },
-                    series: [{
-                        name : 'total',
-                        data : lineSeriesArr
-                    }]
-                  }
-              }));
-          });
+            this.setState(prev => ({
+                ...prev,
+                totalGraph : {
+                    options : {
+                      xaxis: {
+                          categories: lineCategoriesArr,
+                          title: {
+                              text: ''
+                          },
+                          tooltip: {
+                              enabled: false
+                          }
+                      },
+                      tooltip: {
+                          x: {
+                              formatter: function(value) {
+                                  return lineXArr[value - 1];
+                              }
+                          }
+                      },
+                      legend: {
+                          position: 'top',
+                          horizontalAlign: 'right',
+                          floating: true
+                      }
+                  },
+                  series: [{
+                      name : 'total',
+                      data : lineSeriesArr
+                  }]
+                }
+            }));
         });
       }
 
       const getOverviewIDRate = (searchCondition) => {
-        this.setState(prev => ({
-          ...prev,
-          searchCondition : {
-            Selected_Tab : "IDRATE",
-            Selected_Channel : "Total"
-          }
-        }),
-        () => {
-          console.log('getOverviewIDRate : ' , this.state.searchCondition);
-          console.log(this.state.selectedOptionsBase);
+        post("/trendoverview/GetBasic_Overview_ID_Rate", searchCondition)
+        .then((response) => {
+          if (response.data.ErrorCode === 'OK') {
+            //바
+            let barSeriesArr = [];
+            let barCategoriesArr = [];
+            let barXArr = [];
 
-          post("/trendoverview/GetBasic_Overview_ID_Rate", searchCondition)
-          .then((response) => {
-              if (response.data.ErrorCode === 'OK') {
-                console.log(response);
-                //바
-                let barSeriesArr = [];
-                let barCategoriesArr = [];
-                let barXArr = [];
-
-                response.data.BarData.map((data) => {
-                    console.log(data.Channel);
+            response.data.BarData.map((data) => {
+              if(this.state.selectedOptions.value == data.Channel) {
+                data.Data.map((resData) => {
+                  barSeriesArr.push(resData.Value);
+                  barCategoriesArr.push(Number(resData.Date.slice(-2)));
+                  barXArr.push(resData.Date);
                 });
-                response.data.BarData[0].Data.map((data) => {
-                    barSeriesArr.push(data.Value);
-                    barCategoriesArr.push(Number(data.Date.slice(-2)));
-                    barXArr.push(data.Date);
-                });
+              }
+            });
 
-                //히트맵 좌측
-                let heatmapData = [];
-                searchCondition.Channel_Upper.map((data, i) => {
-                  heatmapData.push({
-                    channelCategory: data,
-                    channel: searchCondition.Channel_Lower[i],
+            //히트맵 좌측
+            let heatmapData = [];
+            searchCondition.Channel_Upper.map((data, i) => {
+              heatmapData.push({
+                channelCategory: data,
+                channel: searchCondition.Channel_Lower[i],
+              });
+            });
+
+            TableHeatMapData.data = heatmapData;
+          
+            //히트맵 우측
+            let heatmapSeriesData = [];
+            
+            searchCondition.Channel_Lower.map((lowerData, i) => {
+              let existSameName = false;
+
+              response.data.HeatMapData.map((data, j) => {
+                if(lowerData == data.Channel) {
+                  let dataArray = [];
+                  data.Data.map((res) => {
+                      dataArray.push({
+                          x: res.Date,
+                          y: res.Value
+                      });
                   });
-                });
 
-                TableHeatMapData.data = heatmapData;
+                  heatmapSeriesData.push({
+                      name: data.Channel,
+                      data: dataArray
+                  });
+
+                  existSameName = true;
+                }
+              });
               
-                //히트맵 우측
-                let heatmapSeriesData = [];
-                
-                searchCondition.Channel_Lower.map((lowerData, i) => {
-                  let existSameName = false;
-
-                  response.data.HeatMapData.map((data, j) => {
-                    if(lowerData == data.Channel) {
-                      let dataArray = [];
-                      data.Data.map((res) => {
-                          dataArray.push({
-                              x: res.Date,
-                              y: res.Value
-                          });
-                      });
-  
-                      heatmapSeriesData.push({
-                          name: data.Channel,
-                          data: dataArray
-                      });
-
-                      existSameName = true;
-                    }
-                  });
-                  
-                  if(!existSameName) {
-                    heatmapSeriesData.push({
-                      name: lowerData,
-                      data: []
-                    });
-                  }
+              if(!existSameName) {
+                heatmapSeriesData.push({
+                  name: lowerData,
+                  data: []
                 });
+              }
+            });
 
-                heatMapGraphData.series = heatmapSeriesData.reverse();
+            heatMapGraphData.series = heatmapSeriesData.reverse();
 
-                this.setState(prev => ({
-                    ...prev,
-                    idrateGraph : {
-                        options : {
-                          xaxis: {
-                              categories: barCategoriesArr,
-                              title: {
-                                  text: ''
-                              },
-                              tooltip: {
-                                  enabled: false
-                              }
-                          },
-                          tooltip: {
-                              x: {
-                                  formatter: function(value) {
-                                      return barXArr[value - 1];
-                                  }
-                              }
-                          },
-                          grid: {
-                            yaxis: {
-                              lines: {
-                                show: false
-                              }
-                            },
-                          },
-                          legend: {
-                              position: 'top',
-                              horizontalAlign: 'right',
-                              floating: true
-                          }
-                      },
-                      series: [{
-                          name : 'Cash Flow',
-                          data : barSeriesArr
-                      }]
+            this.setState(prev => ({
+              ...prev,
+              idrateGraph : {
+                options : {
+                  xaxis: {
+                    categories: barCategoriesArr,
+                    title: {
+                      text: ''
+                    },
+                    tooltip: {
+                      enabled: false
                     }
-                }));
+                  },
+                  tooltip: {
+                    x: {
+                      formatter: function(value) {
+                          return barXArr[value - 1];
+                      }
+                    }
+                  },
+                  grid: {
+                    yaxis: {
+                      lines: {
+                        show: false
+                      }
+                    },
+                  },
+                  legend: {
+                    position: 'top',
+                    horizontalAlign: 'right',
+                    floating: true
+                  }
+                },
+                series: [{
+                    name : 'Cash Flow',
+                    data : barSeriesArr
+                }]
               }
-              else{
-                console.log('getOverviewIDRate error');
-              }
-          })
-          .catch(function (error) {
-              console.log(error);
-          });
+            }));
+          }
+          else{
+            console.log('getOverviewIDRate error');
+          }
+        })
+        .catch(function (error) {
+            console.log(error);
         });
+      }
+
+      const selectBox = () => {
+
       }
 
       // 날짜 포맷
@@ -592,8 +569,6 @@ class Overview extends React.Component {
              ChannelLower.push(item.name);
              selectList.push({ label: item.name, value: item.name, channelUp : item.type , key: idx + 1});
            });
-           console.log("어..:");
-           console.log(selectList);
         }
         else{
           console.log('채널 선택 없음');
@@ -621,17 +596,14 @@ class Overview extends React.Component {
           selectedOptions: { label: 'Total', value: 'Total' , channelUp : "Total" , key: 0 } ,
         });
         //여기서 조회 API 구현하면 됨
-        if (statesItems.activeTab === '1'){
-          // 
-          searchCondition.Selected_Tab = 'Total'
+        if (statesItems.activeTab === '1') {
+          searchCondition.Selected_Tab = 'Total';
           getOverviewTotal(searchCondition);
         }
-        else if (statesItems.activeTab === '2'){
-          //
-          searchCondition.Selected_Tab = 'IDRATE'
+        else if (statesItems.activeTab === '2') {
           getOverviewIDRate(searchCondition);
         }
-        else if (statesItems.activeTab === '3'){
+        else if (statesItems.activeTab === '3') {
           //
           console.log('GAP');
         }
@@ -640,18 +612,23 @@ class Overview extends React.Component {
       const toggle = (tab) => {
         const { activeTab } = this.state;
         if(activeTab !== tab){
-          if (tab === "1"){
-              console.log('Total');
-            }
-            else if (tab === "2"){
-              //getOverviewIDRate(statesItems.searchCondition);
-            }
-            else if (tab === "3"){
-              console.log('GAP');
-            }
-            this.setState({
-                activeTab : tab
-            })
+          if (tab === "1") {
+            //차트 초기화
+            // TableHeatMapData.data = [];
+            // heatMapGraphData.series = [];
+          }
+          else if (tab === "2"){
+            //차트 초기화
+            // TableHeatMapData.data = [];
+            // heatMapGraphData.series = [];
+          }
+          else if (tab === "3"){
+            console.log('GAP');
+          }
+
+          this.setState({
+              activeTab : tab
+          })
         }
       }
       return(
@@ -835,7 +812,7 @@ class Overview extends React.Component {
                                                           classNamePrefix="react-select"
                                                           name="form-field-name"
                                                           value={statesItems.selectedOptions}
-                                                          onChange={(val) => this.setSelectedOptions(val)}
+                                                          onChange={(val) => setSelectedOptions(val)}
                                                           options={statesItems.selectedOptionsBase}
                                                         />
                                                       </FormGroup>
