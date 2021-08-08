@@ -24,6 +24,7 @@ class Prime extends React.Component {
     date2.setDate(date2.getDate() - 2);
 
     this.state = {
+      loginCheck : loginYN,
       barChart : {
         options: {
           chart: {
@@ -114,6 +115,13 @@ class Prime extends React.Component {
                 ] , 
       chartDataArray : [] ,
     };
+  }
+
+  componentDidMount = () => {
+    const stateItem = this.state;
+    if (!stateItem.loginCheck){
+      document.location.href = "/user/login";
+    }
   }
 
   ChangeStartDate = (e) => { 
@@ -474,7 +482,10 @@ class Prime extends React.Component {
     const onKeywordpress = (e) =>{
       if (e.keyCode === 13){
         e.preventDefault();
-        // 여기서 Search 로 이동
+        // 조회조건 Validation 체크
+        this.setState({  
+          searchBtnClick: true , 
+        });
       }
     };
 

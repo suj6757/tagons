@@ -88,7 +88,7 @@
         line-height: 60px;
     }
 
-    ul{
+    > ul{
         display: flex;
         padding: 0;
         margin-top: 20px;
@@ -230,7 +230,6 @@
 }
 
 .tbl-indicator{
-
     thead{
         th{
             text-align: center;
@@ -275,15 +274,26 @@
 .bx_select_area{
     position: relative;
     .select-title{
-        position: absolute;
-        top: 6px;
-        left: 0;
+        float: left;
+        margin-top: 5px;
+        margin-right: 20px;
         font-size: 18px;
         color: #888;
+        vertical-align: middle;
     }
     .select-box{
-        width: 180px;
-        margin-left: 90px;
+        float: left;
+        width: 100%;
+        max-width: 180px;    
+    }
+
+    &:after{
+        display: block;
+        overflow: hidden;
+        width: 1px;
+        height: 1px;
+        clear: both;
+        content: '';
     }
 }
 
@@ -413,7 +423,152 @@
         td{
             font-size: 14px;
             border-right: 1px solid #f3f3f3;
-            border-bo5tom: 1px solid #f3f3f3;
+            border-bottom: 1px solid #f3f3f3;
         }
+    }
+}
+
+.ReactTags__selected{
+
+    .ReactTags__tag{
+        float: left;
+        padding: 0.5rem 0.7rem;
+        margin-right: 5px;
+        border: 1px solid #bbb;
+        border-radius: 20px;
+        color: #555;
+        vertical-align: middle;
+        .ReactTags__remove{
+            margin-left: 10px;
+            background: transparent;
+            border: none;
+        }
+
+        + .ReactTags__tag{
+            margin: 0 5px;
+        }
+    }  
+
+    .ReactTags__tagInput{
+        .ReactTags__tagInputField{
+            display: inline-block;
+            padding: 0.5rem 1rem;
+            border: 1px solid #d7d7d7;
+
+            &:focus-visible{
+                outline: none;
+            }
+
+            &[name~="hide"]{
+                display: none;
+            }
+        }
+    }
+}
+
+
+.recharts-legend-wrapper{
+    top: 0 !important;
+}
+
+.t-c{
+    text-align: center !important;
+}
+
+.sentiment_wrap{
+    .chart-area{
+        .chart-header{
+            display: block;
+            line-height: 50px;
+            .chart-title{
+                h4{
+                    color: #fff;
+                }
+            }
+            &.blue{
+                background-color: #0070c0;
+            }
+            &.red{
+                background-color: #f00000;
+            }   
+        }
+    } 
+    .tbl_basic{
+        text-align: center;
+        border-bottom: none;
+    }
+    .box-line{
+        margin-top: 0;
+        border: none;
+        .box{
+            width: 50% !important; 
+
+            &.right{
+                padding: 0 0 0 10px;
+            }
+            &.left{
+                padding: 0 10px 0 0;
+            }
+        }
+    }
+}
+
+.online_overview{
+    
+    .arrow_box{
+        border-radius: 20px;
+        padding: 5px 10px;
+        text-align: center;
+        &::before{
+            border: none;
+        }
+    }
+    .apexcharts-tooltip {
+        overflow: visible !important;
+        border-radius: 20px;
+        background: none !important;
+        box-shadow: none;
+        p{
+            margin-bottom: 0;
+            color: #4f8bc1;
+        }
+        span{
+            display: inline-block;
+        }
+    }
+    .graph-area.bar_area{
+        .box-line{
+            border: none;
+        }
+        .cont-noti{
+            &.small{
+                margin-top: 10px;
+                margin-right: 20px;
+                margin-bottom: 0;
+            }
+        }
+    }
+    .box{
+        .cont-noti{
+            &.small{
+                margin-top: 10px;
+                margin-right: 5px;
+                margin-bottom: 20px;
+            }
+        }
+        .tbl_basic{
+            text-align: center;            
+        }
+    }
+}
+
+.brushChart_wrap{
+    .cont-noti{
+        position: absolute;
+        top: 290px;
+        right: 48px;
+    }
+    .form-group{
+        margin-bottom: 0;
     }
 }

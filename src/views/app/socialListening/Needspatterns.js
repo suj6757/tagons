@@ -439,7 +439,15 @@ class Needspatterns extends React.Component {
         searchBtnClick: true
       });
     }
-
+    const onKeywordpress = (e) =>{
+      if (e.keyCode === 13){
+        e.preventDefault();
+        // 조회조건 Validation 체크
+        this.setState({  
+          searchBtnClick: true , 
+        });
+      }
+    };
     return (
       <>
         <Row>
@@ -501,6 +509,7 @@ class Needspatterns extends React.Component {
                                       name="keyword"
                                       value={statesItems.keyWordtext}
                                       onChange={onKeywordChange}
+                                      onKeyDown={onKeywordpress}
                                       validate={validateKeyword}
                                   />
                                   {errors.keyword && touched.keyword && (

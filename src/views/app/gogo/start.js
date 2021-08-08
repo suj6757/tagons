@@ -690,13 +690,3 @@ const Start = ({ intl }) => {
 };
 
 export default injectIntl(Start);
-
-// const mapStateToProps = ({ authUser }) => {
-//   const { loading, error } = authUser;
-
-//   return { loading, error };
-// }
-
-// export default connect(mapStateToProps, {
-//     loginUserAction : loginUser,
-// })(Start);

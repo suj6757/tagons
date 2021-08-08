@@ -23,6 +23,9 @@ const OverViewLink = React.lazy(() =>
 const SocialLink = React.lazy(() =>
   import(/* webpackChunkName: "viwes-blank-page" */ './socialListening')
 );
+const OnlineLink = React.lazy(() =>
+  import(/* webpackChunkName: "viwes-blank-page" */ './onlineRetailer')
+);
 
 const App = ({ match }) => {
   return (
@@ -54,6 +57,10 @@ const App = ({ match }) => {
             <Route
               path={`${match.url}/socialListening`}
               render={(props) => <SocialLink {...props} />}
+            />
+            <Route
+              path={`${match.url}/onlineRetailer`}
+              render={(props) => <OnlineLink {...props} />}
             />
             <Redirect to="/error" />
           </Switch>

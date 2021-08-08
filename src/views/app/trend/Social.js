@@ -41,6 +41,7 @@ class Social extends React.Component {
         searchBtnClick : false ,
         searchStart : false , 
         userInfo : userData ,
+        loginCheck : loginYN,
         keyWordtext : "" ,   
         keywordSelected : "",
         selectedOptionsBase : [],
@@ -238,6 +239,13 @@ class Social extends React.Component {
             }
           },
         }, 
+      }
+    }
+    
+    componentDidMount = () => {
+      const stateItem = this.state;
+      if (!stateItem.loginCheck){
+        document.location.href = "/user/login";
       }
     }
 
@@ -667,7 +675,10 @@ class Social extends React.Component {
       const onKeywordpress = (e) =>{
         if (e.keyCode === 13){
           e.preventDefault();
-          // 여기서 Search 로 이동
+          // 조회조건 Validation 체크
+          this.setState({  
+            searchBtnClick: true , 
+          });
         }
       };
 

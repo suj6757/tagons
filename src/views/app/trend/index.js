@@ -12,7 +12,7 @@ const Ecommerce = React.lazy(() =>
   import(/* webpackChunkName: "Ecommerce" */ './Ecommerce')
 );
 const GoogleAnalytics = React.lazy(() =>
-  import(/* webpackChunkName: "googleAnalytics" */ './googleAnalytics')
+  import(/* webpackChunkName: "GoogleAnalytics" */ './GoogleAnalytics')
 );
 const Response = React.lazy(() =>
   import(/* webpackChunkName: "Response" */ './Response')

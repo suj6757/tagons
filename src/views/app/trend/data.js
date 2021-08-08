@@ -1,4 +1,8 @@
 /* eslint-disable import/prefer-default-export */
+function checkNumberDot(num){
+  return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+}
+
 export const TableData = [
   {
     id: '-',
@@ -251,10 +255,6 @@ export const TableRowData = [
   },
   {
     channelCategory: 'Social',
-    channel: 'instgram',
-  },
-  {
-    channelCategory: 'Social',
     channel: 'facebook',
     post : 496,
     comment : 38, 
@@ -299,8 +299,7 @@ export const TableRowData = [
   },
 ]
 
-export const TableHeatMapData = {
-  data : [
+export const TableHeatMapData = [
   /*
   {
     channelCategory: 'Search Volume',
@@ -336,9 +335,8 @@ export const TableHeatMapData = {
   },
   */
 ]
-}
 
-export const TableSentimantData = [
+export const tableSentimantData = [
   {
     id: '-',
     title: '원피스',
@@ -415,5 +413,50 @@ export const TableSentimantData = [
     TF: '',
     DF: '',
     'TF-IDF': ''
+  },
+];
+
+export const tableOnlineOverviewData = [
+  {
+    Channels: 'Coupang',
+    'Num of Reviews': checkNumberDot(4348),
+    'Avg of Ratings': 4.4,
+    'Display Ads Spending': checkNumberDot(1582000),
+  },
+  {
+    Channels: '11st',
+    'Num of Reviews': checkNumberDot(4489),
+    'Avg of Ratings': 4.8,
+    'Display Ads Spending': checkNumberDot(1816000),
+  },
+  {
+    Channels: 'Wemakeprice',
+    'Num of Reviews': checkNumberDot(3547),
+    'Avg of Ratings': 3.9,
+    'Display Ads Spending': checkNumberDot(487000),
+  },
+  {
+    Channels: 'Sinsegaemall',
+    'Num of Reviews': checkNumberDot(34865),
+    'Avg of Ratings': 2.1,
+    'Display Ads Spending': checkNumberDot(1348000),
+  },
+  {
+    Channels: 'Timon',
+    'Num of Reviews': checkNumberDot(2248),
+    'Avg of Ratings': 2.2,
+    'Display Ads Spending': checkNumberDot(581000),
+  },
+  {
+    Channels: 'Gmarket',
+    'Num of Reviews': checkNumberDot(3751),
+    'Avg of Ratings': 3.3,
+    'Display Ads Spending': checkNumberDot(321000),
+  },
+  {
+    Channels: 'Action',
+    'Num of Reviews': checkNumberDot(3842),
+    'Avg of Ratings': 1.5,
+    'Display Ads Spending': checkNumberDot(270000),
   },
 ];

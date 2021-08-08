@@ -25,7 +25,7 @@ router.use('/', (req, res) => {
     });
     var protoDescriptor = grpcjs.loadPackageDefinition(packageDefinition);
     var client = new protoDescriptor.LoginService.UserInfo(serverIpNew, grpcjs.credentials.createInsecure());
-``
+
     var methodType = req.method;
     var data2 = {};
     if( methodType == 'GET' ){

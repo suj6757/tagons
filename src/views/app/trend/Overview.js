@@ -50,6 +50,7 @@ class Overview extends React.Component {
       let userData = UserInfo();
       date1.setDate(date1.getDate() - 9);
       date2.setDate(date2.getDate() - 2);
+
       this.state = {
         startDate: date1,
         endDate: date2,
@@ -57,6 +58,7 @@ class Overview extends React.Component {
         searchBtnClick : false ,
         searchStart : false , 
         userInfo : userData ,
+        loginCheck : loginYN,
         keyWordtext : "",
         selectedOptionsBase : [] , 
         searchCondition: {} ,
@@ -213,6 +215,15 @@ class Overview extends React.Component {
       }
     }
 
+    componentDidMount = () => {
+      const stateItem = this.state;
+        //toggle('1');
+       console.log('Overview' , stateItem.loginCheck , stateItem.userInfo);
+      if (!stateItem.loginCheck){
+        document.location.href = "/user/login";
+      }
+    }
+
     ChangeStartDate = (e) => { 
         this.setState({  
             startDate: e,
@@ -240,7 +251,6 @@ class Overview extends React.Component {
       });
       this.setState({ checkInfo });
     }
-  
 
     generateData = (count, yrange) => {
       let i = 0;
@@ -276,7 +286,6 @@ class Overview extends React.Component {
       this.setState({  
         searchBtnClick: true
       });
-      
     }
 
     render(){
@@ -298,7 +307,6 @@ class Overview extends React.Component {
           } 
           return error;
       };
-
       const setSelectedOptions = (val) => {
         this.setState({  
           selectedOptions: val
@@ -314,7 +322,6 @@ class Overview extends React.Component {
           });
         });
       }
-
       const getOverviewTotal = (searchCondition) => {
         post('/trendoverview/GetBasic_Overview_Total', searchCondition).
         then((response) => {
@@ -524,10 +531,6 @@ class Overview extends React.Component {
         });
       }
 
-      const selectBox = () => {
-
-      }
-
       // 날짜 포맷
       const dateString = (dateValue) => {
         let retStr = '';
@@ -596,14 +599,14 @@ class Overview extends React.Component {
           selectedOptions: { label: 'Total', value: 'Total' , channelUp : "Total" , key: 0 } ,
         });
         //여기서 조회 API 구현하면 됨
-        if (statesItems.activeTab === '1') {
+        if (statesItems.activeTab === '1'){
           searchCondition.Selected_Tab = 'Total';
           getOverviewTotal(searchCondition);
         }
-        else if (statesItems.activeTab === '2') {
+        else if (statesItems.activeTab === '2'){
           getOverviewIDRate(searchCondition);
         }
-        else if (statesItems.activeTab === '3') {
+        else if (statesItems.activeTab === '3'){
           //
           console.log('GAP');
         }
@@ -618,19 +621,29 @@ class Overview extends React.Component {
             // heatMapGraphData.series = [];
           }
           else if (tab === "2"){
-            //차트 초기화
+            //차트 초기화ya
             // TableHeatMapData.data = [];
             // heatMapGraphData.series = [];
           }
           else if (tab === "3"){
             console.log('GAP');
           }
-
           this.setState({
               activeTab : tab
           })
         }
       }
+
+      const onKeywordpress = (e) =>{
+        if (e.keyCode === 13){
+          e.preventDefault();
+          // 조회조건 Validation 체크
+          this.setState({  
+            searchBtnClick: true , 
+          });
+        }
+      };
+
       return(
           <div className='overview_area'>
               <Row>
@@ -713,6 +726,7 @@ class Overview extends React.Component {
                                               name="keyword"
                                               value={statesItems.keyWordtext}
                                               onChange={onKeywordChange}
+                                              onKeyDown={onKeywordpress}
                                               validate={validateKeyword}
                                           />
                                           {errors.keyword && touched.keyword && (
@@ -790,7 +804,7 @@ class Overview extends React.Component {
                                                       <div className='box-title'>
                                                           <h2>Heat Map</h2>
                                                       </div>
-                                                      <div className='graph-area Heat-Map'>
+                                                      <div className='graph-area Heat-Map mt-5'>
                                                         <HeatMap tData={TableHeatMapData.data} options={heatMapGraphData.options} series={heatMapGraphData.series} height={heatMapGraphData.height} />
                                                       </div>
                                                   </CardBody>
@@ -845,7 +859,7 @@ class Overview extends React.Component {
                                         <Colxx xxs="12">
                                             <Card>
                                                 <CardBody>
-                                                    <div className='graph-area grap-area'>
+                                                    <div className='graph-area'>
                                                         <CompareLine options={gapTotalGraph.options} series={gapTotalGraph.series} height={gapTotalGraph.height} />
                                                         <p className='cont-noti'>* 모든 채널의 값을 지수화하여 표시</p>
                                                     </div>
@@ -909,7 +923,7 @@ class Overview extends React.Component {
                                         <Colxx xxs="12">
                                             <Card>
                                                 <CardBody>
-                                                    <div className='graph-area grap-area'>
+                                                    <div className='graph-area'>
                                                       <div className='box-title'>
                                                           <h2>Keyword GAP Comparison Chart</h2>
                                                       </div>

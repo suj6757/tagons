@@ -1009,3 +1009,568 @@ export const gapChartGraph = {
     }
   },
 }
+
+
+
+
+export const fullStackBarGraph = {
+  series: [
+  {
+    name: '긍정',
+    data: []
+  }, 
+  {
+    name: '중립',
+    data: []
+  }, 
+  {
+    name: '부정',
+    data: []
+  }, 
+  ],
+  height: 350,
+  
+  options: {
+    chart: {
+      stacked: true,
+      stackType: '100%',
+      toolbar: {
+        show: false,
+      },
+    },
+    grid: {
+      show: false,
+    },
+    colors: ["#baeeff", "#f3f3f3", "#fac4c4"],
+    plotOptions: {
+      bar: {
+        horizontal: true,
+        barHeight: '40%',
+      },
+    },
+    stroke: {
+      width: 1,
+      colors: ['#fff']
+    },
+    xaxis: {
+      labels:{
+        show: false,
+      },
+      axisTicks: {
+        show: false,
+      },
+      categories: ['세컨스킨','쥬시쥬디','에잇세컨즈'],
+    },
+    yaxis: {
+      axisTicks: {
+        show: false
+      },
+      axisBorder: {
+        show: false,
+      },
+    },
+    fill: {
+      opacity: 1
+    },
+    legend: {
+      position: 'bottom',
+      horizontalAlign: 'center',
+    },
+    dataLabels: {
+      style: {
+        colors: ['#888']
+      }
+    }
+  },
+}
+
+export const positiveChartGraph = {
+  series: [
+    {
+      name: "에잇세컨즈",
+      data: [0.77, 0.88, 0.99, 0.11, 0.12, 0.34, 0.56, 0.4, 0.56, 0.41, 0.42, 0.44, 0.55, 0.66, 0.77, 0.99, 0.11, 0.55, 0.11, 0.12, 0.13, 0.15, 0.46, 0.79, 0.53, 0.12, 0.86, 0.77, 0.2, 0.55, 0.44]
+    },
+    {
+      name: "쥬시쥬디",
+      data: [0.77, 0.8, 0.55, 0.22, 0.33, 0.44, 0.55,0.12, 0.13, 0.76, 0.45, 0.52, 0.01, 0.76, 0.22, 0.78, 0.65, 0.63, 0.93, 0.94, 0.82, 0.2, 0.46, 0.15, 0.76, 0.22, 0.46, 0.55, 0.34, 0.74, 0.45]
+    },
+    {
+      name: "세컨스킨",
+      data: [0.77, 0.8, 0.55, 0.22, 0.33, 0.44, 0.55,0.12, 0.13, 0.76, 0.45, 0.52, 0.01, 0.76, 0.22, 0.78, 0.65, 0.63, 0.93, 0.94, 0.82, 0.2, 0.46, 0.15, 0.76, 0.22, 0.46, 0.55, 0.34, 0.74, 0.45]
+    },
+  ],
+  height: 330,
+  options: {
+    chart: {
+      type: 'line',
+      dropShadow: {
+        enabled: false,
+        color: '#000',
+        top: 18,
+        left: 7,
+        blur: 10,
+        opacity: 0.2,
+      },
+      toolbar: {
+        show: false
+      }, 
+      zoom: {
+        enabled: false,
+      }
+    },
+    colors: ['#555', '#a9a9a9','#ee843b'],
+    dataLabels: {
+      enabled: true,
+      background: {
+        foreColor: '#000',
+        padding: 0,
+        borderRadius: 0,
+        borderColor: 'transparent',
+      },
+      style: {
+        fontSize: '14px',
+        fontFamily: 'Helvetica, Arial, sans-serif',
+        fontWeight: 'bold',
+        colors: ['transparent'],
+      },
+      offsetY: -10,
+    },
+    markers: {
+      size: 0,
+      hover: {
+        size: 5,
+        sizeOffset: 5,
+        fillColor: '#000',
+      },
+      discrete: [{
+        fillColor: '#e3e3e3',
+        strokeColor: '#fff',
+        size: 5
+      }]
+    },
+    stroke: {
+      curve: 'smooth'
+    },
+    grid: {
+      show: false,
+    },
+    xaxis: {
+      categories: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31],
+      tickPlacement: 'between'
+    },
+    yaxis: {
+      show: false
+    }, 
+    legend: {
+      position: 'top',
+      horizontalAlign: 'right', 
+    }
+  },
+}
+
+
+export const negativeChartGraph = {
+  series: [
+    {
+      name: "에잇세컨즈",
+      data: [0.77, 0.88, 0.99, 0.11, 0.12, 0.34, 0.56, 0.4, 0.56, 0.41, 0.42, 0.44, 0.55, 0.66, 0.77, 0.99, 0.11, 0.55, 0.11, 0.12, 0.13, 0.15, 0.46, 0.79, 0.53, 0.12, 0.86, 0.77, 0.2, 0.55, 0.44]
+    },
+    {
+      name: "쥬시쥬디",
+      data: [0.77, 0.8, 0.55, 0.22, 0.33, 0.44, 0.55,0.12, 0.13, 0.76, 0.45, 0.52, 0.01, 0.76, 0.22, 0.78, 0.65, 0.63, 0.93, 0.94, 0.82, 0.2, 0.46, 0.15, 0.76, 0.22, 0.46, 0.55, 0.34, 0.74, 0.45]
+    },
+    {
+      name: "세컨스킨",
+      data: [0.77, 0.8, 0.55, 0.22, 0.33, 0.44, 0.55,0.12, 0.13, 0.76, 0.45, 0.52, 0.01, 0.76, 0.22, 0.78, 0.65, 0.63, 0.93, 0.94, 0.82, 0.2, 0.46, 0.15, 0.76, 0.22, 0.46, 0.55, 0.34, 0.74, 0.45]
+    },
+  ],
+  height: 330,
+  options: {
+    chart: {
+      type: 'line',
+      dropShadow: {
+        enabled: false,
+        color: '#000',
+        top: 18,
+        left: 7,
+        blur: 10,
+        opacity: 0.2,
+      },
+      toolbar: {
+        show: false
+      }, 
+      zoom: {
+        enabled: false,
+      }
+    },
+    colors: ['#555', '#a9a9a9','#ee843b'],
+    dataLabels: {
+      enabled: true,
+      background: {
+        foreColor: '#000',
+        padding: 0,
+        borderRadius: 0,
+        borderColor: 'transparent',
+      },
+      style: {
+        fontSize: '14px',
+        fontFamily: 'Helvetica, Arial, sans-serif',
+        fontWeight: 'bold',
+        colors: ['transparent'],
+      },
+      offsetY: -10,
+    },
+    markers: {
+      size: 0,
+      hover: {
+        size: 5,
+        sizeOffset: 5,
+        fillColor: '#000',
+      },
+      discrete: [{
+        fillColor: '#e3e3e3',
+        strokeColor: '#fff',
+        size: 5
+      }]
+    },
+    stroke: {
+      curve: 'smooth'
+    },
+    grid: {
+      show: false,
+    },
+    xaxis: {
+      categories: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31],
+      tickPlacement: 'between'
+    },
+    yaxis: {
+      show: false
+    }, 
+    legend: {
+      position: 'top',
+      horizontalAlign: 'right', 
+    }
+  },
+}
+
+export const boardTotalGraph = {
+  series: [
+    {
+      name: "쥬시쥬디",
+      data: [0.77, 0.88, 0.99, 0.11, 0.12, 0.34, 0.56, 0.4, 0.56, 0.41, 0.42, 0.44, 0.55, 0.66, 0.77, 0.99, 0.11, 0.55, 0.11, 0.12, 0.13, 0.15, 0.46, 0.79, 0.53, 0.12, 0.86, 0.77, 0.2, 0.55, 0.44]
+    },
+    {
+      name: "에잇세컨즈",
+      data: [0.77, 0.8, 0.55, 0.22, 0.33, 0.44, 0.55,0.12, 0.13, 0.76, 0.45, 0.52, 0.01, 0.76, 0.22, 0.78, 0.65, 0.63, 0.93, 0.94, 0.82, 0.2, 0.46, 0.15, 0.76, 0.22, 0.46, 0.55, 0.34, 0.74, 0.45]
+    },
+    {
+      name: "핀블랙",
+      data: [0.24, 0.44, 0.18, 0.28, 0.24, 0.44, 0.18, 0.4, 0.24, 0.44, 0.18, 0.28, 0.24, 0.44, 0.18, 0.28, 0.24,0.44, 0.18, 0.28, 0.24, 0.44, 0.18, 0.28, 0.24, 0.44, 0.18, 0.28, 0.24, 0.44, 0.77]
+    },
+  ],
+  height: 500,
+  options: {
+    chart: {
+      type: 'line',
+      dropShadow: {
+        enabled: false,
+        color: '#000',
+        top: 18,
+        left: 7,
+        blur: 10,
+        opacity: 0.2,
+      },
+      toolbar: {
+        show: false
+      }, 
+      zoom: {
+        enabled: false,
+      }
+    },
+    colors: ['#ffb800', '#ed7d31',  '#404141'],
+    dataLabels: {
+      enabled: true,
+      background: {
+        foreColor: '#000',
+        padding: 0,
+        borderRadius: 0,
+        borderColor: 'transparent',
+      },
+      style: {
+        fontSize: '14px',
+        fontFamily: 'Helvetica, Arial, sans-serif',
+        fontWeight: 'bold',
+        colors: ['transparent'],
+      },
+      offsetY: -10,
+    },
+    markers: {
+      size: 0,
+      hover: {
+        size: 5,
+        sizeOffset: 5,
+        fillColor: '#000',
+      },
+      discrete: [{
+        fillColor: '#e3e3e3',
+        strokeColor: '#fff',
+        size: 5
+      }]
+    },
+    stroke: {
+      curve: 'smooth'
+    },
+    grid: {
+      show: false,
+    },
+    xaxis: {
+      categories: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31],
+      tickPlacement: 'between'
+    },
+    yaxis: {
+      show: false
+    }, 
+    legend: {
+      position: 'top',
+      horizontalAlign: 'right', 
+    }
+  },
+}
+
+
+export const fullStackBarGraphType2 = {
+  series: [
+    {
+      name: 'Sale',
+      data: [44, 30, 50]
+    }, 
+    {
+      name: 'Not Sale',
+      data: [66, 70, 50]
+    }, 
+
+  ],
+  height: 350,
+  options: {
+    chart: {
+      stacked: true,
+      stackType: '100%',
+      toolbar: {
+        show: false,
+      },
+    },
+    grid: {
+      show: false,
+    },
+    colors: ["#0070c0", "#b3b3b3"],
+    plotOptions: {
+      bar: {
+        horizontal: true,
+        barHeight: '40%',
+      },
+    },
+    stroke: {
+      width: 1,
+      colors: ['#fff']
+    },
+    xaxis: {
+      labels:{
+        show: false,
+      },
+      axisTicks: {
+        show: false,
+      },
+      categories: ['세컨스킨','쥬시쥬디','에잇세컨즈'],
+    },
+    yaxis: {
+      axisTicks: {
+        show: false
+      },
+      axisBorder: {
+        show: false,
+      },
+    },
+    fill: {
+      opacity: 1
+    },
+    legend: {
+      position: 'top',
+      horizontalAlign: 'center',
+    },
+    dataLabels: {
+      style: {
+        colors: ['#fff']
+      }
+    }
+  },
+}
+
+export const bubbleChartOptionsType2 = {
+  series: [{
+    name: 'Coupang',
+    data: [[10, 55, 100]],
+  },
+  {
+    name: '11st',
+    data: [[20, 60, 70]],
+  },
+  {
+    name: 'Wemakeprice',
+    data: [[20, 20, 80]],
+  },
+  {
+    name: 'Sinsegaemall',
+    data: [[5, 40, 100]],
+  },
+  {
+    name: 'Timon',
+    data: [[12, 40, 110]],
+  },
+  {
+    name: 'Gmarket',
+    data: [[25, 50, 80]],
+  },
+  {
+    name: 'Action',
+    data: [[20, 40, 90]],
+  },
+],
+  options: {
+    chart: {
+        height: 350,
+        type: 'bubble',
+        toolbar: {
+          show: false,
+        },
+        zoom: {
+          enabled: false
+        },
+    },
+    states: {
+      hover: {
+          filter: {
+              type: 'lighten',
+              value: 0.001,
+          }
+      },
+  },
+    grid: {
+      show: false,
+    },
+    colors: ["#5977ac", "#5891c5", "#5c6573", "#c3d2ec", "#b1cfeb", "#918d8d", "#bdc7d5"],
+    dataLabels: {
+        enabled: true,
+        formatter: function(value, { seriesIndex, w }) {
+          return w.config.series[seriesIndex].name
+        }
+    },
+    // fill: {
+    //     opacity: 0.9
+    // },
+    xaxis: {
+        tickPlacement: 'between',
+        tickAmount: 31,
+        type: 'category',
+        min: 1,
+        max: 31,
+        tooltip: {
+          enabled: false,
+      }
+    },
+    yaxis: {
+        max: 70
+    }, 
+    tooltip: {
+      custom: function({series, seriesIndex, dataPointIndex, w}) {
+        return (
+          `
+            <div class="arrow_box">
+              <p>Ads Spending</p>
+              <span>${series[seriesIndex][dataPointIndex]}</span>
+            </div>
+          `
+        )
+      },
+      // fixed: {
+      //   enabled: true,
+      //   position: 'topLeft',
+      //   offsetX: 50,
+      //   offsetY: 0,
+      // },
+    }
+  },
+}
+
+
+export const barChartOptionsCheck = {
+  options: {
+    chart: {
+      type: 'bar',
+      height: 350,
+      toolbar: {
+        show: false,
+      },
+      zoom: {
+        enabled: false
+      }, 
+    },
+    dataLabels: {
+      enabled: true,
+      offsetY: -20, 
+      style: {
+        colors: ['#888']
+      },
+    },
+    plotOptions: {
+      bar: {
+        horizontal: false,
+        dataLabels: {
+          position: 'top'
+        },
+        columnWidth: '40%',
+      }
+    },
+    grid: {
+      show: false,
+    },
+    fill: {
+      colors: [
+        // color 값 최대값 최소 값 확인함수
+        function({ value, w }) {
+          const graphDataArr = w.config.series[0].data;
+          const maxVal = Math.max.apply(9 , graphDataArr);
+          const minVal = Math.min.apply(9 , graphDataArr);
+          if (value === maxVal) {
+            return '#2f5597'
+          // eslint-disable-next-line no-else-return
+          } else if(value === minVal){
+            return '#f00001'
+          }else{
+            return '#a6a6a6'
+          }
+        }
+      ],
+      opacity: 0.7
+    },
+    title: {
+      // text: ""
+    },
+    xaxis: {
+      categories: ['Copang', '11st', 'Wemakeprice', 'Sinsegae mall', 'Timon', 'Gmarket', 'Auction',],
+    },
+    yaxis: {
+      axisTicks: {
+        show: true
+      },
+      axisBorder: {
+        show: true,
+      },
+    },
+  },
+  series: [{
+    name: "Desktops",
+    data: [10, 10, 35, 62, 69, 148, 148]
+  }], 
+
+  
+};

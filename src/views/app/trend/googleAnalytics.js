@@ -36,6 +36,7 @@ class GoogleAnalytics extends React.Component {
       activeTab: '1',
       keyWordtext :'',
       userInfo : userData ,
+      loginCheck : loginYN,
       internalIndexSelected : '',
       externalSelected : '', 
       UsersSessionsSeries: [] ,
@@ -441,6 +442,14 @@ class GoogleAnalytics extends React.Component {
     };
 
   }
+
+  componentDidMount = () => {
+    const stateItem = this.state;
+    if (!stateItem.loginCheck){
+      document.location.href = "/user/login";
+    }
+  }
+
 
   tabToggle = (tab) => {
     const activeTab = this.state;
@@ -1165,7 +1174,10 @@ class GoogleAnalytics extends React.Component {
     const onKeywordpress = (e) =>{
       if (e.keyCode === 13){
         e.preventDefault();
-        // 여기서 Search 로 이동
+        // 조회조건 Validation 체크
+        this.setState({  
+          searchBtnClick: true , 
+        });
       }
     };
 

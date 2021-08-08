@@ -98,9 +98,35 @@ const ChannelButton = (props) => {
     console.log('socialDataTitle change', socialDataTitle,socialDataList);
   }, [socialDataTitle]);
   useEffect(() => {
+    var Social= [];
+    var OnlineShopping = [];
+    var Google = [];
+    var channelArray = [];
     if (props.searchBtnClick){
       console.log('ChannelButton click');
-      props.searchStart(selectArray);
+      if (selectArray.length > 0 ){
+        selectArray.forEach(function(item,idx){
+          if (item.type === 'Online Shopping'){
+            OnlineShopping.push(item);
+          }
+          else if (item.type === 'Social'){
+            Social.push(item);
+          }
+          else if (item.type === 'Google Analytics'){
+            Google.push(item);
+          }
+        });
+        OnlineShopping.forEach(function(item,idx){
+          channelArray.push(item);
+        });
+        Social.forEach(function(item,idx){
+          channelArray.push(item);
+        });
+        Google.forEach(function(item,idx){
+          channelArray.push(item);
+        });
+      }
+      props.searchStart(channelArray);
     }
   }, [props.searchBtnClick]);
   return (

@@ -98,10 +98,10 @@ const TopNav = ({
           <DropdownToggle tag="div">
             <ul className="d-inline-block top-nav-list">
               <li><NavLink to="/app/prime/prime" activeClassName="active" className="nav-menu">PRIME</NavLink></li>
-              <li><NavLink to="/app/gogo/start" activeClassName="active" className="nav-menu">TREND</NavLink></li>
-              <li><NavLink to="#" activeClassName="" className="nav-menu">SOCIAL LISTENING</NavLink></li>
-              <li><NavLink to="#" activeClassName="" className="nav-menu">ONLINE RETAILER</NavLink></li>
-              <li><NavLink to="#" activeClassName="" className="nav-menu">SIMULATOR</NavLink></li>
+              <li className="mr50"><NavLink to="/app/gogo/start" activeClassName="active" className="nav-menu">TREND</NavLink></li>
+              <li className="mr100"><NavLink to="#" activeClassName="" className="nav-menu">SOCIAL LISTENING</NavLink></li>
+              <li className="mr100"><NavLink to="#" activeClassName="" className="nav-menu">ONLINE RETAILER</NavLink></li>
+              <li className="mr50"><NavLink to="#" activeClassName="" className="nav-menu">SIMULATOR</NavLink></li>
               <li><NavLink to="#" activeClassName="" className="nav-menu">ABOUT TousFlux</NavLink></li>
             </ul>
           </DropdownToggle>
@@ -119,13 +119,13 @@ const TopNav = ({
                 <li><DropdownItem tag={NavLink} to="/app/trend/response" activeClassName="active" className="sub-menu">TREND-RESPONSE</DropdownItem></li>
               </ul>
               <ul className="sub-list3"> 
-                <li><NavLink to="#" activeClassName="" className="sub-menu">SENTIMENT ANALYSIS</NavLink></li>
+                <li><DropdownItem tag={NavLink} to="/app/socialListening/sentimentanalysis" activeClassName="active" className="sub-menu">SENTIMENT ANALYSIS</DropdownItem></li>
                 <li><DropdownItem tag={NavLink} to="/app/socialListening/needspatterns" activeClassName="active" className="sub-menu">NEEDS PATTERNS</DropdownItem></li>
               </ul>
               <ul className="sub-list4">
-                <li><NavLink to="#" activeClassName="" className="sub-menu">ON-BROAD</NavLink></li>
-                <li><NavLink to="#" activeClassName="" className="sub-menu">ON-DETAIL</NavLink></li>
-                <li><NavLink to="#" activeClassName="" className="sub-menu">ADS MONITORING</NavLink></li>
+                <li><DropdownItem tag={NavLink} to="/app/onlineRetailer/onboard" activeClassName="active" className="sub-menu">ONBOARD</DropdownItem></li>
+                <li><DropdownItem tag={NavLink} to="/app/onlineRetailer/overview" activeClassName="active" className="sub-menu">OVERVIEW</DropdownItem></li>
+                <li><DropdownItem tag={NavLink} to="/app/onlineRetailer/productprice" activeClassName="active" className="sub-menu">PRODUCT &amp; PRICE</DropdownItem></li>
               </ul>
               <ul className="sub-list5">
                 <li><NavLink to="#" activeClassName="" className="sub-menu">INFLUENCER</NavLink></li>

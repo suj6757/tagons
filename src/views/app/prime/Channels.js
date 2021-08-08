@@ -26,10 +26,18 @@ class Channels extends React.Component {
         endDate: date2,
         searchBtnClick : false ,
         searchStartFlag : false ,
+        loginCheck : loginYN, 
         keyWordtext :'' ,
         searchCondition : {} ,
         loginBefore : loginYN ,
         userInfo : userData ,
+      }
+    }
+
+    componentDidMount = () => {
+      const stateItem = this.state;
+      if (!stateItem.loginCheck){
+        document.location.href = "/user/login";
       }
     }
 
@@ -131,7 +139,10 @@ class Channels extends React.Component {
       const onKeywordpress = (e) =>{
         if (e.keyCode === 13){
           e.preventDefault();
-          // 여기서 Search 로 이동
+          // 조회조건 Validation 체크
+          this.setState({  
+            searchBtnClick: true , 
+          });
         }
       };
       return(

@@ -30,7 +30,7 @@ export const LeftTrend = ({match}) => {
 export const LeftSocial = ({match}) => {
   return (
     <>
-      <MenuItem><NavLink to="#" activeClassName="">SENTIMENT ANALYSIS</NavLink></MenuItem>
+      <MenuItem><NavLink to="/app/socialListening/sentimentanalysis" activeClassName="active">SENTIMENT ANALYSIS</NavLink></MenuItem>
       <MenuItem><NavLink to="/app/socialListening/needspatterns" activeClassName="active">NEEDS PATTERNS</NavLink></MenuItem>
     </>
   )
@@ -39,8 +39,9 @@ export const LeftSocial = ({match}) => {
 export const LeftOnline = ({match}) => {
   return (
     <>
-      <MenuItem>OVERVIEW</MenuItem>
-      <MenuItem>PRODUCT &amp; PRICE</MenuItem>
+      <MenuItem><NavLink to="/app/onlineRetailer/onboard" activeClassName="active">ONBOARD</NavLink></MenuItem>
+      <MenuItem><NavLink to="/app/onlineRetailer/overview" activeClassName="active">OVERVIEW</NavLink></MenuItem>
+      <MenuItem><NavLink to="/app/onlineRetailer/productprice" activeClassName="active">PRODUCT &amp; PRICE</NavLink></MenuItem>
     </>
   )
 }
