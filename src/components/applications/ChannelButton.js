@@ -10,7 +10,7 @@ const ChannelButton = (props) => {
   const [socialDataList,setSocialDataList] = useState([]); 
   const [onlineShopData,setOnlineShopData] = useState([]); 
   const [googleAnalData,setGoogleAnalData] = useState([]); 
-
+  const [tabAtribute, setTabAtribute ]= useState(props.tabAtribute);
   var socialData = [];
   const tabTitle = ['Social', 'Online Shopping', 'Google Analytics'];
  
@@ -48,6 +48,25 @@ const ChannelButton = (props) => {
   }
 
   const setChannelSelected = (id) => {
+      
+      if (rSelected != null){
+        if (rSelected === 0){
+          socialDataList.forEach(function(item,idx){
+            tagRemoveBtn(item.id);
+          });
+        }
+        else if (rSelected === 1){
+          onlineShopData.forEach(function(item,idx){
+            tagRemoveBtn(item.id);
+          });
+        }
+        else if (rSelected === 2){
+          googleAnalData.forEach(function(item,idx){
+            tagRemoveBtn(item.id);
+          });
+        }
+      }
+      setSelectArray([]);
       setRSelected(id);        
   }
 
@@ -135,7 +154,7 @@ const ChannelButton = (props) => {
       {tabTitle.map((title, idx) => {
           return(
             // eslint-disable-next-line react/no-array-index-key
-            <Button key={idx} color='h_tab' onClick={() => setChannelSelected(idx)} active={rSelected === idx}>{title}</Button>
+            <Button key={idx} color='h_tab' onClick={() => setChannelSelected(idx)} active={rSelected === idx} style={{ display: tabAtribute[idx] ? "inline" : "none" }} >{title}</Button>
           )
       })}
       </div>

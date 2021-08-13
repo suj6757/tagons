@@ -187,7 +187,7 @@ class Channels extends React.Component {
                           <tr>
                               <th style={{ width:'15%' }}>Channel</th>
                               <td style={{ width:'85%' }}>
-                              <ChannelButton  searchStart={searchStart} searchBtnClick={statesItems.searchBtnClick}/>                             
+                              <ChannelButton  searchStart={searchStart} searchBtnClick={statesItems.searchBtnClick} tabAtribute={[true,true,true]}/>                             
                               </td>
                           </tr>
                           <tr>

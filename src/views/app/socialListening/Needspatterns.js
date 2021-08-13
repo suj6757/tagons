@@ -490,7 +490,7 @@ class Needspatterns extends React.Component {
                         <tr>
                           <th style={{ width:'10%' }}>Channel</th>
                           <td style={{ width:'90%' }}>
-                          <ChannelButton searchStart={searchStart} searchBtnClick={statesItems.searchBtnClick} />                             
+                          <ChannelButton searchStart={searchStart} searchBtnClick={statesItems.searchBtnClick} tabAtribute={[true,true,true]} />                             
                           </td>
                         </tr>
                         <tr>

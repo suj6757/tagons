@@ -56,7 +56,7 @@ class Onboard extends React.Component {
       defaultTagNum : 3 ,
       tagInput : [] ,
       keyWordtext : "",
-      selectedOptionsBase :[] ,
+      selectedOptionsBase :{} ,
       SearchCondition : {} ,
       activeTab: '1',
       activeTabSecond: '1',
@@ -74,6 +74,8 @@ class Onboard extends React.Component {
       PointsSeries : [],
       SalesOptions : salesOptions,
       PointsOptions : pointsOptions,
+      PriceDistributionData : [],
+      ChannelData : [] ,
       checkInfo: [
           { id: 1, value: "Daily", isChecked: true },
           { id: 2, value: "Weekly", isChecked: false },
@@ -216,11 +218,7 @@ class Onboard extends React.Component {
     this.setState({ checkInfo });
   };
 
-  setSelectedOptions = (val) => {
-    this.setState({
-      selectedOptions: val
-    });
-  }
+
 
   SearchClick = (e) => {
     console.log('Sentimentanalysis SearchClick !!');
@@ -272,11 +270,55 @@ class Onboard extends React.Component {
       return retStr;
     }
 
-    const setBenefitsType = (ResponseData) => {
+    const setPriceDistribution = (ResponseData)  => {
+        var dataList = [];
+        var channelList = [];
+        let i = 0;
+        var colorvalue = "";
+        ResponseData.Total_Price.forEach(function(item,idx){
+
+          dataList.push({name:item.Price , Total: item.TotalCount});
+        });
+        channelList.push("Tatal");
+        ResponseData.Price_List.forEach(function(item,idx){
+          colorvalue = "#" + Math.floor(Math.random() * 16777215).toString(16);
+          channelList.push({Channel : item.Channel , ChannelColor : colorvalue });
+          item.Data.forEach(function(item1,idx1){
+              i = 0;
+              while ( i < dataList.length ) {
+                if (dataList[i].name === item1.Price ) {
+                  dataList[i][item.Channel] = item1.TotalCount;
+                  break;
+                }
+                i += 1;
+              }
+          });
+        });
+        console.log('setPriceDistribution' , ResponseData , dataList   );
+        this.setState({  
+          PriceDistributionData : dataList ,
+          ChannelData : channelList ,
+        });
+    }
+
+    const getPriceDistribution = (searchCondition) => {
+      // console.log('getPriceDistribution' , searchCondition );
+      post('/onbroad/GetPrice_Distribution', searchCondition).
+      then((response) => {
+        setPriceDistribution(response.data );
+      })
+      .catch(function (error) {
+          console.log(error);         
+      });
+
+    }
+    
+    const setBenefitsType = (ResponseData , searchCondition) => {
       var salesSeries =  [];
       var pointsSeries =  [];
       var salesCategory =  [];
       var pointsCategory =  [];
+      var pSearchCondition = {};
       var salesOptions =  JSON.parse(JSON.stringify(fullStackBarGraphType2.options)); 
       var pointsOptions =  JSON.parse(JSON.stringify(fullStackBarGraphType2.options)); 
       console.log('setBenefitsType', ResponseData);
@@ -302,13 +344,19 @@ class Onboard extends React.Component {
         SalesOptions : salesOptions,
         PointsOptions : pointsOptions,
       });  
-
+      pSearchCondition.FromDate = searchCondition.FromDate;
+      pSearchCondition.ToDate = searchCondition.ToDate;
+      pSearchCondition.Period_Unit = searchCondition.Period_Unit;
+      pSearchCondition.Keyword = searchCondition.Keyword;
+      pSearchCondition.Selected_Competitors = searchCondition.Competitors[0];
+      
+      getPriceDistribution(pSearchCondition);
     }
 
     const getBenefitsType = (searchCondition) => {
       post('/onbroad/GetBenefits_Type', searchCondition).
       then((response) => {
-        setBenefitsType(response.data );
+        setBenefitsType(response.data , searchCondition );
       })
       .catch(function (error) {
           console.log(error);         
@@ -430,7 +478,7 @@ class Onboard extends React.Component {
         }
       });
       if (tagInputs.length > 0 ){
-        selectList.push({ label: 'Total', value: 'Total' , channelUp : "Total" , key: 0 });
+        // selectList.push({ label: 'Total', value: 'Total' , channelUp : "Total" , key: 0 });
         tagInputs.forEach(function(item,idx){
            selectList.push({ label: item.text, value: item.id, key: idx + 1});
            competitors.push(item.id);
@@ -444,6 +492,8 @@ class Onboard extends React.Component {
       searchCondition.Keyword = statesItems.keyWordtext;
       this.setState({  
         SearchCondition: searchCondition,
+        selectedOptionsBase : selectList,
+        selectedOptions : selectList[0],
       });
       console.log('tagSearchStart',searchCondition);
       getBroadMarket(searchCondition);
@@ -479,6 +529,19 @@ class Onboard extends React.Component {
                 })
             }
         }
+    }
+
+    const setSelectedOptions = (val) => {
+      var pSearchCondition = {} ;
+      pSearchCondition.FromDate = statesItems.SearchCondition.FromDate;
+      pSearchCondition.ToDate = statesItems.SearchCondition.ToDate;
+      pSearchCondition.Period_Unit = statesItems.SearchCondition.Period_Unit;
+      pSearchCondition.Keyword = statesItems.SearchCondition.Keyword;
+      pSearchCondition.Selected_Competitors = val.value;
+      this.setState({
+        selectedOptions: val
+      });
+      getPriceDistribution(pSearchCondition);
     }
 
     return (
@@ -805,14 +868,14 @@ class Onboard extends React.Component {
                         classNamePrefix="react-select"
                         name="form-field-name"
                         value={statesItems.selectedOptions}
-                        onChange={(val) => this.setSelectedOptions(val)}
-                        options={selectedOptionsBase}
+                        onChange={(val) => setSelectedOptions(val)}
+                        options={statesItems.selectedOptionsBase}
                     />
                   </FormGroup>
                 </div>
                 <div className='graph-area brushChart_wrap'>
                   <p className='cont-noti'>단위: 건</p>
-                  <BrushChart />
+                  <BrushChart priceDistributionData = {statesItems.PriceDistributionData} channelData= {statesItems.ChannelData} />
                 </div>
               </CardBody>
             </Card>

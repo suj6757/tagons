@@ -150,7 +150,7 @@ class Overview extends React.Component {
                         <tr>
                           <th style={{ width: '15%' }}>Channel</th>
                           <td style={{ width: '85%' }} colSpan="3">
-                            <ChannelButton />
+                            <ChannelButton  tabAtribute={[true,true,true]}/>
                           </td>
                         </tr>
                         <tr>

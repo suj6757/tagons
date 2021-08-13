@@ -214,7 +214,7 @@ class Overview extends React.Component {
         call : []
       }
     }
-
+    /*
     componentDidMount = () => {
       const stateItem = this.state;
         //toggle('1');
@@ -222,7 +222,7 @@ class Overview extends React.Component {
       if (!stateItem.loginCheck){
         document.location.href = "/user/login";
       }
-    }
+    } */
 
     ChangeStartDate = (e) => { 
         this.setState({  
@@ -707,7 +707,7 @@ class Overview extends React.Component {
                               <tr>
                                   <th style={{ width:'15%' }}>Channel</th>
                                   <td style={{ width:'85%' }} colSpan="3">
-                                  <ChannelButton searchStart={searchStart} searchBtnClick={statesItems.searchBtnClick} />                             
+                                  <ChannelButton searchStart={searchStart} searchBtnClick={statesItems.searchBtnClick} tabAtribute={[true,true,true]}/>                             
                                   </td>
                               </tr>
                               <tr>

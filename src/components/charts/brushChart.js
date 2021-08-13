@@ -1,4 +1,4 @@
-import React from "react";
+import React ,{useEffect , useState }from "react";
 import {
   LineChart,
   Line,
@@ -44,13 +44,21 @@ const data = [
   { name: "30", Total: -99, Coupang: 322, '11st': 135, 'G-market': 205, Acuction: 369 },
   { name: "31", Total: -52, Coupang: 246, '11st': 135, 'G-market': 205, Acuction: 369 },
 ];
-
-export default function BrushChartTest2() {
-
+const BrushChartTest2 = (props) => { 
+  const [priceDistributionData, setPriceDistributionData] = useState(props.priceDistributionData) ;
+  const [channelData, setChannelData] = useState(props.priceDistributionData) ;
+  useEffect(() => {
+    console.log('BrushChartTest2' , props)
+  },[]);
+  useEffect(() => {
+    console.log('BrushChartTest2' , props)
+    setPriceDistributionData(props.priceDistributionData);
+    setChannelData(props.channelData);
+  },[props.priceDistributionData]);
   return (
     <ResponsiveContainer width="100%" height={500} className='mt-5'>
       <LineChart
-        data={data}
+        data={priceDistributionData}
         margin={{
           top: 60,
           right: 30,
@@ -65,37 +73,20 @@ export default function BrushChartTest2() {
         <Legend align="center" verticalAlign="top" height={30} className='brushchartlegend' />
         <ReferenceLine y={0} stroke="#000" />
         <Brush dataKey="name" y={30} height={40} stroke="#8884d8" />
-        <Line
-          type="monotone"
-          dataKey="Total"
-          stroke="#4774c5"
-          activeDot={{ r: 5 }}
-        />
-        <Line
-          type="monotone"
-          dataKey="Coupang"
-          stroke="#3a3b3b"
-          activeDot={{ r: 5 }}
-        />
-        <Line
-          type="monotone"
-          dataKey="11st"
-          stroke="#a1a1a1"
-          activeDot={{ r: 5 }}
-        />
-        <Line
-          type="monotone"
-          dataKey="G-market"
-          stroke="#ffc104"
-          activeDot={{ r: 5 }}
-        />
-        <Line
-          type="monotone"
-          dataKey="Acuction"
-          stroke="#5597d3"
-          activeDot={{ r: 5 }}
-        />
+        {
+          channelData.map((cData) => (
+            <Line
+              type="monotone"
+              dataKey={cData.Channel}
+              stroke={cData.ChannelColor}
+              activeDot={{ r: 5 }}
+            />     
+          ))
+        }
+
       </LineChart>
     </ResponsiveContainer>
   );
 }
+
+export default BrushChartTest2; 

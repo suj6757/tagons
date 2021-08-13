@@ -241,13 +241,13 @@ class Social extends React.Component {
         }, 
       }
     }
-    
+    /*
     componentDidMount = () => {
       const stateItem = this.state;
       if (!stateItem.loginCheck){
         document.location.href = "/user/login";
       }
-    }
+    } */
 
     ChangeStartDate = (e) => { 
         this.setState({  
@@ -494,7 +494,7 @@ class Social extends React.Component {
           });
 
         }
-
+        //전체 필수 값
         const getKeywordChart= (searchCondition, selectValue) => {
           axios.post("/social/GetSocial_KeywordChart",searchCondition)
           .then((response) => {
@@ -512,7 +512,7 @@ class Social extends React.Component {
           });
 
         }
-
+        // 전체 필수 값
         const getKeywordRank = (searchCondition, selectValue) => {
           var header = [];
           var keywordBodyList = [];
@@ -546,7 +546,7 @@ class Social extends React.Component {
           });
 
         }
-
+        // 전체 필수 값
         const getTrendChartData = (searchCondition, selectValue) => {
           axios.post("/social/GetSocial_TrendChart",searchCondition)
           .then((response) => {
@@ -644,7 +644,8 @@ class Social extends React.Component {
            
         }
         else{
-          console.log('채널 선택 없음');
+          alert('채널을 선텍히야 주세요');
+          return ;
         }
         statesItems.checkInfo.forEach(item => {
           if (item.isChecked){
@@ -654,6 +655,11 @@ class Social extends React.Component {
         this.setState({  
           selectedOptionsBase: selectList ,
         });
+        
+        if (statesItems.keyWordtext === ''){
+          alert('Keywords를 입력하세요.');
+          return ;
+        }
 
         searchCondition.FromDate = dateString(statesItems.startDate); 
         searchCondition.ToDate = dateString(statesItems.endDate); 
@@ -745,7 +751,7 @@ class Social extends React.Component {
                                   <tr>
                                       <th style={{ width:'15%' }}>Channel</th>
                                       <td style={{ width:'85%' }} colSpan="3">
-                                      <ChannelButton searchStart={searchStart} searchBtnClick={statesItems.searchBtnClick} />                             
+                                      <ChannelButton searchStart={searchStart} searchBtnClick={statesItems.searchBtnClick} tabAtribute={[true,true,true]} />                             
                                       </td>
                                   </tr>
                                   <tr>

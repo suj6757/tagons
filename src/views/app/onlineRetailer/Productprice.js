@@ -25,25 +25,735 @@ import CompareBar from '../../../components/charts/CompareBar';
 import CompareLine from '../../../components/charts/CompareLine';
 import { Columns, ProductColumns, TableData, TableData2, ProductData } from './tableData';
 import 'react-datepicker/dist/react-datepicker.css';
+import { login, UserInfo, logout } from '../../../services/LoginService';
+import { post } from 'axios';
+import { CommerceIndicator, PriceIndicator } from './data';
 
 // eslint-disable-next-line react/prefer-stateless-function
 class ProductPrice extends React.Component {
   constructor(props) {
     super(props); // React.Component의 생성자 메소드를 먼저 실행
+    let date1 = new Date();
+    let date2 = new Date();
+    let loginYN = (UserInfo() !== null);
+    let userData = UserInfo();
+    date1.setDate(date1.getDate() - 9);
+    date2.setDate(date2.getDate() - 2);
 
     this.state = {
-      startDate: new Date(),
-      endDate: new Date(),
+      startDate: date1,
+      endDate: date2,
+      activeId: 1,
+      activeTabId: 1,
+      searchBtnClick : false ,
+      searchStart : false , 
+      userInfo : userData ,
+      loginCheck : loginYN,
+      keyWordtext : "",
+      selectedOptionsBase : [] , 
+      searchCondition: {} ,
+      brandBubbleData : [],
+      // eslint-disable-next-line react/no-unused-state
+      selectedOptions : [],
+      // eslint-disable-next-line react/no-unused-state
       checkInfo: [
-        { id: 1, value: "Daily", isChecked: false },
+        { id: 1, value: "Daily", isChecked: true },
         { id: 2, value: "Weekly", isChecked: false },
         { id: 3, value: "Monthly", isChecked: false },
         { id: 4, value: "Yearly", isChecked: false }
       ],
-      selectedOptions: null,
-      activeId: 1,
-      activeTabId: 1
+      commerceColumn : Columns,
+      commerceTable : TableData,
+      commerceProductGraph : [
+        {
+          series: [],
+          height: 400,
+          options: {
+            chart: {
+              type: 'line',
+              dropShadow: {
+                enabled: false,
+                color: '#000',
+                top: 18,
+                left: 7,
+                blur: 10,
+                opacity: 0.2,
+              },
+              toolbar: {
+                show: false
+              }, 
+              zoom: {
+                enabled: false,
+              }
+            },
+            annotations: {
+              position: 'back' ,
+              yaxis: [
+                {
+                  y: 20,
+                  y2: 40,
+                  opacity: 0.3,
+                  fillColor: "#FEB019",
+                },
+              ],
+            },
+            legend: {
+              position: 'top',
+              horizontalAlign: 'right', 
+            },
+            colors: ['#f6980b','#b9b9b9','#4e4f4f','#b9b9b9'],
+            dataLabels: {
+              enabled: true,
+              background: {
+                foreColor: '#000',
+                padding: 0,
+                borderRadius: 0,
+                borderColor: 'transparent',
+              },
+              style: {
+                fontSize: '14px',
+                fontFamily: 'Helvetica, Arial, sans-serif',
+                fontWeight: 'bold',
+                colors: ['transparent'],
+              },
+              offsetY: -10,
+            },
+            markers: {
+              size: 5,
+              hover: {
+                size: 5,
+                sizeOffset: 5,
+                fillColor: '#000',
+              },
+              discrete: [{
+                fillColor: '#e3e3e3',
+                strokeColor: '#fff',
+                size: 5
+              }]
+            },
+            grid: {
+              show: false,
+            },
+            xaxis: {
+              categories: [],
+              tickPlacement: 'between',
+              axisTicks: {
+                show: false,
+              }
+            },
+            yaxis: {
+              axisBorder: {
+                show: true,
+              },
+              title: {
+                text: 'Product',
+                rotate: 0,
+                offsetX: 0,
+                offsetY: -150,
+                style: {
+                  fontSize: '14px',
+                  fontWeight: 600,
+                  cssClass: 'apexcharts-yaxis-title',
+                },
+              }
+            },  
+          }
+        }
+      ],
+      commerceProductTableData : [],
+      commerceDeliveryGraph : [
+        {
+          series: [],
+          height: 400,
+          options: {
+            chart: {
+              type: 'line',
+              dropShadow: {
+                enabled: false,
+                color: '#000',
+                top: 18,
+                left: 7,
+                blur: 10,
+                opacity: 0.2,
+              },
+              toolbar: {
+                show: false
+              }, 
+              zoom: {
+                enabled: false,
+              }
+            },
+            annotations: {
+              position: 'back' ,
+              yaxis: [
+                {
+                  y: 20,
+                  y2: 40,
+                  opacity: 0.3,
+                  fillColor: "#FEB019",
+                },
+              ],
+            },
+            legend: {
+              position: 'top',
+              horizontalAlign: 'right', 
+            },
+            colors: ['#f6980b','#b9b9b9','#4e4f4f','#b9b9b9'],
+            dataLabels: {
+              enabled: true,
+              background: {
+                foreColor: '#000',
+                padding: 0,
+                borderRadius: 0,
+                borderColor: 'transparent',
+              },
+              style: {
+                fontSize: '14px',
+                fontFamily: 'Helvetica, Arial, sans-serif',
+                fontWeight: 'bold',
+                colors: ['transparent'],
+              },
+              offsetY: -10,
+            },
+            markers: {
+              size: 5,
+              hover: {
+                size: 5,
+                sizeOffset: 5,
+                fillColor: '#000',
+              },
+              discrete: [{
+                fillColor: '#e3e3e3',
+                strokeColor: '#fff',
+                size: 5
+              }]
+            },
+            grid: {
+              show: false,
+            },
+            xaxis: {
+              categories: [],
+              tickPlacement: 'between',
+              axisTicks: {
+                show: false,
+              }
+            },
+            yaxis: {
+              axisBorder: {
+                show: true,
+              },
+              title: {
+                text: 'Product',
+                rotate: 0,
+                offsetX: 0,
+                offsetY: -150,
+                style: {
+                  fontSize: '14px',
+                  fontWeight: 600,
+                  cssClass: 'apexcharts-yaxis-title',
+                },
+              }
+            },  
+          }
+        }
+      ],
+      commerceDeliveryTableData : [],
+      commerceReviewsGraph : [
+        {
+          series: [],
+          height: 400,
+          options: {
+            chart: {
+              type: 'line',
+              dropShadow: {
+                enabled: false,
+                color: '#000',
+                top: 18,
+                left: 7,
+                blur: 10,
+                opacity: 0.2,
+              },
+              toolbar: {
+                show: false
+              }, 
+              zoom: {
+                enabled: false,
+              }
+            },
+            annotations: {
+              position: 'back' ,
+              yaxis: [
+                {
+                  y: 20,
+                  y2: 40,
+                  opacity: 0.3,
+                  fillColor: "#FEB019",
+                },
+              ],
+            },
+            legend: {
+              position: 'top',
+              horizontalAlign: 'right', 
+            },
+            colors: ['#f6980b','#b9b9b9','#4e4f4f','#b9b9b9'],
+            dataLabels: {
+              enabled: true,
+              background: {
+                foreColor: '#000',
+                padding: 0,
+                borderRadius: 0,
+                borderColor: 'transparent',
+              },
+              style: {
+                fontSize: '14px',
+                fontFamily: 'Helvetica, Arial, sans-serif',
+                fontWeight: 'bold',
+                colors: ['transparent'],
+              },
+              offsetY: -10,
+            },
+            markers: {
+              size: 5,
+              hover: {
+                size: 5,
+                sizeOffset: 5,
+                fillColor: '#000',
+              },
+              discrete: [{
+                fillColor: '#e3e3e3',
+                strokeColor: '#fff',
+                size: 5
+              }]
+            },
+            grid: {
+              show: false,
+            },
+            xaxis: {
+              categories: [],
+              tickPlacement: 'between',
+              axisTicks: {
+                show: false,
+              }
+            },
+            yaxis: {
+              axisBorder: {
+                show: true,
+              },
+              title: {
+                text: 'Product',
+                rotate: 0,
+                offsetX: 0,
+                offsetY: -150,
+                style: {
+                  fontSize: '14px',
+                  fontWeight: 600,
+                  cssClass: 'apexcharts-yaxis-title',
+                },
+              }
+            },  
+          }
+        }
+      ],
+      commerceReviewsTableData : [],
+      priceColumn : Columns,
+      priceTable : TableData,
+      priceRegularGraph : [
+        {
+          series: [],
+          height: 400,
+          options: {
+            chart: {
+              type: 'line',
+              dropShadow: {
+                enabled: false,
+                color: '#000',
+                top: 18,
+                left: 7,
+                blur: 10,
+                opacity: 0.2,
+              },
+              toolbar: {
+                show: false
+              }, 
+              zoom: {
+                enabled: false,
+              }
+            },
+            annotations: {
+              position: 'back' ,
+              yaxis: [
+                {
+                  y: 20,
+                  y2: 40,
+                  opacity: 0.3,
+                  fillColor: "#FEB019",
+                },
+              ],
+            },
+            legend: {
+              position: 'top',
+              horizontalAlign: 'right', 
+            },
+            colors: ['#f6980b','#b9b9b9','#4e4f4f','#b9b9b9'],
+            dataLabels: {
+              enabled: true,
+              background: {
+                foreColor: '#000',
+                padding: 0,
+                borderRadius: 0,
+                borderColor: 'transparent',
+              },
+              style: {
+                fontSize: '14px',
+                fontFamily: 'Helvetica, Arial, sans-serif',
+                fontWeight: 'bold',
+                colors: ['transparent'],
+              },
+              offsetY: -10,
+            },
+            markers: {
+              size: 5,
+              hover: {
+                size: 5,
+                sizeOffset: 5,
+                fillColor: '#000',
+              },
+              discrete: [{
+                fillColor: '#e3e3e3',
+                strokeColor: '#fff',
+                size: 5
+              }]
+            },
+            grid: {
+              show: false,
+            },
+            xaxis: {
+              categories: [],
+              tickPlacement: 'between',
+              axisTicks: {
+                show: false,
+              }
+            },
+            yaxis: {
+              axisBorder: {
+                show: true,
+              },
+              title: {
+                text: 'Product',
+                rotate: 0,
+                offsetX: 0,
+                offsetY: -150,
+                style: {
+                  fontSize: '14px',
+                  fontWeight: 600,
+                  cssClass: 'apexcharts-yaxis-title',
+                },
+              }
+            },  
+          }
+        }
+      ],
+      priceRegularTableData : [],
+      priceSaleGraph : [
+        {
+          series: [],
+          height: 400,
+          options: {
+            chart: {
+              type: 'line',
+              dropShadow: {
+                enabled: false,
+                color: '#000',
+                top: 18,
+                left: 7,
+                blur: 10,
+                opacity: 0.2,
+              },
+              toolbar: {
+                show: false
+              }, 
+              zoom: {
+                enabled: false,
+              }
+            },
+            annotations: {
+              position: 'back' ,
+              yaxis: [
+                {
+                  y: 20,
+                  y2: 40,
+                  opacity: 0.3,
+                  fillColor: "#FEB019",
+                },
+              ],
+            },
+            legend: {
+              position: 'top',
+              horizontalAlign: 'right', 
+            },
+            colors: ['#f6980b','#b9b9b9','#4e4f4f','#b9b9b9'],
+            dataLabels: {
+              enabled: true,
+              background: {
+                foreColor: '#000',
+                padding: 0,
+                borderRadius: 0,
+                borderColor: 'transparent',
+              },
+              style: {
+                fontSize: '14px',
+                fontFamily: 'Helvetica, Arial, sans-serif',
+                fontWeight: 'bold',
+                colors: ['transparent'],
+              },
+              offsetY: -10,
+            },
+            markers: {
+              size: 5,
+              hover: {
+                size: 5,
+                sizeOffset: 5,
+                fillColor: '#000',
+              },
+              discrete: [{
+                fillColor: '#e3e3e3',
+                strokeColor: '#fff',
+                size: 5
+              }]
+            },
+            grid: {
+              show: false,
+            },
+            xaxis: {
+              categories: [],
+              tickPlacement: 'between',
+              axisTicks: {
+                show: false,
+              }
+            },
+            yaxis: {
+              axisBorder: {
+                show: true,
+              },
+              title: {
+                text: 'Product',
+                rotate: 0,
+                offsetX: 0,
+                offsetY: -150,
+                style: {
+                  fontSize: '14px',
+                  fontWeight: 600,
+                  cssClass: 'apexcharts-yaxis-title',
+                },
+              }
+            },  
+          }
+        }
+      ],
+      priceSaleTableData : [],
+      priceRegularDeliveryGraph : [
+        {
+          series: [],
+          height: 400,
+          options: {
+            chart: {
+              type: 'line',
+              dropShadow: {
+                enabled: false,
+                color: '#000',
+                top: 18,
+                left: 7,
+                blur: 10,
+                opacity: 0.2,
+              },
+              toolbar: {
+                show: false
+              }, 
+              zoom: {
+                enabled: false,
+              }
+            },
+            annotations: {
+              position: 'back' ,
+              yaxis: [
+                {
+                  y: 20,
+                  y2: 40,
+                  opacity: 0.3,
+                  fillColor: "#FEB019",
+                },
+              ],
+            },
+            legend: {
+              position: 'top',
+              horizontalAlign: 'right', 
+            },
+            colors: ['#f6980b','#b9b9b9','#4e4f4f','#b9b9b9'],
+            dataLabels: {
+              enabled: true,
+              background: {
+                foreColor: '#000',
+                padding: 0,
+                borderRadius: 0,
+                borderColor: 'transparent',
+              },
+              style: {
+                fontSize: '14px',
+                fontFamily: 'Helvetica, Arial, sans-serif',
+                fontWeight: 'bold',
+                colors: ['transparent'],
+              },
+              offsetY: -10,
+            },
+            markers: {
+              size: 5,
+              hover: {
+                size: 5,
+                sizeOffset: 5,
+                fillColor: '#000',
+              },
+              discrete: [{
+                fillColor: '#e3e3e3',
+                strokeColor: '#fff',
+                size: 5
+              }]
+            },
+            grid: {
+              show: false,
+            },
+            xaxis: {
+              categories: [],
+              tickPlacement: 'between',
+              axisTicks: {
+                show: false,
+              }
+            },
+            yaxis: {
+              axisBorder: {
+                show: true,
+              },
+              title: {
+                text: 'Product',
+                rotate: 0,
+                offsetX: 0,
+                offsetY: -150,
+                style: {
+                  fontSize: '14px',
+                  fontWeight: 600,
+                  cssClass: 'apexcharts-yaxis-title',
+                },
+              }
+            },  
+          }
+        }
+      ],
+      priceRegularDeliveryTableData : [],
+      priceSaleDeliveryGraph : [
+        {
+          series: [],
+          height: 400,
+          options: {
+            chart: {
+              type: 'line',
+              dropShadow: {
+                enabled: false,
+                color: '#000',
+                top: 18,
+                left: 7,
+                blur: 10,
+                opacity: 0.2,
+              },
+              toolbar: {
+                show: false
+              }, 
+              zoom: {
+                enabled: false,
+              }
+            },
+            annotations: {
+              position: 'back' ,
+              yaxis: [
+                {
+                  y: 20,
+                  y2: 40,
+                  opacity: 0.3,
+                  fillColor: "#FEB019",
+                },
+              ],
+            },
+            legend: {
+              position: 'top',
+              horizontalAlign: 'right', 
+            },
+            colors: ['#f6980b','#b9b9b9','#4e4f4f','#b9b9b9'],
+            dataLabels: {
+              enabled: true,
+              background: {
+                foreColor: '#000',
+                padding: 0,
+                borderRadius: 0,
+                borderColor: 'transparent',
+              },
+              style: {
+                fontSize: '14px',
+                fontFamily: 'Helvetica, Arial, sans-serif',
+                fontWeight: 'bold',
+                colors: ['transparent'],
+              },
+              offsetY: -10,
+            },
+            markers: {
+              size: 5,
+              hover: {
+                size: 5,
+                sizeOffset: 5,
+                fillColor: '#000',
+              },
+              discrete: [{
+                fillColor: '#e3e3e3',
+                strokeColor: '#fff',
+                size: 5
+              }]
+            },
+            grid: {
+              show: false,
+            },
+            xaxis: {
+              categories: [],
+              tickPlacement: 'between',
+              axisTicks: {
+                show: false,
+              }
+            },
+            yaxis: {
+              axisBorder: {
+                show: true,
+              },
+              title: {
+                text: 'Product',
+                rotate: 0,
+                offsetX: 0,
+                offsetY: -150,
+                style: {
+                  fontSize: '14px',
+                  fontWeight: 600,
+                  cssClass: 'apexcharts-yaxis-title',
+                },
+              }
+            },  
+          }
+        }
+      ],
+      priceSaleDeliveryTableData : []
     };
+  }
+
+  componentDidMount = () => {
+    const stateItem = this.state;
+
+    if (!stateItem.loginCheck){
+      document.location.href = "/user/login";
+    }
   }
 
   ChangeStartDate = (e) => {
@@ -58,12 +768,27 @@ class ProductPrice extends React.Component {
     });
   }
 
-  validateKeyword = (value) => {
-    let error;
-    if (!value) {
-      error = 'No Keywords';
-    }
-    return error;
+  SearchClick = (e) => {
+    console.log('Overview SearchClick !!');
+    this.setState({  
+      searchBtnClick: true
+    });
+  }
+
+  handleOneChecked = (evt) => {
+    // eslint-disable-next-line prefer-const
+    let { checkInfo } = this.state;
+    checkInfo.forEach(item => {
+      if (item.value === evt.target.value){
+        if (!item.isChecked ){
+          item.isChecked = evt.target.checked;
+        }         
+      }
+      else{
+        item.isChecked = false;
+      }
+    });
+    this.setState({ checkInfo });
   }
 
   changeOption = (...args) => {
@@ -78,7 +803,74 @@ class ProductPrice extends React.Component {
     const getNum = Number(evt.currentTarget.className.replace('item-',''));
 
     this.setState({
-      activeId : getNum,
+      activeId : getNum
+    }, () => {
+      switch(getNum) {
+        case 1 : this.makeCommerceTable(this.state.commerceProductTableData);
+          break;
+        
+        case 2 : this.makeCommerceTable(this.state.commerceDeliveryTableData);
+          break;
+
+        case 3 : this.makeCommerceTable(this.state.commerceReviewsTableData);
+          break;
+        
+        default : console.log('탭 선택안함');
+      }
+    });
+  }
+
+  makeCommerceTable = (response) => {
+    let semiTableData = [];
+    let semiColumnData = [{
+      Header: 'Channel',
+      accessor: 'channel',
+      cellClass: 'text-center',
+      disableSortBy: true
+    }];
+
+    response.map((data, idx) => {
+      this.state.searchCondition.Channel_Lower.map(channel => {
+        if(data.Channel == channel) {
+          let semiSeries = [];
+
+          data.Data.map((res, id) => {
+            semiSeries.push(res.Value);
+
+            if(idx == 0) {
+              let num = Number(res.Date.substr(5, 2)) + '/' + res.Date.slice(-2);
+              
+              semiColumnData.push({
+                Header: num,
+                accessor: 'count' + (id + 1),
+                cellClass: 'text-center',
+                disableSortBy: true
+              });
+            }
+          });
+  
+          semiTableData.push({
+            id : idx + 1
+          , channel
+          , count1: semiSeries[0],
+            count2: semiSeries[1],
+            count3: semiSeries[2],
+            count4: semiSeries[3],
+            count5: semiSeries[4],
+            count6: semiSeries[5],
+            count7: semiSeries[6],
+            count8: semiSeries[7],
+            count9: semiSeries[8],
+            count10: semiSeries[9],
+            count11: semiSeries[10]
+          });
+        }
+      });
+    });
+
+    this.setState({
+      commerceColumn : semiColumnData,
+      commerceTable : semiTableData
     });
   }
 
@@ -88,6 +880,68 @@ class ProductPrice extends React.Component {
 
     this.setState({
       activeTabId : getNum,
+    }, () => {
+      switch(getNum) {
+        case 1 : this.makePriceTable(this.state.priceRegularTableData);
+          break;
+        
+        case 2 : this.makePriceTable(this.state.priceSaleTableData);
+          break;
+
+        case 3 : this.makePriceTable(this.state.priceRegularDeliveryTableData);
+          break;
+        
+        case 4 : this.makePriceTable(this.state.priceSaleDeliveryTableData);
+          break;
+        
+        default : console.log('토글 선택안함');
+      }
+    });
+  }
+
+  makePriceTable = (response) => {
+    let semiTableData = [];
+    let semiColumnData = [{
+      Header: 'Channel',
+      accessor: 'channel',
+      cellClass: 'text-center',
+      disableSortBy: true
+    }];
+
+    response.map((data, idx) => {
+      this.state.searchCondition.Channel_Lower.map(channel => {
+        if(data.Channel == channel) {
+          let semiSeries = [];
+
+          data.Data.map((res, id) => {
+            semiSeries.push(res.Value);
+
+            if(idx == 0) {
+              let num = Number(res.Date.substr(5, 2)) + '/' + res.Date.slice(-2);
+              
+              semiColumnData.push({
+                Header: num,
+                accessor: 'count' + (id + 1),
+                cellClass: 'text-center',
+                disableSortBy: true
+              });
+            }
+          });
+  
+          semiTableData.push({
+            id : idx + 1
+          , channel
+          , count1: semiSeries[0],
+            count2: semiSeries[1],
+            count3: semiSeries[2]
+          });
+        }
+      });
+    });
+
+    this.setState({
+      priceColumn : semiColumnData,
+      priceTable : semiTableData
     });
   }
 
@@ -95,7 +949,6 @@ class ProductPrice extends React.Component {
     const statesItems = this.state;
     const statesChart = this.state;
     const { selectedOptionsBaseCheck , selectedOptionsChannelCheck } = this.state;
-
 
     const indiCont = [
       {id: 1, title :  'Product',},
@@ -120,466 +973,6 @@ class ProductPrice extends React.Component {
       { label: "Coupang", value: "social_val01", key: 0 },
       { label: "Naver_news", value: "social_val02", key: 1 },
       { label: "Naver_blog", value: "social_val03", key: 2 },
-    ]
-
-    const usersChartData = [
-      {
-        series: [
-          {
-            name: "Coupang",
-            data: [20, 10, 27, 19, 35, 42, 50,]
-          },
-          {
-            name: "11st",
-            data: [12, 52, 32, 19, 22, 10, 60,]
-          },
-          {
-            name: "Gmarket",
-            data: [28, 22, 46, 39, 15, 21, 58,]
-          },
-          {
-            name: "Timon",
-            data: [22, 45, 30, 22, 35, 27, 65,]
-          },
-        ],
-        height: 400,
-        options: {
-          chart: {
-            type: 'line',
-            dropShadow: {
-              enabled: false,
-              color: '#000',
-              top: 18,
-              left: 7,
-              blur: 10,
-              opacity: 0.2,
-            },
-            toolbar: {
-              show: false
-            }, 
-            zoom: {
-              enabled: false,
-            }
-          },
-          annotations: {
-            position: 'back' ,
-            yaxis: [
-              {
-                y: 20,
-                y2: 40,
-                opacity: 0.3,
-                fillColor: "#FEB019",
-              },
-            ],
-          },
-          legend: {
-            position: 'top',
-            horizontalAlign: 'right', 
-          },
-          colors: ['#f6980b','#b9b9b9','#4e4f4f','#b9b9b9'],
-          dataLabels: {
-            enabled: true,
-            background: {
-              foreColor: '#000',
-              padding: 0,
-              borderRadius: 0,
-              borderColor: 'transparent',
-            },
-            style: {
-              fontSize: '14px',
-              fontFamily: 'Helvetica, Arial, sans-serif',
-              fontWeight: 'bold',
-              colors: ['transparent'],
-            },
-            offsetY: -10,
-          },
-          markers: {
-            size: 5,
-            hover: {
-              size: 5,
-              sizeOffset: 5,
-              fillColor: '#000',
-            },
-            discrete: [{
-              fillColor: '#e3e3e3',
-              strokeColor: '#fff',
-              size: 5
-            }]
-          },
-          grid: {
-            show: false,
-          },
-          xaxis: {
-            categories: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31],
-            tickPlacement: 'between',
-            axisTicks: {
-              show: false,
-            }
-          },
-          yaxis: {
-            axisBorder: {
-              show: true,
-            },
-            title: {
-              text: 'Product',
-              rotate: 0,
-              offsetX: 0,
-              offsetY: -150,
-              style: {
-                fontSize: '14px',
-                fontWeight: 600,
-                cssClass: 'apexcharts-yaxis-title',
-              },
-            }
-          }, 
-          
-        },
-      },
-    ]
-
-    const sessionsChartData = [
-      {
-        series: [
-          {
-            name: "Coupang",
-            data: [20, 10, 27, 19, 35, 42, 50,]
-          },
-          {
-            name: "11st",
-            data: [12, 52, 32, 19, 22, 10, 60,]
-          },
-          {
-            name: "Gmarket",
-            data: [28, 22, 46, 39, 15, 21, 58,]
-          },
-          {
-            name: "Timon",
-            data: [22, 45, 30, 22, 35, 27, 65,]
-          },
-        ],
-        height: 400,
-        options: {
-          chart: {
-            type: 'line',
-            dropShadow: {
-              enabled: false,
-              color: '#000',
-              top: 18,
-              left: 7,
-              blur: 10,
-              opacity: 0.2,
-            },
-            toolbar: {
-              show: false
-            }, 
-            zoom: {
-              enabled: false,
-            }
-          },
-          annotations: {
-            position: 'back' ,
-            yaxis: [
-              {
-                y: 20,
-                y2: 40,
-                opacity: 0.3,
-                fillColor: "#FEB019",
-              },
-            ],
-          },
-          legend: {
-            position: 'top',
-            horizontalAlign: 'right', 
-          },
-          colors: ['#f6980b','#b9b9b9','#4e4f4f','#b9b9b9'],
-          dataLabels: {
-            enabled: true,
-            background: {
-              foreColor: '#000',
-              padding: 0,
-              borderRadius: 0,
-              borderColor: 'transparent',
-            },
-            style: {
-              fontSize: '14px',
-              fontFamily: 'Helvetica, Arial, sans-serif',
-              fontWeight: 'bold',
-              colors: ['transparent'],
-            },
-            offsetY: -10,
-          },
-          markers: {
-            size: 5,
-            hover: {
-              size: 5,
-              sizeOffset: 5,
-              fillColor: '#000',
-            },
-            discrete: [{
-              fillColor: '#e3e3e3',
-              strokeColor: '#fff',
-              size: 5
-            }]
-          },
-          grid: {
-            show: false,
-          },
-          xaxis: {
-            categories: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31],
-            tickPlacement: 'between',
-            axisTicks: {
-              show: false,
-            }
-          },
-          yaxis: {
-            axisBorder: {
-              show: true,
-            },
-            title: {
-              text: 'Product',
-              rotate: 0,
-              offsetX: 0,
-              offsetY: -150,
-              style: {
-                fontSize: '14px',
-                fontWeight: 600,
-                cssClass: 'apexcharts-yaxis-title',
-              },
-            }
-          }, 
-          
-        },
-      },
-    ]
-
-    const conversionChartData = [
-      {
-        series: [
-          {
-            name: "Coupang",
-            data: [20, 10, 27, 19, 35, 42, 50,]
-          },
-          {
-            name: "11st",
-            data: [12, 52, 32, 19, 22, 10, 60,]
-          },
-          {
-            name: "Gmarket",
-            data: [28, 22, 46, 39, 15, 21, 58,]
-          },
-          {
-            name: "Timon",
-            data: [22, 45, 30, 22, 35, 27, 65,]
-          },
-        ],
-        height: 400,
-        options: {
-          chart: {
-            type: 'line',
-            dropShadow: {
-              enabled: false,
-              color: '#000',
-              top: 18,
-              left: 7,
-              blur: 10,
-              opacity: 0.2,
-            },
-            toolbar: {
-              show: false
-            }, 
-            zoom: {
-              enabled: false,
-            }
-          },
-          annotations: {
-            position: 'back' ,
-            yaxis: [
-              {
-                y: 20,
-                y2: 40,
-                opacity: 0.3,
-                fillColor: "#FEB019",
-              },
-            ],
-          },
-          legend: {
-            position: 'top',
-            horizontalAlign: 'right', 
-          },
-          colors: ['#f6980b','#b9b9b9','#4e4f4f','#b9b9b9'],
-          dataLabels: {
-            enabled: true,
-            background: {
-              foreColor: '#000',
-              padding: 0,
-              borderRadius: 0,
-              borderColor: 'transparent',
-            },
-            style: {
-              fontSize: '14px',
-              fontFamily: 'Helvetica, Arial, sans-serif',
-              fontWeight: 'bold',
-              colors: ['transparent'],
-            },
-            offsetY: -10,
-          },
-          markers: {
-            size: 5,
-            hover: {
-              size: 5,
-              sizeOffset: 5,
-              fillColor: '#000',
-            },
-            discrete: [{
-              fillColor: '#e3e3e3',
-              strokeColor: '#fff',
-              size: 5
-            }]
-          },
-          grid: {
-            show: false,
-          },
-          xaxis: {
-            categories: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31],
-            tickPlacement: 'between',
-            axisTicks: {
-              show: false,
-            }
-          },
-          yaxis: {
-            axisBorder: {
-              show: true,
-            },
-            title: {
-              text: 'Product',
-              rotate: 0,
-              offsetX: 0,
-              offsetY: -150,
-              style: {
-                fontSize: '14px',
-                fontWeight: 600,
-                cssClass: 'apexcharts-yaxis-title',
-              },
-            }
-          }, 
-          
-        },
-      },
-    ]
-
-    const bounceChartData = [
-      {
-        series: [
-          {
-            name: "Coupang",
-            data: [20, 10, 27, 19, 35, 42, 50,]
-          },
-          {
-            name: "11st",
-            data: [12, 52, 32, 19, 22, 10, 60,]
-          },
-          {
-            name: "Gmarket",
-            data: [28, 22, 46, 39, 15, 21, 58,]
-          },
-          {
-            name: "Timon",
-            data: [22, 45, 30, 22, 35, 27, 65,]
-          },
-        ],
-        height: 400,
-        options: {
-          chart: {
-            type: 'line',
-            dropShadow: {
-              enabled: false,
-              color: '#000',
-              top: 18,
-              left: 7,
-              blur: 10,
-              opacity: 0.2,
-            },
-            toolbar: {
-              show: false
-            }, 
-            zoom: {
-              enabled: false,
-            }
-          },
-          annotations: {
-            position: 'back' ,
-            yaxis: [
-              {
-                y: 20,
-                y2: 40,
-                opacity: 0.3,
-                fillColor: "#FEB019",
-              },
-            ],
-          },
-          legend: {
-            position: 'top',
-            horizontalAlign: 'right', 
-          },
-          colors: ['#f6980b','#b9b9b9','#4e4f4f','#b9b9b9'],
-          dataLabels: {
-            enabled: true,
-            background: {
-              foreColor: '#000',
-              padding: 0,
-              borderRadius: 0,
-              borderColor: 'transparent',
-            },
-            style: {
-              fontSize: '14px',
-              fontFamily: 'Helvetica, Arial, sans-serif',
-              fontWeight: 'bold',
-              colors: ['transparent'],
-            },
-            offsetY: -10,
-          },
-          markers: {
-            size: 5,
-            hover: {
-              size: 5,
-              sizeOffset: 5,
-              fillColor: '#000',
-            },
-            discrete: [{
-              fillColor: '#e3e3e3',
-              strokeColor: '#fff',
-              size: 5
-            }]
-          },
-          grid: {
-            show: false,
-          },
-          xaxis: {
-            categories: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31],
-            tickPlacement: 'between',
-            axisTicks: {
-              show: false,
-            }
-          },
-          yaxis: {
-            axisBorder: {
-              show: true,
-            },
-            title: {
-              text: 'Product',
-              rotate: 0,
-              offsetX: 0,
-              offsetY: -150,
-              style: {
-                fontSize: '14px',
-                fontWeight: 600,
-                cssClass: 'apexcharts-yaxis-title',
-              },
-            }
-          }, 
-          
-        },
-      },
     ]
 
     const numProductData = {
@@ -791,6 +1184,14 @@ class ProductPrice extends React.Component {
           zoom: {
             enabled: false
           },
+          events: {
+            click: function(event, chartContext, config) {
+              if (config.seriesIndex >= 0) {
+                console.log('brandBubbleData', config);
+                //clickChart(config.seriesIndex,config.config.series,config.config.series.length);
+              }
+            }
+          },
         },
         legend: {
           show: false,
@@ -832,7 +1233,7 @@ class ProductPrice extends React.Component {
           }
         }, 
       },
-      series: [{ name: ["Gillette"] , data: [[36.4, 13.4], [1.7, 11], [5.4, 8], [9, 17], [1.9, 4], [3.6, 12.2], [1.9, 14.4], [1.9, 9], [1.9, 13.2], [1.4, 7], [6.4, 8.8], [3.6, 4.3], [1.6, 10], [9.9, 2], [7.1, 15], [1.4, 0], [3.6, 13.7], [1.9, 15.2], [6.4, 16.5], [0.9, 10], [4.5, 17.1], [10.9, 10], [0.1, 14.7], [9, 10], [12.7, 11.8], [2.1, 10], [2.5, 10], [27.1, 10], [2.9, 11.5], [7.1, 10.8], [2.1, 12]]}]
+      series: [{ name: "Gillette" , data: [[36.4, 13.4], [1.7, 11], [5.4, 8], [9, 17], [1.9, 4], [3.6, 12.2], [1.9, 14.4], [1.9, 9], [1.9, 13.2], [1.4, 7], [6.4, 8.8], [3.6, 4.3], [1.6, 10], [9.9, 2], [7.1, 15], [1.4, 0], [3.6, 13.7], [1.9, 15.2], [6.4, 16.5], [0.9, 10], [4.5, 17.1], [10.9, 10], [0.1, 14.7], [9, 10], [12.7, 11.8], [2.1, 10], [2.5, 10], [27.1, 10], [2.9, 11.5], [7.1, 10.8], [2.1, 12]]}]
     }
 
     const totalGraph = {
@@ -915,9 +1316,575 @@ class ProductPrice extends React.Component {
       },
     }
 
-    const chartDataArray = [usersChartData, sessionsChartData, conversionChartData];
+    const chartDataArray = [this.state.commerceProductGraph, this.state.commerceDeliveryGraph, this.state.commerceReviewsGraph];
+    const priceChartDataArray = [this.state.priceRegularGraph, this.state.priceSaleGraph, this.state.priceRegularDeliveryGraph, this.state.priceSaleDeliveryGraph];
 
-    const priceChartDataArray = [usersChartData, sessionsChartData, conversionChartData, bounceChartData];
+    const onKeywordChange = (e) => {
+      this.setState({
+        keyWordtext : e.target.value
+      }); 
+    };
+    const onKeywordpress = (e) => {
+      if (e.keyCode === 13){
+        e.preventDefault();
+        // 조회조건 Validation 체크
+        this.setState({  
+          searchBtnClick: true , 
+        });
+      }
+    };
+    const validateKeyword = (value) => {
+        let error;
+        if (!statesItems.keyWordtext) {
+          error = 'No Keywords';
+        } 
+        return error;
+    };
+
+    const setBrandProductRank = (ResponseData , searchCondition) => {
+      console.log('setBrandProductRank : ', ResponseData);
+    }
+    const getBrandProductRank = (searchCondition) => {
+      post("/ondetailppindicator/GetBrand_ProductRank", searchCondition)
+      .then((response) => {
+        
+        setBrandProductRank(ResponseData , searchCondition);
+      })
+      .catch(function (error) {
+        console.log('err : ', error);
+      });
+    }
+
+    const setBrandDistribution = (ResponseData, searchCondition) => {
+      let i = 0;
+      let findflag = false;
+      var bubbleData = [];
+      console.log('setBrandDistribution' , ResponseData);
+      ResponseData.Data.forEach(function(item,idx){
+        
+        if (bubbleData.length > 0){
+          i = 0 ;
+          findflag = false;
+          while ( i < bubbleData.length ){
+            if (item.Brand === bubbleData[i].name){
+              bubbleData[i].data.push([item.Rank,item.Price]);
+              findflag = true;
+              break;
+            }
+            i += 1;
+          }
+          if (!findflag) {
+            bubbleData.push({name:item.Brand,data:[[item.Rank,item.Price]]});
+          }
+        }
+        else{
+          bubbleData.push({name:item.Brand,data:[[item.Rank,item.Price]]});
+        }
+      });
+      console.log('bubbleData' , bubbleData);
+      this.setState({  
+        brandBubbleData: bubbleData ,
+      });
+      // getBrandProductRank(searchCondition);
+    }
+
+    const getBrandDistribution = (searchCondition) => {
+      post("/ondetailppindicator/GetBrand_Distribution", searchCondition)
+      .then((response) => {
+        //console.log('GetDistribution : ', response.data);
+        setBrandDistribution(response.data, searchCondition );
+      })
+      .catch(function (error) {
+        console.log('err : ', error);
+      });
+    }
+
+
+    const getGetCommerceIndicator = (searchCondition) => {
+      post("/ondetailppindicator/GetCommerce_Indicator", searchCondition)
+      .then((response) => {
+        let data = CommerceIndicator;
+        setGetCommerceIndicator(data, searchCondition);
+        
+        //setGetCommerceIndicator(response.data, searchCondition);
+      })
+      .catch(function (error) {
+        console.log('err : ', error);
+      });
+    };
+    const setGetCommerceIndicator = (ResponseData , searchCondition) => {
+      //프로덕트
+      let productSeries = [];
+      let productCategories = [];
+
+      ResponseData.Product_Graph.map((data, idx) => {
+        searchCondition.Channel_Lower.map(channel => {
+          if(data.Channel == channel) {
+            let semiSeries = [];
+
+            if(data.Type == "AVG") {
+              data.Data.map(res => {
+                semiSeries.push(res.Value);
+
+                if(productCategories.length < 1) {
+                  productCategories.push(res.Date.slice(-2));
+                }
+                else {
+                  let flag = false;
+                  productCategories.map(ress => {
+                    if(ress != res.Date.slice(-2))
+                      flag = true;
+                  });
+
+                  if(flag)
+                    productCategories.push(res.Date.slice(-2));
+                }
+              });
+    
+              productSeries.push({
+                name : channel
+              , data : semiSeries
+              });
+            }
+          }
+        });
+      });
+
+      //딜리버리
+      let deliverySeries = [];
+      let deliveryCategories = [];
+
+      ResponseData.Delivery_Graph.map((data, idx) => {
+        searchCondition.Channel_Lower.map(channel => {
+          if(data.Channel == channel) {
+            let semiSeries = [];
+
+            if(data.Type == "AVG") {
+              data.Data.map(res => {
+                semiSeries.push(res.Value);
+
+                if(deliveryCategories.length < 1) {
+                  deliveryCategories.push(res.Date.slice(-2));
+                }
+                else {
+                  let flag = false;
+                  deliveryCategories.map(ress => {
+                    if(ress != res.Date.slice(-2))
+                      flag = true;
+                  });
+
+                  if(flag)
+                    deliveryCategories.push(res.Date.slice(-2));
+                }
+              });
+    
+              deliverySeries.push({
+                name : channel
+              , data : semiSeries
+              });
+            }
+          }
+        });
+      });
+
+      //리뷰즈
+      let reviewsSeries = [];
+      let reviewsCategories = [];
+
+      ResponseData.Reviews_Graph.map((data, idx) => {
+        searchCondition.Channel_Lower.map(channel => {
+          if(data.Channel == channel) {
+            let semiSeries = [];
+
+            if(data.Type == "AVG") {
+              data.Data.map(res => {
+                semiSeries.push(res.Value);
+
+                if(reviewsCategories.length < 1) {
+                  reviewsCategories.push(res.Date.slice(-2));
+                }
+                else {
+                  let flag = false;
+                  reviewsCategories.map(ress => {
+                    if(ress != res.Date.slice(-2))
+                      flag = true;
+                  });
+
+                  if(flag)
+                    reviewsCategories.push(res.Date.slice(-2));
+                }
+              });
+    
+              reviewsSeries.push({
+                name : channel
+              , data : semiSeries
+              });
+            }
+          }
+        });
+      });
+      
+      this.setState((prev) => ({
+        commerceProductGraph : [{
+          options : {
+            ...prev.commerceProductGraph[0].options,
+            xaxis : {
+              categories : productCategories
+            }
+          },
+          series : productSeries
+        }],
+        commerceDeliveryGraph : [{
+          options : {
+            ...prev.commerceDeliveryGraph[0].options,
+            xaxis : {
+              categories : deliveryCategories
+            }
+          },
+          series : deliverySeries
+        }],
+        commerceReviewsGraph : [{
+          options : {
+            ...prev.commerceReviewsGraph[0].options,
+            xaxis : {
+              categories : reviewsCategories
+            }
+          },
+          series : reviewsSeries
+        }],
+        commerceProductTableData : ResponseData.Product_Table,
+        commerceDeliveryTableData : ResponseData.Delivery_Table,
+        commerceReviewsTableData : ResponseData.Reviews_Table
+      }), () => {
+        this.makeCommerceTable(ResponseData.Product_Table);
+      });
+        
+      getPriceIndicator(searchCondition);
+    }
+
+
+    const getPriceIndicator = (searchCondition) => {
+      post("/ondetailppindicator/GetPrice_Indicator", searchCondition)
+      .then((response) => {
+        let data = PriceIndicator;
+        setPriceIndicator(data, searchCondition);
+
+        // setPriceIndicator(response.data, searchCondition);
+      })
+      .catch(function (error) {
+        console.log('err : ', error);
+      });
+    };
+    const setPriceIndicator = (ResponseData , searchCondition) => {
+      //레귤러
+      let regularSeries = [];
+      let regularCategories = [];
+
+      ResponseData.Regular_Graph.map((data, idx) => {
+        searchCondition.Channel_Lower.map(channel => {
+          if(data.Channel == channel) {
+            let semiSeries = [];
+
+            if(data.Type == "AVG") {
+              data.Data.map(res => {
+                semiSeries.push(res.Value);
+
+                if(regularCategories.length < 1) {
+                  regularCategories.push(res.Date.slice(-2));
+                }
+                else {
+                  let flag = false;
+                  regularCategories.map(ress => {
+                    if(ress != res.Date.slice(-2))
+                      flag = true;
+                  });
+
+                  if(flag)
+                    regularCategories.push(res.Date.slice(-2));
+                }
+              });
+    
+              regularSeries.push({
+                name : channel
+              , data : semiSeries
+              });
+            }
+          }
+        });
+      });
+
+      //세일
+      let saleSeries = [];
+      let saleCategories = [];
+
+      ResponseData.Sale_Graph.map((data, idx) => {
+        searchCondition.Channel_Lower.map(channel => {
+          if(data.Channel == channel) {
+            let semiSeries = [];
+
+            if(data.Type == "AVG") {
+              data.Data.map(res => {
+                semiSeries.push(res.Value);
+
+                if(saleCategories.length < 1) {
+                  saleCategories.push(res.Date.slice(-2));
+                }
+                else {
+                  let flag = false;
+                  saleCategories.map(ress => {
+                    if(ress != res.Date.slice(-2))
+                      flag = true;
+                  });
+
+                  if(flag)
+                    saleCategories.push(res.Date.slice(-2));
+                }
+              });
+    
+              saleSeries.push({
+                name : channel
+              , data : semiSeries
+              });
+            }
+          }
+        });
+      });
+
+      //레귤러_딜리버리
+      let regularDeliverySeries = [];
+      let regularDeliveryCategories = [];
+
+      ResponseData.Reqular_Delivery_Graph.map((data, idx) => {
+        searchCondition.Channel_Lower.map(channel => {
+          if(data.Channel == channel) {
+            let semiSeries = [];
+
+            if(data.Type == "AVG") {
+              data.Data.map(res => {
+                semiSeries.push(res.Value);
+
+                if(regularDeliveryCategories.length < 1) {
+                  regularDeliveryCategories.push(res.Date.slice(-2));
+                }
+                else {
+                  let flag = false;
+                  regularDeliveryCategories.map(ress => {
+                    if(ress != res.Date.slice(-2))
+                      flag = true;
+                  });
+
+                  if(flag)
+                    regularDeliveryCategories.push(res.Date.slice(-2));
+                }
+              });
+    
+              regularDeliverySeries.push({
+                name : channel
+              , data : semiSeries
+              });
+            }
+          }
+        });
+      });
+
+      //세일_딜리버리
+      let saleDeliverySeries = [];
+      let saleDeliveryCategories = [];
+
+      ResponseData.Sale_Delivery_Graph.map((data, idx) => {
+        searchCondition.Channel_Lower.map(channel => {
+          if(data.Channel == channel) {
+            let semiSeries = [];
+
+            if(data.Type == "AVG") {
+              data.Data.map(res => {
+                semiSeries.push(res.Value);
+
+                if(saleDeliveryCategories.length < 1) {
+                  saleDeliveryCategories.push(res.Date.slice(-2));
+                }
+                else {
+                  let flag = false;
+                  saleDeliveryCategories.map(ress => {
+                    if(ress != res.Date.slice(-2))
+                      flag = true;
+                  });
+
+                  if(flag)
+                    saleDeliveryCategories.push(res.Date.slice(-2));
+                }
+              });
+    
+              saleDeliverySeries.push({
+                name : channel
+              , data : semiSeries
+              });
+            }
+          }
+        });
+      });
+      
+      this.setState((prev) => ({
+        priceRegularGraph : [{
+          options : {
+            ...prev.priceRegularGraph[0].options,
+            xaxis : {
+              categories : regularCategories
+            }
+          },
+          series : regularSeries
+        }],
+        priceSaleGraph : [{
+          options : {
+            ...prev.priceSaleGraph[0].options,
+            xaxis : {
+              categories : saleCategories
+            }
+          },
+          series : regularSeries
+        }],
+        priceRegularDeliveryGraph : [{
+          options : {
+            ...prev.priceRegularDeliveryGraph[0].options,
+            xaxis : {
+              categories : regularDeliveryCategories
+            }
+          },
+          series : regularDeliverySeries
+        }],
+        priceSaleDeliveryGraph : [{
+          options : {
+            ...prev.priceSaleDeliveryGraph[0].options,
+            xaxis : {
+              categories : saleDeliveryCategories
+            }
+          },
+          series : saleDeliverySeries
+        }],
+        priceRegularTableData : ResponseData.Regular_Table,
+        priceSaleTableData : ResponseData.Sale_Table,
+        priceRegularDeliveryTableData : ResponseData.Reqular_Delivery_Table,
+        priceSaleDeliveryTableData : ResponseData.Sale_Delivery_Table
+      }), () => {
+        this.makePriceTable(ResponseData.Regular_Table);
+      });
+
+      // getPPIndicator(searchCondition);
+    }
+
+
+    const getPPIndicator = (searchCondition) => {
+      post("/ondetailppindicator/GetPP_Indicator", searchCondition)
+      .then((response) => {
+        setPPIndicator(response.data , searchCondition); 
+      })
+      .catch(function (error) {
+        console.log('err : ', error);
+      });
+    }
+    const setPPIndicator = (ResponseData , searchCondition) => {
+      console.log('setPPIndicator : ', ResponseData);
+      searchCondition.Selected_Channel = searchCondition.Channel_Lower[0];
+      getBrandDistribution(searchCondition);
+    }
+    
+    // 날짜 포맷
+    const dateString = (dateValue) => {
+      let retStr = '';
+      //Year
+      retStr = retStr.concat(dateValue.getFullYear());
+      //Month
+      if(dateValue.getMonth() < 10) {
+          retStr = retStr.concat('-0', dateValue.getMonth() + 1);
+      }
+      else {
+          retStr = retStr.concat('-', dateValue.getMonth() + 1);
+      }
+      //Date
+      if(dateValue.getDate() < 10) {
+          retStr = retStr.concat('-0', dateValue.getDate());
+      }
+      else {
+          retStr = retStr.concat('-', dateValue.getDate());
+      }
+      return retStr;
+    }
+    const searchStart = (searchChannel) =>{
+      var searchCondition = {} ;
+      var ChannelUpper = [];
+      var ChannelLower = [];
+      var selectList = [];
+      var periodUnit = "";
+      this.setState({  
+        searchBtnClick: false
+      });
+      this.setState({  
+        searchCondition: {} ,
+        searchStart : false , 
+      });
+      if (searchChannel.length > 0 ){
+         selectList.push({ label: 'Total', value: 'Total' , channelUp : "Total" , key: 0 });
+         searchChannel.forEach(function(item,idx){
+           ChannelUpper.push(item.type);
+           ChannelLower.push(item.name);
+           selectList.push({ label: item.name, value: item.name, channelUp : item.type , key: idx + 1});
+         });
+      }
+      else{
+        console.log('채널 선택 없음');
+      }
+      statesItems.checkInfo.forEach(item => {
+        if (item.isChecked){
+          periodUnit = item.value;
+        }
+      });
+      this.setState({  
+        selectedOptionsBase: selectList ,
+      });
+
+      searchCondition.FromDate = dateString(statesItems.startDate); 
+      searchCondition.ToDate = dateString(statesItems.endDate); 
+      searchCondition.Period_Unit = periodUnit;
+      //searchCondition.Channel_Upper = ChannelUpper;
+      searchCondition.Channel_Upper = 'OnlineShopping';
+      searchCondition.Channel_Lower = ChannelLower;
+      searchCondition.Keyword = document.querySelector('#keyword').value;
+
+      this.setState({  
+        searchCondition: searchCondition ,
+        searchStart : true , 
+        selectedOptionsPP: { label: 'Total', value: 'Total' , channelUp : "Total" , key: 0 } ,
+        selectedOptionsBrand: { label: 'Total', value: 'Total' , channelUp : "Total" , key: 0 } ,
+      });
+       getGetCommerceIndicator(searchCondition);
+    };
+
+
+    const changeOptionPP = (...args) => {
+      this.setState({
+        selectedOptionsPP: [args[0]]
+      });
+    }
+
+    const changeOptionBrand = (...args) => {
+      var SsearchCondition = {};
+      console.log('changeOptionBrand',args[0] , statesItems.searchCondition );
+      
+      this.setState({
+        selectedOptionsBrand: [args[0]]
+      });
+
+      SsearchCondition.FromDate = statesItems.searchCondition.FromDate;
+      SsearchCondition.ToDate = statesItems.searchCondition.ToDate;
+      SsearchCondition.Period_Unit = statesItems.searchCondition.Period_Unit;
+      SsearchCondition.Channel_Upper = statesItems.searchCondition.Channel_Upper;
+      SsearchCondition.Channel_Lower = statesItems.searchCondition.Channel_Lower;
+      SsearchCondition.Keyword = statesItems.searchCondition.Keyword;
+      SsearchCondition.Selected_Channel = args[0].value;
+
+      //getBrandDistribution(SsearchCondition);  
+      getGetCommerceIndicator(searchCondition);
+    }
 
     return (
       <>
@@ -966,7 +1933,7 @@ class ProductPrice extends React.Component {
                                     id={items.id}
                                     key={items.id}
                                     onChange={this.handleOneChecked}
-                                    defaultChecked={items.isChecked}
+                                    checked={items.isChecked}
                                     type="checkbox"
                                     value={items.value}
                                     className='check-single-box'
@@ -982,7 +1949,7 @@ class ProductPrice extends React.Component {
                         <tr>
                           <th style={{ width: '15%' }}>Channel</th>
                           <td style={{ width: '85%' }} colSpan="3">
-                            <ChannelButton />
+                            <ChannelButton searchStart={searchStart} searchBtnClick={statesItems.searchBtnClick} tabAtribute={[false,true,false]}/>
                           </td>
                         </tr>
                         <tr>
@@ -999,7 +1966,12 @@ class ProductPrice extends React.Component {
                                   <Field
                                     className="form-control"
                                     name="keyword"
-                                    validate={this.validateKeyword}
+                                    id="keyword"
+                                    placeholder="No Keywords"
+                                    value={statesItems.keyWordtext}
+                                    onChange={onKeywordChange}
+                                    onKeyDown={onKeywordpress}
+                                    validate={validateKeyword}
                                   />
                                   {errors.keyword && touched.keyword && (
                                     <div className="d-block noti-text">
@@ -1015,7 +1987,7 @@ class ProductPrice extends React.Component {
                     </table>
                   </div>
                   <div className="text-center">
-                    <Button className="btn-xl mt-4" color="gray" type="submit">
+                    <Button className="btn-xl mt-4" color="gray" onClick={this.SearchClick}>
                       ENTER
                     </Button>
                   </div>
@@ -1063,7 +2035,7 @@ class ProductPrice extends React.Component {
                               >
                                 { statesChart.activeId === Number(`${indx + 1}`) && 
                                 <div className='chart-area bor-none'>
-                                  <CompareLine options={item.options} series={item.series} height={350} className="chart-bar" />
+                                <CompareLine options={item.options} series={item.series} height={350} className="chart-bar" />
                                 </div>
                                 }
                               </div>
@@ -1079,8 +2051,8 @@ class ProductPrice extends React.Component {
                   <div className="tbl-no-page tbl-scroll-auto">
                     <ReactTable
                       className='table'
-                      data={TableData}
-                      columns={Columns}
+                      data={this.state.commerceTable}
+                      columns={this.state.commerceColumn}
                       defaultPageSize={10}
                       sortable={false}
                     />
@@ -1145,8 +2117,8 @@ class ProductPrice extends React.Component {
                   <div className="tbl-no-page tbl-scroll-auto">
                     <ReactTable
                       className='table'
-                      data={TableData2}
-                      columns={Columns}
+                      data={this.state.priceTable}
+                      columns={this.state.priceColumn}
                       defaultPageSize={10}
                       sortable={false}
                     />
@@ -1174,9 +2146,9 @@ class ProductPrice extends React.Component {
                       className="react-select"
                       classNamePrefix="react-select"
                       name="form-field-name"
-                      value={selectedOptionsBaseCheck}
-                      onChange={this.changeOption}
-                      options={selectedOptionsBase}
+                      value={statesItems.selectedOptionsPP}
+                      onChange={changeOptionPP}
+                      options={statesItems.selectedOptionsBase}
                     />
                   </FormGroup>
                 </div>
@@ -1240,16 +2212,16 @@ class ProductPrice extends React.Component {
                       className="react-select"
                       classNamePrefix="react-select"
                       name="form-field-name"
-                      value={selectedOptionsChannelCheck}
-                      onChange={this.changeOption}
-                      options={selectedOptionsChannel}
+                      value={statesItems.selectedOptionsBrand}
+                      onChange={changeOptionBrand}
+                      options={statesItems.selectedOptionsBase}
                     />
                   </FormGroup>
                 </div>
 
                 <div className="box-line brand-chart-area mb-5">
                   <div className="pd30">
-                    <CompareScatter options={brandBubbleData.options} series={brandBubbleData.series} type="scatter" height={500} />
+                    <CompareScatter options={brandBubbleData.options} series={statesItems.brandBubbleData} type="scatter" height={500} />
                   </div>
                 </div>
 
