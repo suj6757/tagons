@@ -19,7 +19,7 @@ import { Colxx } from '../../../components/common/CustomBootstrap';
 import CompareLine from '../../../components/charts/CompareLine';
 import TagInput from "../../../components/applications/TagInput";
 import FullStackBar from "../../../components/charts/FullStackBar";
-import BrushChart from '../../../components/charts/brushChart';
+import BrushChart from '../../../components/charts/BrushChart';
 import CustomSelectInput from '../../../components/common/CustomSelectInput';
 import 'react-datepicker/dist/react-datepicker.css';
 import {

@@ -27,7 +27,7 @@ import { Columns, ProductColumns, TableData, TableData2, ProductData } from './t
 import 'react-datepicker/dist/react-datepicker.css';
 import { login, UserInfo, logout } from '../../../services/LoginService';
 import { post } from 'axios';
-import { CommerceIndicator, PriceIndicator } from './data';
+import { CommerceIndicator, PriceIndicator, ProductPriceIndicator } from './data';
 
 // eslint-disable-next-line react/prefer-stateless-function
 class ProductPrice extends React.Component {
@@ -90,8 +90,8 @@ class ProductPrice extends React.Component {
               position: 'back' ,
               yaxis: [
                 {
-                  y: 20,
-                  y2: 40,
+                  y: 6000,
+                  y2: 6100,
                   opacity: 0.3,
                   fillColor: "#FEB019",
                 },
@@ -744,7 +744,50 @@ class ProductPrice extends React.Component {
           }
         }
       ],
-      priceSaleDeliveryTableData : []
+      priceSaleDeliveryTableData : [],
+      ProductPriceData : {},
+      DeliverydaysNumofproductGraph : {
+        options: {
+          chart: {
+            toolbar: {
+              show: false,
+            },
+            zoom: {
+              enabled: false
+            },
+          },
+          legend: {
+            show: false,
+          },
+          fill: {
+            colors: ['#2f5597', '#bfbfbf', '#bfbfbf', '#bfbfbf', '#bfbfbf', '#f00001'],
+          },
+          plotOptions: {
+            bar: {
+              columnWidth: '45%',
+              distributed: true,
+            }
+          },
+          grid: {
+            show: false,
+          },
+          xaxis: {
+            axisTicks: {
+              show: false,
+            },
+            categories: [],
+            labels: {
+              style: {
+                fontSize: '12px'
+              }
+            },
+          },
+          yaxis: {
+            show: false,
+          },
+        },
+        series: []
+      }
     };
   }
 
@@ -805,22 +848,25 @@ class ProductPrice extends React.Component {
     this.setState({
       activeId : getNum
     }, () => {
-      switch(getNum) {
-        case 1 : this.makeCommerceTable(this.state.commerceProductTableData);
-          break;
-        
-        case 2 : this.makeCommerceTable(this.state.commerceDeliveryTableData);
-          break;
-
-        case 3 : this.makeCommerceTable(this.state.commerceReviewsTableData);
-          break;
-        
-        default : console.log('탭 선택안함');
-      }
+      this.makeCommerceTable();
     });
   }
 
-  makeCommerceTable = (response) => {
+  makeCommerceTable = () => {
+    let response = [];
+    switch(this.state.activeId) {
+      case 1 : response = this.state.commerceProductTableData;
+        break;
+
+      case 2 : response = this.state.commerceDeliveryTableData;
+        break;
+      
+      case 3 : response = this.state.commerceReviewsTableData;
+        break;
+
+      default : console.log('탭 선택 안함');
+    }
+
     let semiTableData = [];
     let semiColumnData = [{
       Header: 'Channel',
@@ -881,25 +927,28 @@ class ProductPrice extends React.Component {
     this.setState({
       activeTabId : getNum,
     }, () => {
-      switch(getNum) {
-        case 1 : this.makePriceTable(this.state.priceRegularTableData);
-          break;
-        
-        case 2 : this.makePriceTable(this.state.priceSaleTableData);
-          break;
-
-        case 3 : this.makePriceTable(this.state.priceRegularDeliveryTableData);
-          break;
-        
-        case 4 : this.makePriceTable(this.state.priceSaleDeliveryTableData);
-          break;
-        
-        default : console.log('토글 선택안함');
-      }
+      this.makePriceTable();
     });
   }
 
-  makePriceTable = (response) => {
+  makePriceTable = () => {
+    let response = [];
+    switch(this.state.activeTabId) {
+      case 1 : response = this.state.priceRegularTableData;
+        break;
+      
+      case 2 : response = this.state.priceSaleTableData;
+        break;
+
+      case 3 : response = this.state.priceRegularDeliveryTableData;
+        break;
+      
+      case 4 : response = this.state.priceSaleDeliveryTableData;
+        break;
+      
+      default : console.log('토글 선택안함');
+    }
+
     let semiTableData = [];
     let semiColumnData = [{
       Header: 'Channel',
@@ -974,49 +1023,6 @@ class ProductPrice extends React.Component {
       { label: "Naver_news", value: "social_val02", key: 1 },
       { label: "Naver_blog", value: "social_val03", key: 2 },
     ]
-
-    const numProductData = {
-      options: {
-        chart: {
-          toolbar: {
-            show: false,
-          },
-          zoom: {
-            enabled: false
-          },
-        },
-        legend: {
-          show: false,
-        },
-        fill: {
-          colors: ['#2f5597', '#bfbfbf', '#bfbfbf', '#bfbfbf', '#bfbfbf', '#f00001'],
-        },
-        plotOptions: {
-          bar: {
-            columnWidth: '45%',
-            distributed: true,
-          }
-        },
-        grid: {
-          show: false,
-        },
-        xaxis: {
-          axisTicks: {
-            show: false,
-          },
-          categories: ['1day', '2day','3day', '4day','5day', 'etc',],
-          labels: {
-            style: {
-              fontSize: '12px'
-            }
-          },
-        },
-        yaxis: {
-          show: false,
-        },
-      },
-      series: [{data: [85, 57, 32, 21, 15, 6],}]
-    }
 
     const ratingsData = {
       options: {
@@ -1556,7 +1562,7 @@ class ProductPrice extends React.Component {
         commerceDeliveryTableData : ResponseData.Delivery_Table,
         commerceReviewsTableData : ResponseData.Reviews_Table
       }), () => {
-        this.makeCommerceTable(ResponseData.Product_Table);
+        this.makeCommerceTable();
       });
         
       getPriceIndicator(searchCondition);
@@ -1766,26 +1772,33 @@ class ProductPrice extends React.Component {
         priceRegularDeliveryTableData : ResponseData.Reqular_Delivery_Table,
         priceSaleDeliveryTableData : ResponseData.Sale_Delivery_Table
       }), () => {
-        this.makePriceTable(ResponseData.Regular_Table);
+        this.makePriceTable();
       });
 
-      // getPPIndicator(searchCondition);
+      getPPIndicator(searchCondition);
     }
 
 
     const getPPIndicator = (searchCondition) => {
       post("/ondetailppindicator/GetPP_Indicator", searchCondition)
       .then((response) => {
-        setPPIndicator(response.data , searchCondition); 
+        let data = ProductPriceIndicator;
+        setPPIndicator(data.Data , searchCondition);
+
+        // setPPIndicator(response.data , searchCondition);
       })
       .catch(function (error) {
         console.log('err : ', error);
       });
     }
     const setPPIndicator = (ResponseData , searchCondition) => {
-      console.log('setPPIndicator : ', ResponseData);
-      searchCondition.Selected_Channel = searchCondition.Channel_Lower[0];
-      getBrandDistribution(searchCondition);
+      this.setState({
+        ProductPriceData : ResponseData
+      }, () => {
+        makePPGraph();
+      });
+
+      // getBrandDistribution(searchCondition);
     }
     
     // 날짜 포맷
@@ -1862,7 +1875,45 @@ class ProductPrice extends React.Component {
 
     const changeOptionPP = (...args) => {
       this.setState({
-        selectedOptionsPP: [args[0]]
+        selectedOptionsPP: args[0]
+      }, () => {
+        makePPGraph();
+      });
+    }
+
+    const makePPGraph = () => {
+      let response = this.state.ProductPriceData;
+
+      response.map((data, idx) => {
+        if(this.state.selectedOptionsPP.value == data.Channel) {
+          console.log('DeliveryDays_NumOfProduct : ', data.DeliveryDays_NumOfProduct);
+
+          //Delivery days & Num of Product
+          let DeliveryDaysNumOfProductSeries = [];
+          let DeliveryDaysNumOfProductCategories = [];
+          
+          data.DeliveryDays_NumOfProduct.map(res => {
+            DeliveryDaysNumOfProductSeries.push(res.Value);
+            DeliveryDaysNumOfProductCategories.push(res.Date);
+          })
+
+          this.setState((prev) => ({
+            DeliverydaysNumofproductGraph : {
+              options : {
+                ...prev.DeliverydaysNumofproductGraph.options,
+                xaxis : {
+                  categories : DeliveryDaysNumOfProductCategories
+                }
+              },
+              series : [{ data : DeliveryDaysNumOfProductSeries }]
+            }
+          }));
+
+          // console.log('Ratings_NumOfProduct : ', data.Ratings_NumOfProduct);
+          // console.log('RegularPrice_Ratings : ', data.RegularPrice_Ratings);
+          // console.log('DeliveryDays_Ratings : ', data.DeliveryDays_Ratings);
+          // console.log('RegularPrice_Rank : ', data.RegularPrice_Rank);  
+        }
       });
     }
 
@@ -1883,7 +1934,7 @@ class ProductPrice extends React.Component {
       SsearchCondition.Selected_Channel = args[0].value;
 
       //getBrandDistribution(SsearchCondition);  
-      getGetCommerceIndicator(searchCondition);
+      getGetCommerceIndicator(SsearchCondition);
     }
 
     return (
@@ -2157,7 +2208,7 @@ class ProductPrice extends React.Component {
                   <div className="box-left">
                     <div className="pattern-tit"><span>Delivery days &amp; Num of Product</span></div>
                     <p className="total-count">단위 : 건</p>
-                    <CompareBar options={numProductData.options} series={numProductData.series} type="bar" height={350} className="analysis-chart-bar" />
+                    <CompareBar options={this.state.DeliverydaysNumofproductGraph.options} series={this.state.DeliverydaysNumofproductGraph.series} type="bar" height={350} className="analysis-chart-bar" />
                   </div>
                   <div className="box-right">
                     <div className="pattern-tit"><span>Ratings &amp; Num of Product</span></div>

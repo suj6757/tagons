@@ -7,3 +7,8 @@ export function changeDate(date, format = "YYYY-MM-DD") {
   const publishDate = moment(date).format(format);
   return publishDate;
 }
+
+/// 넘버 , 포매팅
+export function numberFormatting(num) {
+    return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+}
