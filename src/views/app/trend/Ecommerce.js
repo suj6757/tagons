@@ -24,7 +24,7 @@ import { Colxx } from '../../../components/common/CustomBootstrap';
 import 'react-datepicker/dist/react-datepicker.css';
 import CompareLine from '../../../components/charts/CompareLine';
 import ChannelButton from '../../../components/applications/ChannelButton'
-import BrushChart from '../../../components/charts/BrushChart';
+import BrushChart from '../../../components/charts/brushChart';
 import { login, UserInfo, logout } from '../../../services/LoginService';
 import { post } from 'axios';
 

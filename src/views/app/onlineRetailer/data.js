@@ -2661,11 +2661,29 @@ export const CommerceIndicator = {
                         "Value": "23368"
                     }
                 ],
-                "DeliveryDays_Ratings": [
+                "DeliveryDays_Ratings" : [
                     {
-                        "Date": "0days00",
-                        "Rank": 4
+                        "Date": "1days",
+                        "Value": 4.2
                     }, {
+                        "Date": "2days",
+                        "Value": 4.6
+                    }, {
+                        "Date": "3days",
+                        "Value": 3.8
+                    }, {
+                        "Date": "4days",
+                        "Value": 3.5
+                    }, {
+                        "Date": "5days",
+                        "Value": 3.5
+                    }, {
+                        "Date": "ETC",
+                        "Value": 2.8
+                    }
+                ],
+                "RegularPrice_Rank": [
+                    {
                         "Price": "118000",
                         "Rank": 5
                     }, {

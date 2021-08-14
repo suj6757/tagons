@@ -787,6 +787,218 @@ class ProductPrice extends React.Component {
           },
         },
         series: []
+      },
+      DeliverydaysRatingsGraph : {
+        options: {
+          chart: {
+            toolbar: {
+              show: false,
+            },
+            zoom: {
+              enabled: false
+            },
+          },
+          legend: {
+            show: false,
+          },
+          fill: {
+            colors: [],
+          },
+          plotOptions: {
+            bar: {
+              columnWidth: '45%',
+              distributed: true,
+            }
+          },
+          grid: {
+            show: false,
+          },
+          xaxis: {
+            axisTicks: {
+              show: false,
+            },
+            categories: [],
+            labels: {
+              style: {
+                fontSize: '12px'
+              }
+            },
+          },
+          yaxis: {
+            show: false,
+          },
+        },
+        series: []
+      },
+      RatingsNumofproductGraph : {
+        options: {
+          chart: {
+            type: 'scatter',
+            toolbar: {
+              show: false,
+            },
+            zoom: {
+              enabled: false
+            },
+          },
+          legend: {
+            show: false,
+          },
+          fill: {
+            colors: ['#a3a3a3',],
+          },
+          grid: {
+            show: false,
+          },
+          xaxis: {
+            tickAmount: 4,
+            title: {
+              text: 'Ratings',
+              rotate: 0,
+              offsetX: 300,
+              offsetY: -10,
+              style: {
+                fontSize: '12px',
+                fontWeight: 600,
+                cssClass: 'apexcharts-xaxis-title',
+              },
+            }
+          },
+          yaxis: {
+            axisBorder: {
+              show: true,
+            },
+            labels : {
+              show : false
+            },
+            title: {
+              text: 'Product',
+              rotate: 0,
+              offsetX: 20,
+              offsetY: -150,
+              style: {
+                fontSize: '12px',
+                fontWeight: 600,
+                cssClass: 'apexcharts-yaxis-title',
+              },
+            }
+          }, 
+        },
+        series: []
+      },
+      RegularpriceRatingsGraph : {
+        options: {
+          chart: {
+            type: 'scatter',
+            toolbar: {
+              show: false,
+            },
+            zoom: {
+              enabled: false
+            },
+          },
+          legend: {
+            show: false,
+          },
+          fill: {
+            colors: ['#a3a3a3',],
+          },
+          grid: {
+            show: false,
+          },
+          xaxis: {
+            tickAmount: 4,
+            title: {
+              text: 'Ratings',
+              rotate: 0,
+              offsetX: 300,
+              offsetY: -10,
+              style: {
+                fontSize: '12px',
+                fontWeight: 600,
+                cssClass: 'apexcharts-xaxis-title',
+              },
+            }
+          },
+          yaxis: {
+            axisBorder: {
+              show: true,
+            },
+            labels : {
+              show : false
+            },
+            title: {
+              text: 'Product',
+              rotate: 0,
+              offsetX: 20,
+              offsetY: -150,
+              style: {
+                fontSize: '12px',
+                fontWeight: 600,
+                cssClass: 'apexcharts-yaxis-title',
+              },
+            }
+          }, 
+        },
+        series: []
+      },
+      RegularpriceRankGraph : {
+        options: {
+          chart: {
+            toolbar: {
+              show: false,
+            },
+            zoom: {
+              enabled: false
+            },
+          },
+          legend: {
+            show: false,
+          },
+          colors: ["#505151"],
+          grid: {
+            show: false,
+          },
+          xaxis: {
+            axisTicks: {
+              show: false,
+            },
+            title: {
+              text: 'Price',
+              rotate: 0,
+              offsetX: 670,
+              offsetY: -10,
+              style: {
+                fontSize: '12px',
+                fontWeight: 600,
+                cssClass: 'apexcharts-xaxis-title',
+              },
+            },
+            categories: ['25,000', '26,000','27,000', '28,000','29,000', '30,000',],
+            labels: {
+              style: {
+                fontSize: '12px'
+              }
+            },
+          },
+          yaxis: {
+            axisBorder: {
+              show: true,
+            },
+            title: {
+              text: 'Rank',
+              rotate: 0,
+              offsetX: 20,
+              offsetY: -150,
+              style: {
+                fontSize: '12px',
+                fontWeight: 600,
+                cssClass: 'apexcharts-yaxis-title',
+              },
+            }
+          },
+        },
+        series: [{data: [4.2, 4.6, 3.8, 3.5, 3.5, 2.8],}]
       }
     };
   }
@@ -1023,162 +1235,6 @@ class ProductPrice extends React.Component {
       { label: "Naver_news", value: "social_val02", key: 1 },
       { label: "Naver_blog", value: "social_val03", key: 2 },
     ]
-
-    const ratingsData = {
-      options: {
-        chart: {
-          toolbar: {
-            show: false,
-          },
-          zoom: {
-            enabled: false
-          },
-        },
-        legend: {
-          show: false,
-        },
-        fill: {
-          colors: [ '#bfbfbf', '#2f5597', '#bfbfbf', '#bfbfbf', '#bfbfbf', '#f00001'],
-        },
-        plotOptions: {
-          bar: {
-            columnWidth: '45%',
-            distributed: true,
-          }
-        },
-        grid: {
-          show: false,
-        },
-        xaxis: {
-          axisTicks: {
-            show: false,
-          },
-          categories: ['1day', '2day','3day', '4day','5day', 'etc',],
-          labels: {
-            style: {
-              fontSize: '12px'
-            }
-          },
-        },
-        yaxis: {
-          show: false,
-        },
-      },
-      series: [{data: [4.2, 4.6, 3.8, 3.5, 3.5, 2.8],}]
-    }
-
-    const productBubbleData = {
-      options: {
-        chart: {
-          type: 'scatter',
-          toolbar: {
-            show: false,
-          },
-          zoom: {
-            enabled: false
-          },
-        },
-        legend: {
-          show: false,
-        },
-        fill: {
-          colors: ['#a3a3a3',],
-        },
-        grid: {
-          show: false,
-        },
-        xaxis: {
-          tickAmount: 6,
-          title: {
-            text: 'Ratings',
-            rotate: 0,
-            offsetX: 300,
-            offsetY: -10,
-            style: {
-              fontSize: '12px',
-              fontWeight: 600,
-              cssClass: 'apexcharts-xaxis-title',
-            },
-          }
-        },
-        yaxis: {
-          axisBorder: {
-            show: true,
-          },
-          title: {
-            text: 'Product',
-            rotate: 0,
-            offsetX: 20,
-            offsetY: -150,
-            style: {
-              fontSize: '12px',
-              fontWeight: 600,
-              cssClass: 'apexcharts-yaxis-title',
-            },
-          }
-        }, 
-      },
-      series: [{data: [[36.4, 13.4], [1.7, 11], [5.4, 8], [9, 17], [1.9, 4], [3.6, 12.2], [1.9, 14.4], [1.9, 9], [1.9, 13.2], [1.4, 7], [6.4, 8.8], [3.6, 4.3], [1.6, 10], [9.9, 2], [7.1, 15], [1.4, 0], [3.6, 13.7], [1.9, 15.2], [6.4, 16.5], [0.9, 10], [4.5, 17.1], [10.9, 10], [0.1, 14.7], [9, 10], [12.7, 11.8], [2.1, 10], [2.5, 10], [27.1, 10], [2.9, 11.5], [7.1, 10.8], [2.1, 12]]}]
-    }
-
-    const priceRankData = {
-      options: {
-        chart: {
-          toolbar: {
-            show: false,
-          },
-          zoom: {
-            enabled: false
-          },
-        },
-        legend: {
-          show: false,
-        },
-        colors: ["#505151"],
-        grid: {
-          show: false,
-        },
-        xaxis: {
-          axisTicks: {
-            show: false,
-          },
-          title: {
-            text: 'Price',
-            rotate: 0,
-            offsetX: 670,
-            offsetY: -10,
-            style: {
-              fontSize: '12px',
-              fontWeight: 600,
-              cssClass: 'apexcharts-xaxis-title',
-            },
-          },
-          categories: ['25,000', '26,000','27,000', '28,000','29,000', '30,000',],
-          labels: {
-            style: {
-              fontSize: '12px'
-            }
-          },
-        },
-        yaxis: {
-          axisBorder: {
-            show: true,
-          },
-          title: {
-            text: 'Rank',
-            rotate: 0,
-            offsetX: 20,
-            offsetY: -150,
-            style: {
-              fontSize: '12px',
-              fontWeight: 600,
-              cssClass: 'apexcharts-yaxis-title',
-            },
-          }
-        },
-      },
-      series: [{data: [4.2, 4.6, 3.8, 3.5, 3.5, 2.8],}]
-    }
 
     const brandBubbleData = {
       options: {
@@ -1783,7 +1839,7 @@ class ProductPrice extends React.Component {
       post("/ondetailppindicator/GetPP_Indicator", searchCondition)
       .then((response) => {
         let data = ProductPriceIndicator;
-        setPPIndicator(data.Data , searchCondition);
+        setPPIndicator(data.Data, searchCondition);
 
         // setPPIndicator(response.data , searchCondition);
       })
@@ -1886,33 +1942,133 @@ class ProductPrice extends React.Component {
 
       response.map((data, idx) => {
         if(this.state.selectedOptionsPP.value == data.Channel) {
-          console.log('DeliveryDays_NumOfProduct : ', data.DeliveryDays_NumOfProduct);
-
           //Delivery days & Num of Product
           let DeliveryDaysNumOfProductSeries = [];
           let DeliveryDaysNumOfProductCategories = [];
+          let DeliveryDaysNumOfProductColors = [];
           
           data.DeliveryDays_NumOfProduct.map(res => {
-            DeliveryDaysNumOfProductSeries.push(res.Value);
+            DeliveryDaysNumOfProductSeries.push(Number(res.Value));
             DeliveryDaysNumOfProductCategories.push(res.Date);
-          })
+          });
+          
+          DeliveryDaysNumOfProductSeries.map((res) => {
+            let color = '#bfbfbf';
 
+            if(res == Math.max(...DeliveryDaysNumOfProductSeries))
+              color = '#2f5597';
+            else if(res == Math.min(...DeliveryDaysNumOfProductSeries))
+              color = '#f00001';
+
+            DeliveryDaysNumOfProductColors.push(color);
+          });
+
+
+          //Ratings & Num of Product
+          let RatingsNumOfProductSeries = [];
+
+          data.Ratings_NumOfProduct.map(res => {
+            RatingsNumOfProductSeries.push([res.Ratings, Number(res.Value)]);
+          });
+
+
+          //Regular Price & Ratings
+          let RegularPriceRatingsSeries = [];
+          
+          data.RegularPrice_Ratings.map(res => {
+            RegularPriceRatingsSeries.push([res.Ratings, Number(res.Value)]);
+          });
+          
+
+          //Delivery days & Ratings
+          let DeliveryDaysRatingsSeries = [];
+          let DeliveryDaysRatingsCategories = [];
+          let DeliveryDaysRatingsColors = [];
+          
+          data.DeliveryDays_Ratings.map(res => {
+            DeliveryDaysRatingsSeries.push(Number(res.Value));
+            DeliveryDaysRatingsCategories.push(res.Date);
+          });
+          
+          DeliveryDaysRatingsSeries.map((res) => {
+            let color = '#bfbfbf';
+
+            if(res == Math.max(...DeliveryDaysRatingsSeries))
+              color = '#2f5597';
+            else if(res == Math.min(...DeliveryDaysRatingsSeries))
+              color = '#f00001';
+
+            DeliveryDaysRatingsColors.push(color);
+          });
+
+
+          //Regular Price & Rank
+          let RegularPriceRankSeries = [];
+          let RegularPriceRankCategories = [];
+
+          data.RegularPrice_Rank.map((res) => {
+            RegularPriceRankSeries.push(res.Rank);
+
+            if(RegularPriceRankCategories.length < 1) {
+              RegularPriceRankCategories.push(res.Price);
+            }
+            else {
+              let flag = false;
+              RegularPriceRankCategories.map(ress => {
+                if(ress != res.Price)
+                  flag = true;
+              });
+
+              if(flag)
+                RegularPriceRankCategories.push(res.Price);
+            }
+          });
+
+
+          //setting
           this.setState((prev) => ({
             DeliverydaysNumofproductGraph : {
               options : {
                 ...prev.DeliverydaysNumofproductGraph.options,
                 xaxis : {
                   categories : DeliveryDaysNumOfProductCategories
-                }
+                },
+                fill: {
+                  colors: DeliveryDaysNumOfProductColors
+                },
               },
               series : [{ data : DeliveryDaysNumOfProductSeries }]
-            }
+            },
+            DeliverydaysRatingsGraph : {
+              options : {
+                ...prev.DeliverydaysRatingsGraph.options,
+                xaxis : {
+                  categories : DeliveryDaysRatingsCategories
+                },
+                fill: {
+                  colors: DeliveryDaysRatingsColors
+                },
+              },
+              series : [{ data : DeliveryDaysRatingsSeries }]
+            },
+            RatingsNumofproductGraph : {
+              ...prev.RatingsNumofproductGraph,
+              series : [{ data : RatingsNumOfProductSeries }]
+            },
+            RegularpriceRatingsGraph : {
+              ...prev.RegularpriceRatingsGraph,
+              series : [{ data : RegularPriceRatingsSeries }]
+            },
+            RegularpriceRankGraph : {
+              options : {
+                ...prev.RegularpriceRankGraph.options,
+                xaxis : {
+                  categories : RegularPriceRankCategories
+                },
+              },
+              series : [{ data : RegularPriceRankSeries }]
+            },
           }));
-
-          // console.log('Ratings_NumOfProduct : ', data.Ratings_NumOfProduct);
-          // console.log('RegularPrice_Ratings : ', data.RegularPrice_Ratings);
-          // console.log('DeliveryDays_Ratings : ', data.DeliveryDays_Ratings);
-          // console.log('RegularPrice_Rank : ', data.RegularPrice_Rank);  
         }
       });
     }
@@ -2214,7 +2370,7 @@ class ProductPrice extends React.Component {
                     <div className="pattern-tit"><span>Ratings &amp; Num of Product</span></div>
                     <p className="total-count">단위 : 건</p>
                     <div className="pd30">
-                      <CompareScatter options={productBubbleData.options} series={productBubbleData.series} type="scatter" height={320} />
+                      <CompareScatter options={this.state.RatingsNumofproductGraph.options} series={this.state.RatingsNumofproductGraph.series} type="scatter" height={320} />
                     </div>
                   </div>
                 </div>
@@ -2224,13 +2380,13 @@ class ProductPrice extends React.Component {
                     <div className="pattern-tit"><span>Regular Price &amp; Ratings</span></div>
                     <p className="total-count">단위 : 건</p>
                     <div className="pd30">
-                      <CompareScatter options={productBubbleData.options} series={productBubbleData.series} type="scatter" height={320} />
+                      <CompareScatter options={this.state.RegularpriceRatingsGraph.options} series={this.state.RegularpriceRatingsGraph.series} type="scatter" height={320} />
                     </div>
                   </div>
                   <div className="box-right">
                     <div className="pattern-tit"><span>Delivery days &amp; Ratings</span></div>
                     <p className="total-count">단위 : 건</p>
-                    <CompareBar options={ratingsData.options} series={ratingsData.series} type="bar" height={350} className="analysis-chart-bar" />
+                    <CompareBar options={this.state.DeliverydaysRatingsGraph.options} series={this.state.DeliverydaysRatingsGraph.series} type="bar" height={350} className="analysis-chart-bar" />
                   </div>
                 </div>
 
@@ -2238,7 +2394,7 @@ class ProductPrice extends React.Component {
                   <div className="pattern-tit"><span>Regular Price &amp; Rank</span></div>
                   <p className="total-count">단위 : 건</p>
                   <div className="pt-4 pl-5 pr-5">
-                    <CompareLine options={priceRankData.options} series={priceRankData.series} type="line" height={350} />
+                    <CompareLine options={this.state.RegularpriceRankGraph.options} series={this.state.RegularpriceRankGraph.series} type="line" height={350} />
                   </div>
                 </div>
 
