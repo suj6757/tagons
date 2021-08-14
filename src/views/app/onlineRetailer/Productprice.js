@@ -974,7 +974,7 @@ class ProductPrice extends React.Component {
                 cssClass: 'apexcharts-xaxis-title',
               },
             },
-            categories: ['25,000', '26,000','27,000', '28,000','29,000', '30,000',],
+            categories: [],
             labels: {
               style: {
                 fontSize: '12px'
@@ -998,7 +998,7 @@ class ProductPrice extends React.Component {
             }
           },
         },
-        series: [{data: [4.2, 4.6, 3.8, 3.5, 3.5, 2.8],}]
+        series: []
       }
     };
   }
