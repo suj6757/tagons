@@ -487,7 +487,12 @@ class Sentimentanalysis extends React.Component {
          });
       }
       else{
-        console.log('채널 선택 없음');
+        alert('채널 선택 없음');
+        return;
+      }
+      if (statesItems.tagInput.length == 0){
+        alert('Competitors 없음');
+        return;
       }
       statesItems.checkInfo.forEach(item => {
         if (item.isChecked){

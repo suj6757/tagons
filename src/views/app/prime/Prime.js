@@ -448,7 +448,8 @@ class Prime extends React.Component {
          });
       }
       else{
-        console.log('채널 선택 없음');
+        alert('채널 선택 없음');
+        return ;
       }
       searchCondition.FromDate = dateString(statesItems.startDate); 
       searchCondition.ToDate = dateString(statesItems.endDate); 

@@ -115,7 +115,8 @@ class Channels extends React.Component {
            });
         }
         else{
-          console.log('채널 선택 없음');
+          alert('채널 선택 없음');
+          return ;
         }
         searchCondition.FromDate = dateString(statesItems.startDate); 
         searchCondition.ToDate = dateString(statesItems.endDate); 
@@ -125,13 +126,11 @@ class Channels extends React.Component {
         searchCondition.Keyword = statesItems.keyWordtext;
         searchCondition.Company = statesItems.userInfo.CompanyName;
         searchCondition.CompanyCode = statesItems.userInfo.CompanyCode;
-        // console.log('searchCondition',searchCondition);
-        console.log('11111');
         this.setState({  
           searchCondition: searchCondition ,
           searchStartFlag : true , 
         });
-          console.log('2222');
+        
         //여기서 조회 API 구현하면 됨
 
 

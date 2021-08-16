@@ -1,6 +1,7 @@
 /* eslint-disable react/jsx-boolean-value */
 import React from 'react';
 import { WithContext as ReactTags } from 'react-tag-input';
+import { post } from "axios";
 
 const KeyCodes = {
   comma: 188,
@@ -10,56 +11,81 @@ const KeyCodes = {
 const delimiters = [...KeyCodes.enter, KeyCodes.comma];
 
 class TagInput extends React.Component {
-    constructor(props) {
-        super(props);
+  constructor(props) {
+    super(props);
 
-        this.state = {
-            tagNum : props.defaultTagNum,
-            tags: [],
-        };
+    /// Competitors 가져오기
+    let compeltitors = [];
+    post('/common/GetCompetitors_List').
+    then((response) => {
+      console.log('GetCompetitors_List', response);
+
+      response.data.Competitors.map((c) => {
+        compeltitors.push(c.Competitors);
+      });
+
+      this.setState({
+        competitors: compeltitors,
+      });
+
+    })
+      .catch(function (error) {
+        console.log(error);
+      });
+
+    this.state = {
+      tagNum : props.defaultTagNum,
+      tags: [],
+      competitors: [],
+    };
+  }
+
+  componentDidUpdate(props) {
+    // only update chart if the data has changed
+
+    // console.log('componentDidUpdate', props);
+    if (this.props.searchBtnClick){
+      let { tags } = this.state;
+      this.props.searchStart(tags);
     }
+  }
 
-    componentDidUpdate(props) {
-      // only update chart if the data has changed
-      
-      // console.log('componentDidUpdate', props);
-      if (this.props.searchBtnClick){
-        let { tags } = this.state;
-        this.props.searchStart(tags);
-      }
-    }
+  handleDelete = (i) => {
+    const { tags } = this.state;
+    this.setState({
+      tags: tags.filter((tag, index) => index !== i),
+    });
+  }
 
-    handleDelete = (i) => {
-        const { tags } = this.state;
-        this.setState({
-         tags: tags.filter((tag, index) => index !== i),
-        });
-    }
+  /// 추가시
+  handleAddition = (tag) =>  {
+    const { tags , tagNum} = this.state;
+    console.log('handleAddition',tag);
 
-    handleAddition = (tag) =>  {
-      const { tags , tagNum} = this.state;
-      // console.log('handleAddition',tag);
+    let competitors = this.state.competitors;
+    if (competitors.includes(tag.text)) {
       if(tags.length !== tagNum ){
-          this.setState(state => ({ tags: [...state.tags, tag] }));
+        this.setState(state => ({ tags: [...state.tags, tag] }));
       }
     }
+  }
 
-    render() {
-        const { tags } = this.state;
-        const { tagNum } = this.state;
-        return (
-            <div>
-                <ReactTags tags={tags}
-                    handleDelete={this.handleDelete}
-                    handleAddition={this.handleAddition}
-                    delimiters={delimiters}
-                    allowDeleteFromEmptyInput={false}
-                    placeholder='No Competitors'
-                    name={tags.length !== tagNum ? `input-tag` : `input-tag hide`}
-                    />
-            </div>
-        )
-    }
+  render() {
+    const { tags } = this.state;
+    const { tagNum } = this.state;
+    return (
+      <div>
+        <ReactTags tags={tags}
+                   handleDelete={this.handleDelete}
+                   handleAddition={this.handleAddition}
+                   delimiters={delimiters}
+                   allowDeleteFromEmptyInput={false}
+                   placeholder='No Competitors'
+                   name={tags.length !== tagNum ? `input-tag` : `input-tag hide`}
+        />
+      </div>
+    )
+  }
 };
 
 

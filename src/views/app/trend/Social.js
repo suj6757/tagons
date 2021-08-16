@@ -227,8 +227,8 @@ class Social extends React.Component {
               title: {
                 text: 'Temperature'
               },
-              min: 1,
-              max: 35
+              min: 0,
+              max: 2,
             },
             legend: {
               position: 'top',
@@ -494,12 +494,35 @@ class Social extends React.Component {
           });
 
         }
+        const setKeywordChart = (ResponseData) => {
+          var chartSeries = [] ;
+          var Category = [];
+          var KeywordGraph = statesItems.keywordGraph;
+          var maxnum = 0.0;
+          console.log('setKeywordChart',ResponseData);
+          chartSeries.push({name:"",data: []});
+          ResponseData.Data.forEach(function(item,idx){
+            chartSeries[0].data.push(item.TFIDF);
+            Category.push(item.date.substring(8,10));
+            if (maxnum <  item.TFIDF){
+              maxnum = item.TFIDF;
+            }
+          });
+
+          KeywordGraph.series = chartSeries;
+          KeywordGraph.options.xaxis.categories = Category;
+          KeywordGraph.options.yaxis.max = Math.ceil(maxnum);
+          this.setState({
+            keywordGraph : KeywordGraph ,
+
+          });
+        }
         //전체 필수 값
-        const getKeywordChart= (searchCondition, selectValue) => {
+        const getKeywordChart = (searchCondition, selectValue) => {
           axios.post("/social/GetSocial_KeywordChart",searchCondition)
           .then((response) => {
               if (response.data.ErrorCode === 'OK'){    
-                console.log('getKeywordChart ' , response.data);
+                setKeywordChart(response.data); // console.log('getKeywordChart ' , response.data);
               }
               else{
                 console.log('getKeywordChart error');
@@ -512,28 +535,34 @@ class Social extends React.Component {
           });
 
         }
-        // 전체 필수 값
-        const getKeywordRank = (searchCondition, selectValue) => {
+        const setKeywordRank = (ResponseData, searchCondition, selectValue) => {
           var header = [];
           var keywordBodyList = [];
+          // console.log('getKeywordRank ' , response.data.Data[0] );
+          header.push("No");
+          ResponseData.Data[0].channel.forEach(function(item,idx){
+            header.push(item.name);
+          });
+          
+          ResponseData.Data.forEach(function(item,idx){
+            keywordBodyList.push(item);
+          });
+          // 여기서 가져 오기
+          this.setState({
+            keywordRankHeader : header ,
+            keywordList : keywordBodyList ,
+          });
+          getKeywordChart(searchCondition, selectValue) ;
+  
+        }
+        // 전체 필수 값
+        const getKeywordRank = (searchCondition, selectValue) => {
+
           axios.post("/social/GetSocial_KeywordRank",searchCondition)
           .then((response) => {
               if (response.data.ErrorCode === 'OK'){    
-                console.log('getKeywordRank ' , response.data.Data[0] );
-                header.push("No");
-                response.data.Data[0].channel.forEach(function(item,idx){
-                  header.push(item.name);
-                });
+                setKeywordRank(response.data,searchCondition, selectValue);
                 
-                response.data.Data.forEach(function(item,idx){
-                  keywordBodyList.push(item);
-                });
-                // 여기서 가져 오기
-                this.setState({
-                  keywordRankHeader : header ,
-                  keywordList : keywordBodyList ,
-                });
-                // getKeywordChart(searchCondition, selectValue) ;
               }
               else{
                 console.log('getKeywordRank error');

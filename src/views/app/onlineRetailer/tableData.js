@@ -389,29 +389,100 @@ export const ProductData = [
   {
     id: 1,
     rank: 1,
-    product: '����Ʈ G5 ������ ������ + 12 �����̵� ���� - �ִ� 1��ġ ���̺� ����Ʈ G5 ������ ������ + 12 �����̵� ���� - �ִ� 1��ġ ���̺� : ��Ƽ, 1',
+    product: '질레트 G5 남성용 손잡이 + 12 블레이드 리필 - 최대 1년치 쉐이브 질레트 G5 남성용 손잡이 + 12 블레이드 리필 - 최대 1년치 쉐이브 : 뷰티, 1',
     brand: 'Gillette',
     avg: '24,800',
   },
   {
     id: 2,
     rank: 2,
-    product: '2020 �ٿ�� ��Ǿ �ʰ����� ���������� �̽�Ƽũ ��ǰ, 1.05L , 3��',
+    product: '2020 다우니 퍼퓸 초고농축 섬유유연제 미스티크 본품, 1.05L , 3개',
     brand: 'Downy',
     avg: '16,230',
   },
   {
     id: 3,
     rank: 65,
-    product: '����Ʈ G5 ������ ������ + 12 �����̵� ���� - �ִ� 1��ġ ���̺� : ��Ƽ, 1',
+    product: '질레트 G5 남성용 손잡이 + 12 블레이드 리필 - 최대 1년치 쉐이브 : 뷰티, 1',
     brand: 'Gillette',
     avg: '12,000',
   },
   {
     id: 4,
     rank: 23,
-    product: '2020 �ٿ�� ��Ǿ �ʰ����� ���������� �̽�Ƽũ ��ǰ, 1.05L , 3��',
+    product: '2020 다우니 퍼퓸 초고농축 섬유유연제 미스티크 본품, 1.05L , 3개',
     brand: 'Downy',
     avg: '24,000',
   },
 ];
+
+export const totalGraphpp = {
+      series: [],
+      height: 300,
+      options: {
+        chart: {
+          type: 'line',
+          dropShadow: {
+            enabled: false,
+            color: '#000',
+            top: 18,
+            left: 7,
+            blur: 10,
+            opacity: 0.2,
+          },
+          toolbar: {
+            show: false
+          }, 
+          zoom: {
+            enabled: false,
+          }
+        },
+        legend: {
+          position: 'top',
+          horizontalAlign: 'right', 
+        },
+        colors: ['#4f4f4f','#dc8043'],
+        dataLabels: {
+          enabled: true,
+          background: {
+            foreColor: '#000',
+            padding: 0,
+            borderRadius: 0,
+            borderColor: 'transparent',
+          },
+          style: {
+            fontSize: '14px',
+            fontFamily: 'Helvetica, Arial, sans-serif',
+            fontWeight: 'bold',
+            colors: ['transparent'],
+          },
+          offsetY: -10,
+        },
+        markers: {
+          size: 5,
+          hover: {
+            size: 5,
+            sizeOffset: 5,
+            fillColor: '#000',
+          },
+          discrete: [{
+            fillColor: '#e3e3e3',
+            strokeColor: '#fff',
+            size: 5
+          }]
+        },
+        stroke: {
+          curve: 'smooth'
+        },
+        grid: {
+          show: false,
+        },
+        xaxis: {
+          categories: [],
+          tickPlacement: 'between'
+        },
+        yaxis: {
+          show: false
+        }, 
+      },
+    };

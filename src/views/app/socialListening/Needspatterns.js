@@ -295,7 +295,8 @@ class Needspatterns extends React.Component {
         });
       }
       else{
-        console.log('채널 선택 없음');
+        alert('채널 선택 없음');
+        return;
       }
 
       this.setState({  

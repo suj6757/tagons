@@ -5,6 +5,7 @@ const port = 5000;
 
 //CommonService.proto /common
 router.use('/common/GetChannel_List', require('./common/GetChannel_List'));
+router.use('/common/GetCompetitors_List', require('./common/GetCompetitors_List'));
 
 //TrendService.proto  /ecommerce
 router.use('/ecommerce/GetECommerce_Channel_List', require('./ecommerce/GetECommerce_Channel_List'));

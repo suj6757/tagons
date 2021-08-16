@@ -473,8 +473,15 @@ class Ecommerce extends React.Component {
        });
       }
       else{
-        console.log('채널 선택 없음');
+        alert('채널 선택 없음');
+        return ;
       }
+      // console.log('statesItems.keyWordtext' , statesItems.keyWordtext );
+      if (statesItems.keyWordtext.replace(' ','')  === ""){
+        alert('키워드 없음');
+        return ;
+      }
+
       statesItems.checkInfo.forEach(item => {
         if (item.isChecked){
           periodUnit = item.value;

@@ -23,7 +23,7 @@ import CustomSelectInput from '../../../components/common/CustomSelectInput';
 import CompareScatter from '../../../components/charts/CompareScatter';
 import CompareBar from '../../../components/charts/CompareBar';
 import CompareLine from '../../../components/charts/CompareLine';
-import { Columns, ProductColumns, TableData, TableData2, ProductData } from './tableData';
+import { Columns, ProductColumns, TableData, TableData2, ProductData ,totalGraphpp } from './tableData';
 import 'react-datepicker/dist/react-datepicker.css';
 import { login, UserInfo, logout } from '../../../services/LoginService';
 import { post } from 'axios';
@@ -53,6 +53,13 @@ class ProductPrice extends React.Component {
       selectedOptionsBase : [] , 
       searchCondition: {} ,
       brandBubbleData : [],
+      selectArray : [],
+      BrandProductData :[] ,
+      brandBubbleOpt:{},
+      ProductRankOpt : totalGraphpp.options ,
+      ProductRankSeries : [] ,
+      RegularPriceOpt : totalGraphpp.options,
+      RegularPriceSeries : [] , 
       // eslint-disable-next-line react/no-unused-state
       selectedOptions : [],
       // eslint-disable-next-line react/no-unused-state
@@ -257,7 +264,7 @@ class ProductPrice extends React.Component {
           }
         }
       ],
-      commerceDeliveryTableData : [],
+      commerceDeliveryTableData : [],    
       commerceReviewsGraph : [
         {
           series: [],
@@ -356,7 +363,7 @@ class ProductPrice extends React.Component {
       ],
       commerceReviewsTableData : [],
       priceColumn : Columns,
-      priceTable : TableData,
+      priceTable : TableData, 
       priceRegularGraph : [
         {
           series: [],
@@ -453,7 +460,7 @@ class ProductPrice extends React.Component {
           }
         }
       ],
-      priceRegularTableData : [],
+      priceRegularTableData : [],   
       priceSaleGraph : [
         {
           series: [],
@@ -550,7 +557,7 @@ class ProductPrice extends React.Component {
           }
         }
       ],
-      priceSaleTableData : [],
+      priceSaleTableData : [],   
       priceRegularDeliveryGraph : [
         {
           series: [],
@@ -647,7 +654,7 @@ class ProductPrice extends React.Component {
           }
         }
       ],
-      priceRegularDeliveryTableData : [],
+      priceRegularDeliveryTableData : [],    
       priceSaleDeliveryGraph : [
         {
           series: [],
@@ -744,7 +751,7 @@ class ProductPrice extends React.Component {
           }
         }
       ],
-      priceSaleDeliveryTableData : [],
+      priceSaleDeliveryTableData : [],                     
       ProductPriceData : {},
       DeliverydaysNumofproductGraph : {
         options: {
@@ -1132,7 +1139,7 @@ class ProductPrice extends React.Component {
     });
   }
 
-  tabListClickEvt = (evt) => {
+   tabListClickEvt = (evt) => {
     evt.preventDefault();
     const getNum = Number(evt.currentTarget.className.replace('analysis-item-',''));
 
@@ -1236,7 +1243,163 @@ class ProductPrice extends React.Component {
       { label: "Naver_blog", value: "social_val03", key: 2 },
     ]
 
-    const brandBubbleData = {
+    const ratingsData = {
+      options: {
+        chart: {
+          toolbar: {
+            show: false,
+          },
+          zoom: {
+            enabled: false
+          },
+        },
+        legend: {
+          show: false,
+        },
+        fill: {
+          colors: [ '#bfbfbf', '#2f5597', '#bfbfbf', '#bfbfbf', '#bfbfbf', '#f00001'],
+        },
+        plotOptions: {
+          bar: {
+            columnWidth: '45%',
+            distributed: true,
+          }
+        },
+        grid: {
+          show: false,
+        },
+        xaxis: {
+          axisTicks: {
+            show: false,
+          },
+          categories: ['1day', '2day','3day', '4day','5day', 'etc',],
+          labels: {
+            style: {
+              fontSize: '12px'
+            }
+          },
+        },
+        yaxis: {
+          show: false,
+        },
+      },
+      series: [{data: [4.2, 4.6, 3.8, 3.5, 3.5, 2.8],}]
+    }
+
+    const productBubbleData = {
+      options: {
+        chart: {
+          type: 'scatter',
+          toolbar: {
+            show: false,
+          },
+          zoom: {
+            enabled: false
+          },
+        },
+        legend: {
+          show: false,
+        },
+        fill: {
+          colors: ['#a3a3a3',],
+        },
+        grid: {
+          show: false,
+        },
+        xaxis: {
+          tickAmount: 6,
+          title: {
+            text: 'Ratings',
+            rotate: 0,
+            offsetX: 300,
+            offsetY: -10,
+            style: {
+              fontSize: '12px',
+              fontWeight: 600,
+              cssClass: 'apexcharts-xaxis-title',
+            },
+          }
+        },
+        yaxis: {
+          axisBorder: {
+            show: true,
+          },
+          title: {
+            text: 'Product',
+            rotate: 0,
+            offsetX: 20,
+            offsetY: -150,
+            style: {
+              fontSize: '12px',
+              fontWeight: 600,
+              cssClass: 'apexcharts-yaxis-title',
+            },
+          }
+        }, 
+      },
+      series: [{data: [[36.4, 13.4], [1.7, 11], [5.4, 8], [9, 17], [1.9, 4], [3.6, 12.2], [1.9, 14.4], [1.9, 9], [1.9, 13.2], [1.4, 7], [6.4, 8.8], [3.6, 4.3], [1.6, 10], [9.9, 2], [7.1, 15], [1.4, 0], [3.6, 13.7], [1.9, 15.2], [6.4, 16.5], [0.9, 10], [4.5, 17.1], [10.9, 10], [0.1, 14.7], [9, 10], [12.7, 11.8], [2.1, 10], [2.5, 10], [27.1, 10], [2.9, 11.5], [7.1, 10.8], [2.1, 12]]}]
+    }
+
+    const priceRankData = {
+      options: {
+        chart: {
+          toolbar: {
+            show: false,
+          },
+          zoom: {
+            enabled: false
+          },
+        },
+        legend: {
+          show: false,
+        },
+        colors: ["#505151"],
+        grid: {
+          show: false,
+        },
+        xaxis: {
+          axisTicks: {
+            show: false,
+          },
+          title: {
+            text: 'Price',
+            rotate: 0,
+            offsetX: 670,
+            offsetY: -10,
+            style: {
+              fontSize: '12px',
+              fontWeight: 600,
+              cssClass: 'apexcharts-xaxis-title',
+            },
+          },
+          categories: ['25,000', '26,000','27,000', '28,000','29,000', '30,000',],
+          labels: {
+            style: {
+              fontSize: '12px'
+            }
+          },
+        },
+        yaxis: {
+          axisBorder: {
+            show: true,
+          },
+          title: {
+            text: 'Rank',
+            rotate: 0,
+            offsetX: 20,
+            offsetY: -150,
+            style: {
+              fontSize: '12px',
+              fontWeight: 600,
+              cssClass: 'apexcharts-yaxis-title',
+            },
+          }
+        },
+      },
+      series: [{data: [4.2, 4.6, 3.8, 3.5, 3.5, 2.8],}]
+    }
+
+    var brandBubbleData = {
       options: {
         chart: {
           type: 'scatter',
@@ -1249,8 +1412,7 @@ class ProductPrice extends React.Component {
           events: {
             click: function(event, chartContext, config) {
               if (config.seriesIndex >= 0) {
-                console.log('brandBubbleData', config);
-                //clickChart(config.seriesIndex,config.config.series,config.config.series.length);
+                clickBrandDistribution(config.seriesIndex, config.config.series[config.seriesIndex].name);
               }
             }
           },
@@ -1258,9 +1420,7 @@ class ProductPrice extends React.Component {
         legend: {
           show: false,
         },
-        fill: {
-          colors: ['#a3a3a3',],
-        },
+        
         grid: {
           show: false,
         },
@@ -1298,88 +1458,69 @@ class ProductPrice extends React.Component {
       series: [{ name: "Gillette" , data: [[36.4, 13.4], [1.7, 11], [5.4, 8], [9, 17], [1.9, 4], [3.6, 12.2], [1.9, 14.4], [1.9, 9], [1.9, 13.2], [1.4, 7], [6.4, 8.8], [3.6, 4.3], [1.6, 10], [9.9, 2], [7.1, 15], [1.4, 0], [3.6, 13.7], [1.9, 15.2], [6.4, 16.5], [0.9, 10], [4.5, 17.1], [10.9, 10], [0.1, 14.7], [9, 10], [12.7, 11.8], [2.1, 10], [2.5, 10], [27.1, 10], [2.9, 11.5], [7.1, 10.8], [2.1, 12]]}]
     }
 
-    const totalGraph = {
-      series: [
-        {
-          name: "Gillette",
-          data: [0.77, 0.88, 0.99, 0.11, 0.12, 0.34, 0.56, 0.4, 0.56, 0.41, 0.42, 0.44, 0.55, 0.66, 0.77, 0.99, 0.11, 0.55, 0.11, 0.12, 0.13, 0.15, 0.46, 0.79, 0.53, 0.12, 0.86, 0.77, 0.2, 0.55, 0.44]
-        },
-        {
-          name: "Downy",
-          data: [0.77, 0.8, 0.55, 0.22, 0.33, 0.44, 0.55,0.12, 0.13, 0.76, 0.45, 0.52, 0.01, 0.76, 0.22, 0.78, 0.65, 0.63, 0.93, 0.94, 0.82, 0.2, 0.46, 0.15, 0.76, 0.22, 0.46, 0.55, 0.34, 0.74, 0.45]
-        },
-      ],
-      height: 300,
-      options: {
-        chart: {
-          type: 'line',
-          dropShadow: {
-            enabled: false,
-            color: '#000',
-            top: 18,
-            left: 7,
-            blur: 10,
-            opacity: 0.2,
-          },
-          toolbar: {
-            show: false
-          }, 
-          zoom: {
-            enabled: false,
-          }
-        },
-        legend: {
-          position: 'top',
-          horizontalAlign: 'right', 
-        },
-        colors: ['#4f4f4f','#dc8043'],
-        dataLabels: {
-          enabled: true,
-          background: {
-            foreColor: '#000',
-            padding: 0,
-            borderRadius: 0,
-            borderColor: 'transparent',
-          },
-          style: {
-            fontSize: '14px',
-            fontFamily: 'Helvetica, Arial, sans-serif',
-            fontWeight: 'bold',
-            colors: ['transparent'],
-          },
-          offsetY: -10,
-        },
-        markers: {
-          size: 5,
-          hover: {
-            size: 5,
-            sizeOffset: 5,
-            fillColor: '#000',
-          },
-          discrete: [{
-            fillColor: '#e3e3e3',
-            strokeColor: '#fff',
-            size: 5
-          }]
-        },
-        stroke: {
-          curve: 'smooth'
-        },
-        grid: {
-          show: false,
-        },
-        xaxis: {
-          categories: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31],
-          tickPlacement: 'between'
-        },
-        yaxis: {
-          show: false
-        }, 
-      },
-    }
+
 
     const chartDataArray = [this.state.commerceProductGraph, this.state.commerceDeliveryGraph, this.state.commerceReviewsGraph];
     const priceChartDataArray = [this.state.priceRegularGraph, this.state.priceSaleGraph, this.state.priceRegularDeliveryGraph, this.state.priceSaleDeliveryGraph];
+
+    const removeBrandDistribution = (id) => {
+      var SelectArray = statesItems.selectArray;
+      var SearchConditionRank = [];
+      var SearchCondition = statesItems.searchCondition;
+      
+      const checkFunc = SelectArray.findIndex((item)=> item.id === id);
+      SelectArray.splice(checkFunc , 1);
+      this.setState({
+        selectArray : SelectArray,
+      });
+      if (SelectArray.length > 0 ){
+        SelectArray.forEach(function(item,idx){
+          SearchConditionRank.push(item.name);
+        });
+
+        SearchCondition.Selected_Channel = statesItems.selectedOptionsBrand.value;
+        SearchCondition.Brand = SearchConditionRank;
+        getBrandProductRank(SearchCondition); 
+      }
+      else{
+        this.setState({
+          selectArray : SelectArray,
+          ProductRankSeries : [] ,
+          RegularPriceSeries : [] ,
+          BrandProductData : [] ,
+        });
+      }
+    }
+
+    const clickBrandDistribution = (seriesIndex,seriesName) => {
+      var SelectArray = statesItems.selectArray;
+      var SearchConditionRank = [];
+      var SearchCondition = statesItems.searchCondition;
+      let findFlag = false;
+      
+      SelectArray.forEach(function(item,idx){
+        if (item.id === seriesIndex ){
+          findFlag = true;
+        }
+      });
+
+      if (!findFlag) {
+        SelectArray.push({id : seriesIndex  , name : seriesName});
+        SelectArray.forEach(function(item,idx){
+          SearchConditionRank.push(item.name);
+        });
+        SearchCondition.Selected_Channel = statesItems.selectedOptionsBrand.value;
+        SearchCondition.Brand = SearchConditionRank;
+        getBrandProductRank(SearchCondition); //LJJ
+      }
+      this.setState({
+        selectArray : SelectArray,
+      }); 
+      
+
+
+    }
+
 
     const onKeywordChange = (e) => {
       this.setState({
@@ -1404,13 +1545,54 @@ class ProductPrice extends React.Component {
     };
 
     const setBrandProductRank = (ResponseData , searchCondition) => {
+      var productRankOpt = statesItems.ProductRankOpt;
+      var productCategory = [];
+      var productRankSeries = [];
+      var regularPriceOpt = statesItems.RegularPriceOpt;
+      var regularPriceSeries = [];
+      var regularPriceCategory = [];
+      var productRankTable = [];
       console.log('setBrandProductRank : ', ResponseData);
+      ResponseData.Product_Rank.forEach(function(item,idx){
+        productRankSeries.push({name:item.Channel,data:[],});
+        item.Data.forEach(function(item1,idx1){
+          productRankSeries[idx].data.push(item1.Value);
+          if (idx === 0){
+            productCategory.push(item1.Date.substring(8,10));
+          }
+        });
+      });
+
+      ResponseData.Regular_Price.forEach(function(item,idx){
+        regularPriceSeries.push({name:item.Channel,data:[],});
+        item.Data.forEach(function(item1,idx1){
+          regularPriceSeries[idx].data.push(item1.Value);
+          if (idx === 0){
+            regularPriceCategory.push(item1.Date.substring(8,10));
+          }
+        });
+      });
+      
+      ResponseData.Product_Rank_Table.forEach(function(item,idx){
+        productRankTable.push({id:idx+1,rank:item.Rank,product:item.ProductName,brand:item.BrandName,avg:item.AvgOfRegularPrice});
+      });
+      console.log('setBrandProductRank',productCategory,productRankSeries,regularPriceSeries,regularPriceCategory,productRankTable);
+      productRankOpt.xaxis.categories = productCategory;
+      regularPriceOpt.xaxis.categories = regularPriceCategory;
+      this.setState({
+        ProductRankOpt : productRankOpt,
+        ProductRankSeries : productRankSeries ,
+        RegularPriceOpt : regularPriceOpt ,
+        RegularPriceSeries : regularPriceSeries ,
+        BrandProductData : productRankTable,
+      });
     }
+
     const getBrandProductRank = (searchCondition) => {
       post("/ondetailppindicator/GetBrand_ProductRank", searchCondition)
       .then((response) => {
-        
-        setBrandProductRank(ResponseData , searchCondition);
+        // console.log('getBrandProductRank',searchCondition);
+        setBrandProductRank(response.data , searchCondition);
       })
       .catch(function (error) {
         console.log('err : ', error);
@@ -1421,7 +1603,12 @@ class ProductPrice extends React.Component {
       let i = 0;
       let findflag = false;
       var bubbleData = [];
-      console.log('setBrandDistribution' , ResponseData);
+      var bubbleData1 = [];
+      var bubbleOpt = brandBubbleData.options; 
+      var SelectArray = statesItems.selectArray;
+      var SearchConditionTemp = {};
+
+      // console.log('setBrandDistribution' , bubbleOpt);
       ResponseData.Data.forEach(function(item,idx){
         
         if (bubbleData.length > 0){
@@ -1443,17 +1630,30 @@ class ProductPrice extends React.Component {
           bubbleData.push({name:item.Brand,data:[[item.Rank,item.Price]]});
         }
       });
-      console.log('bubbleData' , bubbleData);
+      // console.log('bubbleData' , bubbleData);
+      if (bubbleData.length > 30){
+        bubbleData1 = bubbleData.slice(0,30);
+      }
+      else{
+        bubbleData1 = bubbleData;
+      }
+      SelectArray.push({id : 0  , name : bubbleData1[0].name});
       this.setState({  
-        brandBubbleData: bubbleData ,
+        brandBubbleData: bubbleData1 ,
+        selectArray :  SelectArray ,
       });
-      // getBrandProductRank(searchCondition);
+      
+      
+      searchCondition.Brand = [];
+      searchCondition.Brand.push(bubbleData1[0].name);
+      getBrandProductRank(searchCondition); 
+
     }
 
     const getBrandDistribution = (searchCondition) => {
       post("/ondetailppindicator/GetBrand_Distribution", searchCondition)
       .then((response) => {
-        //console.log('GetDistribution : ', response.data);
+        // console.log('GetDistribution : ', response.data);
         setBrandDistribution(response.data, searchCondition );
       })
       .catch(function (error) {
@@ -1461,24 +1661,33 @@ class ProductPrice extends React.Component {
       });
     }
 
-
     const getGetCommerceIndicator = (searchCondition) => {
+      
       post("/ondetailppindicator/GetCommerce_Indicator", searchCondition)
       .then((response) => {
+        /*
         let data = CommerceIndicator;
-        setGetCommerceIndicator(data, searchCondition);
+        setGetCommerceIndicator(data, searchCondition); */ // 데이타 없어어 임시 데이타
+        console.log('getGetCommerceIndicator',response );
+        if (response.data.ErrorCode != undefined){
+          setGetCommerceIndicator(response.data, searchCondition);
+        }
+        else{
+          alert('getGetCommerceIndicator 수신 데이타가 업습니다. ');
+          getPriceIndicator(searchCondition);
+        }
         
-        //setGetCommerceIndicator(response.data, searchCondition);
       })
       .catch(function (error) {
         console.log('err : ', error);
       });
     };
-    const setGetCommerceIndicator = (ResponseData , searchCondition) => {
+    
+   const setGetCommerceIndicator = (ResponseData , searchCondition) => {
       //프로덕트
       let productSeries = [];
       let productCategories = [];
-
+      
       ResponseData.Product_Graph.map((data, idx) => {
         searchCondition.Channel_Lower.map(channel => {
           if(data.Channel == channel) {
@@ -1623,8 +1832,7 @@ class ProductPrice extends React.Component {
         
       getPriceIndicator(searchCondition);
     }
-
-
+    
     const getPriceIndicator = (searchCondition) => {
       post("/ondetailppindicator/GetPrice_Indicator", searchCondition)
       .then((response) => {
@@ -1637,6 +1845,7 @@ class ProductPrice extends React.Component {
         console.log('err : ', error);
       });
     };
+
     const setPriceIndicator = (ResponseData , searchCondition) => {
       //레귤러
       let regularSeries = [];
@@ -1833,13 +2042,12 @@ class ProductPrice extends React.Component {
 
       getPPIndicator(searchCondition);
     }
-
-
+    
     const getPPIndicator = (searchCondition) => {
       post("/ondetailppindicator/GetPP_Indicator", searchCondition)
       .then((response) => {
         let data = ProductPriceIndicator;
-        setPPIndicator(data.Data, searchCondition);
+        setPPIndicator(data.Data , searchCondition);
 
         // setPPIndicator(response.data , searchCondition);
       })
@@ -1853,8 +2061,9 @@ class ProductPrice extends React.Component {
       }, () => {
         makePPGraph();
       });
+      searchCondition.Selected_Channel = searchCondition.Channel_Lower[0];
+      getBrandDistribution(searchCondition);
 
-      // getBrandDistribution(searchCondition);
     }
     
     // 날짜 포맷
@@ -1880,27 +2089,29 @@ class ProductPrice extends React.Component {
     }
     const searchStart = (searchChannel) =>{
       var searchCondition = {} ;
-      var ChannelUpper = [];
+      var ChannelUpper = "";
       var ChannelLower = [];
       var selectList = [];
       var periodUnit = "";
       this.setState({  
-        searchBtnClick: false
+        searchBtnClick: false ,
+        selectArray : [] ,
       });
       this.setState({  
         searchCondition: {} ,
         searchStart : false , 
       });
       if (searchChannel.length > 0 ){
-         selectList.push({ label: 'Total', value: 'Total' , channelUp : "Total" , key: 0 });
+         // selectList.push({ label: 'Total', value: 'Total' , channelUp : "Total" , key: 0 });
+         ChannelUpper = searchChannel[0].type.replace(' ','');
          searchChannel.forEach(function(item,idx){
-           ChannelUpper.push(item.type);
            ChannelLower.push(item.name);
-           selectList.push({ label: item.name, value: item.name, channelUp : item.type , key: idx + 1});
+           selectList.push({ label: item.name, value: item.name, channelUp : item.type , key: idx });
          });
       }
       else{
-        console.log('채널 선택 없음');
+        alert('채널 선택 없음');
+        return;
       }
       statesItems.checkInfo.forEach(item => {
         if (item.isChecked){
@@ -1914,8 +2125,8 @@ class ProductPrice extends React.Component {
       searchCondition.FromDate = dateString(statesItems.startDate); 
       searchCondition.ToDate = dateString(statesItems.endDate); 
       searchCondition.Period_Unit = periodUnit;
-      //searchCondition.Channel_Upper = ChannelUpper;
-      searchCondition.Channel_Upper = 'OnlineShopping';
+      searchCondition.Channel_Upper = ChannelUpper;
+      //searchCondition.Channel_Upper = 'OnlineShopping';
       searchCondition.Channel_Lower = ChannelLower;
       searchCondition.Keyword = document.querySelector('#keyword').value;
 
@@ -1923,7 +2134,7 @@ class ProductPrice extends React.Component {
         searchCondition: searchCondition ,
         searchStart : true , 
         selectedOptionsPP: { label: 'Total', value: 'Total' , channelUp : "Total" , key: 0 } ,
-        selectedOptionsBrand: { label: 'Total', value: 'Total' , channelUp : "Total" , key: 0 } ,
+        selectedOptionsBrand:selectList[0] ,
       });
        getGetCommerceIndicator(searchCondition);
     };
@@ -2242,7 +2453,7 @@ class ProductPrice extends React.Component {
                               >
                                 { statesChart.activeId === Number(`${indx + 1}`) && 
                                 <div className='chart-area bor-none'>
-                                <CompareLine options={item.options} series={item.series} height={350} className="chart-bar" />
+                                  <CompareLine options={item.options} series={item.series} height={350} className="chart-bar" />
                                 </div>
                                 }
                               </div>
@@ -2436,9 +2647,12 @@ class ProductPrice extends React.Component {
                   <h2>Brand</h2>
                   <div className="brand-tag-list">
                     <ul className="list_tag">
-                      <li>Gillette <Button close /></li>
-                      <li>Downy <Button close /></li>
-                      <li>Dove <Button close /></li>
+                      {statesItems.selectArray.map((item, idx) =>{
+                        return(
+                            // eslint-disable-next-line react/no-array-index-key
+                          <li key={idx}>{item.name} <Button close onClick={() => removeBrandDistribution(item.id)} /></li>
+                        )
+                      })}
                     </ul>
                   </div>
                 </div>
@@ -2447,12 +2661,12 @@ class ProductPrice extends React.Component {
                   <div className="box-left">
                     <div className="bx_name"><span>Product Rank</span></div>
                     <p className="cont-noti">단위 : 원</p>
-                    <CompareLine options={totalGraph.options} series={totalGraph.series} height={totalGraph.height} />
+                    <CompareLine options={statesItems.ProductRankOpt} series={statesItems.ProductRankSeries} height={totalGraphpp.height} />
                   </div>
                   <div className="box-right">
                     <div className="bx_name"><span>Regular Price</span></div>
                     <p className="cont-noti">단위 : 원</p>
-                    <CompareLine options={totalGraph.options} series={totalGraph.series} height={totalGraph.height} />
+                    <CompareLine options={statesItems.RegularPriceOpt} series={statesItems.RegularPriceSeries} height={totalGraphpp.height} />
                   </div>
                 </div>
 
@@ -2463,7 +2677,7 @@ class ProductPrice extends React.Component {
                 <div className="tbl-no-page">
                   <ReactTable
                     className='table'
-                    data={ProductData}
+                    data={statesItems.BrandProductData}
                     columns={ProductColumns}
                     defaultPageSize={10}
                     sortable={false}
