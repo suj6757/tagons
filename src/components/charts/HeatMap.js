@@ -36,12 +36,15 @@ class HeatMap extends Component {
 
     return (
       <>
-         <TableRowspan 
-            tClass='heatmap_wrap_table r-table'
-            tData={Object.assign([],this.props.tData)} 
-            tColumns={columns}
-          />
-         <HeatMapChart className='heatmap_cont' options={heatMapGraphData.options} series={heatMapGraphData.series} height={heatMapGraphData.height} />
+        <TableRowspan 
+          tClass='heatmap_wrap_table r-table'
+          tData={Object.assign([],this.props.tData)} 
+          tColumns={columns}
+        />
+        
+        <div className='heatmap_con'>
+          <HeatMapChart className='heatmap_cont' options={heatMapGraphData.options} series={heatMapGraphData.series} height={heatMapGraphData.height} />
+        </div>
        </>
     );
   }
