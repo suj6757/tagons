@@ -335,18 +335,22 @@
     margin-top: 0 !important;
 }
 
-.heatmap_con {
-    margin-left: 10px;
+.heatmap_margin {
+    margin-top: 20px;
+    height: 100%;
 }
+
+// .heatTable {
+//     height: 92%;
+// }
 
 .graph-area {
     &.Heat-Map{
-        padding-left: 276px;
+        // padding-left: 276px;
         
         .heatmap_wrap_table{
-            position: absolute;
-            width: 298px;
-            height: 92%;
+            // position: absolute;
+            // width: 298px;
             top: 0;
             left: 0;
             border-bottom: none;
@@ -361,7 +365,7 @@
                 height: 54.0437px;
                 border-left: 1px solid #ddd;
                 border-bottom: 1px solid #ddd;
-                padding-top: 0;
+                // padding-top: 8%;
                 padding-bottom: 0;
                 font-size: 14px;
             }
