@@ -422,7 +422,7 @@ class Needspatterns extends React.Component {
 
     const columns = [
       {
-        Header: 'Channel Category',
+        Header: 'Group Name',
         accessor: 'category',
         cellClass: 'text-center',
         disableSortBy: true
@@ -548,7 +548,7 @@ class Needspatterns extends React.Component {
 
                 <div className="box-area pattern-map-area">
                   <div className="box-left">
-                    <div className="pattern-tit"><span>Total</span></div>
+                    <div className="pattern-tit"><span className="">Total</span></div>
                     <ReactApexChart options={statesItems.treemapTotal.options} series={statesItems.treemapTotal.series} type="treemap" height={540} className="chart-box" />
                   </div>
                   <div className="box-right">
