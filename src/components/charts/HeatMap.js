@@ -44,7 +44,7 @@ class HeatMap extends Component {
         />
         
         <div className='heatmap_margin'>
-          <HeatMapChart options={heatMapGraphData.options} series={heatMapGraphData.series} height={heatMapGraphData.height} />
+          <HeatMapChart options={this.props.options} series={this.props.series} height={this.props.height} />
         </div>
       </div>
     );

@@ -580,7 +580,7 @@ export const heatMapGraphData = {
       },
       */
     ],
-    height: 500,
+    height: 400,
     options: {
       grid: {
         show: true,
@@ -645,7 +645,8 @@ export const heatMapGraphData = {
       },
       xaxis: {
         position: 'top',
-      },
+        categories: []
+      }, 
       yaxis: {
         show: false,
       },

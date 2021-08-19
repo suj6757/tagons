@@ -211,6 +211,8 @@ class Overview extends React.Component {
           { 'No': 9, 'Channel1': "Coupang", 'Channel2' : 'Naver', "Gap": 0.56,},
           { 'No': 10, 'Channel1': "Coupang", 'Channel2' : 'Naver', "Gap": 0.56,},
         ],
+        totalHeatmap : { ...heatMapGraphData },
+        idrateHeatmap : { ...heatMapGraphData },
         call : []
       }
     }
@@ -325,7 +327,6 @@ class Overview extends React.Component {
       const getOverviewTotal = (searchCondition) => {
         post('/trendoverview/GetBasic_Overview_Total', searchCondition).
         then((response) => {
-            console.log(response);
             //라인
             let lineSeriesArr = [];
             let lineCategoriesArr = [];
@@ -349,6 +350,7 @@ class Overview extends React.Component {
           
             //히트맵 우측
             let heatmapSeriesData = [];
+            let heatmapCategories = [];
             
             searchCondition.Channel_Lower.map((lowerData, i) => {
               let existSameName = false;
@@ -357,15 +359,24 @@ class Overview extends React.Component {
                 if(lowerData == data.Channel) {
                   let dataArray = [];
                   data.Data.map((res) => {
-                      dataArray.push({
-                          x: res.Date,
-                          y: res.Value
-                      });
+                    dataArray.push({
+                      x: res.Date,
+                      y: res.Value
+                    });
+
+                    let flag = true;
+                    heatmapCategories.map(ress => {
+                      if(ress == res.Date)
+                        flag = false;
+                    });
+  
+                    if(flag)
+                      heatmapCategories.push(res.Date);
                   });
 
                   heatmapSeriesData.push({
-                      name: data.Channel,
-                      data: dataArray
+                    name: data.Channel,
+                    data: dataArray
                   });
 
                   existSameName = true;
@@ -379,41 +390,51 @@ class Overview extends React.Component {
                 });
               }
             });
-
-            heatMapGraphData.series = heatmapSeriesData.reverse();
   
-            this.setState(prev => ({
-                ...prev,
+            this.setState((prev) => ({
                 totalGraph : {
-                    options : {
-                      xaxis: {
-                          categories: lineCategoriesArr,
-                          title: {
-                              text: ''
-                          },
-                          tooltip: {
-                              enabled: false
-                          }
+                  options : {
+                    ...prev.totalGraph.options,
+                    xaxis: {
+                      categories: lineCategoriesArr,
+                      title: {
+                        text: ''
                       },
                       tooltip: {
-                          x: {
-                              formatter: function(value) {
-                                  return lineXArr[value - 1];
-                              }
-                          }
-                      },
-                      legend: {
-                          position: 'top',
-                          horizontalAlign: 'right',
-                          floating: true
+                        enabled: false
                       }
+                    },
+                    tooltip: {
+                      x: {
+                        formatter: function(value) {
+                          return lineXArr[value - 1];
+                        }
+                      }
+                    },
+                    legend: {
+                      position: 'top',
+                      horizontalAlign: 'right',
+                      floating: true
+                    }
                   },
                   series: [{
-                      name : 'total',
-                      data : lineSeriesArr
+                    name : 'total',
+                    data : lineSeriesArr
                   }]
+                },
+                totalHeatmap : {
+                  options : {
+                    ...prev.totalHeatmap.options,
+                    xaxis: {
+                      position: 'top',
+                      categories: heatmapCategories
+                    }
+                  },
+                  series: heatmapSeriesData.reverse()
                 }
-            }));
+            }), () => {
+              console.log('ssss : ', this.state.totalHeatmap);
+            });
         });
       }
 
@@ -449,6 +470,7 @@ class Overview extends React.Component {
           
             //히트맵 우측
             let heatmapSeriesData = [];
+            let heatmapCategories = [];
             
             searchCondition.Channel_Lower.map((lowerData, i) => {
               let existSameName = false;
@@ -457,15 +479,24 @@ class Overview extends React.Component {
                 if(lowerData == data.Channel) {
                   let dataArray = [];
                   data.Data.map((res) => {
-                      dataArray.push({
-                          x: res.Date,
-                          y: res.Value
-                      });
+                    dataArray.push({
+                      x: res.Date,
+                      y: res.Value
+                    });
+
+                    let flag = true;
+                    heatmapCategories.map(ress => {
+                      if(ress == res.Date)
+                        flag = false;
+                    });
+  
+                    if(flag)
+                      heatmapCategories.push(res.Date);
                   });
 
                   heatmapSeriesData.push({
-                      name: data.Channel,
-                      data: dataArray
+                    name: data.Channel,
+                    data: dataArray
                   });
 
                   existSameName = true;
@@ -475,17 +506,15 @@ class Overview extends React.Component {
               if(!existSameName) {
                 heatmapSeriesData.push({
                   name: lowerData,
-                  data: []
+                  data: [] 
                 });
               }
             });
 
-            heatMapGraphData.series = heatmapSeriesData.reverse();
-
-            this.setState(prev => ({
-              ...prev,
+            this.setState((prev) => ({
               idrateGraph : {
                 options : {
+                  ...prev.idrateGraph.options,
                   xaxis: {
                     categories: barCategoriesArr,
                     title: {
@@ -519,8 +548,20 @@ class Overview extends React.Component {
                     name : 'Cash Flow',
                     data : barSeriesArr
                 }]
+              },
+              idrateHeatmap : {
+                options : {
+                  ...prev.idrateHeatmap.options,
+                  xaxis: {
+                    position: 'top',
+                    categories: heatmapCategories
+                  }
+                },
+                series: heatmapSeriesData.reverse()
               }
-            }));
+            }), () => {
+              console.log('ssssss : ', this.state.idrateHeatmap);
+            });
           }
           else{
             console.log('getOverviewIDRate error');
@@ -600,19 +641,19 @@ class Overview extends React.Component {
           selectedOptions: { label: 'Total', value: 'Total' , channelUp : "Total" , key: 0 } ,
         });
         //여기서 조회 API 구현하면 됨
-        if (statesItems.activeTab === '1'){
+        // if (statesItems.activeTab === '1'){
           searchCondition.Selected_Tab = 'Total';
           getOverviewTotal(searchCondition);
-        }
-        else if (statesItems.activeTab === '2'){
+        // }
+        // else if (statesItems.activeTab === '2'){
           getOverviewIDRate(searchCondition);
-        }
-        else if (statesItems.activeTab === '3'){
+        // }
+        // else if (statesItems.activeTab === '3'){
           //
           console.log('GAP');
-        }
-        
+        // }
       };
+
       const toggle = (tab) => {
         const { activeTab } = this.state;
         if(activeTab !== tab){
@@ -806,7 +847,7 @@ class Overview extends React.Component {
                                                           <h2>Heat Map</h2>
                                                       </div>
                                                       {/* <div className='graph-area Heat-Map mt-5'> */}
-                                                        <HeatMap tData={TableHeatMapData.data} options={heatMapGraphData.options} series={heatMapGraphData.series} height={heatMapGraphData.height} />
+                                                        <HeatMap tData={TableHeatMapData.data} options={this.state.totalHeatmap.options} series={this.state.totalHeatmap.series} height={this.state.totalHeatmap.height} />
                                                       {/* </div> */}
                                                   </CardBody>
                                               </Card>
@@ -848,7 +889,7 @@ class Overview extends React.Component {
                                                           <h2>Heat Map</h2>
                                                       </div>
                                                       <div className='graph-area Heat-Map'>
-                                                          <HeatMap tData={TableHeatMapData.data} options={heatMapGraphData.options} series={heatMapGraphData.series} height={heatMapGraphData.height} />
+                                                          <HeatMap tData={TableHeatMapData.data} options={this.state.idrateHeatmap.options} series={this.state.idrateHeatmap.series} height={this.state.idrateHeatmap.height} />
                                                       </div>
                                                   </CardBody>
                                               </Card>
