@@ -1605,7 +1605,7 @@ class ProductPrice extends React.Component {
       var bubbleData = [];
       var bubbleData1 = [];
       var bubbleOpt = brandBubbleData.options; 
-      var SelectArray = statesItems.selectArray;
+      var SelectArray = [];
       var SearchConditionTemp = {};
 
       // console.log('setBrandDistribution' , bubbleOpt);
@@ -1631,21 +1631,22 @@ class ProductPrice extends React.Component {
         }
       });
       // console.log('bubbleData' , bubbleData);
+      /*
       if (bubbleData.length > 30){
         bubbleData1 = bubbleData.slice(0,30);
       }
       else{
         bubbleData1 = bubbleData;
-      }
-      SelectArray.push({id : 0  , name : bubbleData1[0].name});
+      } */
+      SelectArray.push({id : 0  , name : bubbleData[0].name});
       this.setState({  
-        brandBubbleData: bubbleData1 ,
+        brandBubbleData: bubbleData ,
         selectArray :  SelectArray ,
       });
       
       
       searchCondition.Brand = [];
-      searchCondition.Brand.push(bubbleData1[0].name);
+      searchCondition.Brand.push(bubbleData[0].name);
       getBrandProductRank(searchCondition); 
 
     }
@@ -2300,8 +2301,8 @@ class ProductPrice extends React.Component {
       SsearchCondition.Keyword = statesItems.searchCondition.Keyword;
       SsearchCondition.Selected_Channel = args[0].value;
 
-      //getBrandDistribution(SsearchCondition);  
-      getGetCommerceIndicator(SsearchCondition);
+      getBrandDistribution(SsearchCondition);  
+      //getGetCommerceIndicator(SsearchCondition);
     }
 
     return (

@@ -51,6 +51,16 @@ class Overview extends React.Component {
       date1.setDate(date1.getDate() - 9);
       date2.setDate(date2.getDate() - 2);
 
+      /// [GAP] 상단 차트
+      let gapTotalOptions = gapTotalGraph.options;
+      /// [GAP] ChannelChart
+      let ccOptions = channelChartGraph.options;
+      /// [GAP] GAP Chart
+      let gcOptions = gapChartGraph.options;
+      /// [GAP] Keyword GAP Comparison Chart
+      let kgccOptions = columeNegativeGraphMix.options;
+
+
       this.state = {
         startDate: date1,
         endDate: date2,
@@ -72,7 +82,7 @@ class Overview extends React.Component {
                   data: []
                 },
               ],
-              height: 500,
+              height: 400,
               options: {
                 chart: {
                   type: 'line',
@@ -197,26 +207,37 @@ class Overview extends React.Component {
           { id: 2, value: "Weekly", isChecked: false },
           { id: 3, value: "Monthly", isChecked: false },
           { id: 4, value: "Yearly", isChecked: false }
-        ], 
+        ],
+        /// [GAP] 라인 챠트
+        gapTotal: {
+          series: [],
+          options: gapTotalOptions,
+        },
+        /// [GAP] Channel Chart
+        channelChart: {
+          series: [],
+          options: ccOptions,
+        },
+        /// [GAP] GAP Chart
+        gapChart: {
+          series: [],
+          options: gcOptions,
+        },
+        /// [GAP] Keyword GAP Comparison Chart
+        kgccChart: {
+          series: [],
+          options: kgccOptions,
+        },
         // eslint-disable-next-line react/no-unused-state
         overviewTableData : [
-          { 'No': 1, 'Channel1': "Naver", 'Channel2' : 'Naver', "Gap": 0.56, },
-          { 'No': 2, 'Channel1': "Naver News", 'Channel2' : 'Naver', "Gap": 0.56, },
-          { 'No': 3, 'Channel1': "Naver Blog", 'Channel2' : 'Naver', "Gap": 0.56,},
-          { 'No': 4, 'Channel1': "Instargram", 'Channel2' : 'Naver', "Gap": 0.56,},
-          { 'No': 5, 'Channel1': "Facebook", 'Channel2' : 'Naver', "Gap": 0.56,},
-          { 'No': 6, 'Channel1': "Youtube", 'Channel2' : 'Naver', "Gap": 0.56,},
-          { 'No': 7, 'Channel1': "Navete shopping", 'Channel2' : 'Naver', "Gap": 0.56,},
-          { 'No': 8, 'Channel1': "Coupang", 'Channel2' : 'Naver', "Gap": 0.56,},
-          { 'No': 9, 'Channel1': "Coupang", 'Channel2' : 'Naver', "Gap": 0.56,},
-          { 'No': 10, 'Channel1': "Coupang", 'Channel2' : 'Naver', "Gap": 0.56,},
+          { 'No': '', 'Channel1': "", 'Channel2' : '', "Gap": '', }
         ],
         totalHeatmap : { ...heatMapGraphData },
         idrateHeatmap : { ...heatMapGraphData },
         call : []
       }
     }
-    /*
+
     componentDidMount = () => {
       const stateItem = this.state;
         //toggle('1');
@@ -224,7 +245,7 @@ class Overview extends React.Component {
       if (!stateItem.loginCheck){
         document.location.href = "/user/login";
       }
-    } */
+    }
 
     ChangeStartDate = (e) => { 
         this.setState({  
@@ -393,6 +414,7 @@ class Overview extends React.Component {
   
             this.setState((prev) => ({
                 totalGraph : {
+                  ...prev.totalGraph,
                   options : {
                     ...prev.totalGraph.options,
                     xaxis: {
@@ -513,6 +535,7 @@ class Overview extends React.Component {
 
             this.setState((prev) => ({
               idrateGraph : {
+                ...prev.idrateGraph,
                 options : {
                   ...prev.idrateGraph.options,
                   xaxis: {
@@ -560,7 +583,7 @@ class Overview extends React.Component {
                 series: heatmapSeriesData.reverse()
               }
             }), () => {
-              console.log('ssssss : ', this.state.idrateHeatmap);
+              console.log('ssssss : ', this.state);
             });
           }
           else{
@@ -570,6 +593,166 @@ class Overview extends React.Component {
         .catch(function (error) {
             console.log(error);
         });
+      }
+
+      /// [Gap] Tap, 라인차트 & 테이블
+      const getOverviewGap1 = (searchCondition) => {
+        post("/trendoverview/GetBasic_Overview_Gap1", searchCondition)
+          .then((response) => {
+            if (response.data.ErrorCode === 'OK') {
+              console.log("GetBasic_Overview_Gap1", response);
+
+              /// gapTotalSeries
+              let gts = [];
+              let categories = [];
+              /// LineChart
+              response.data.LineData.map((dta, i) => {
+                let s = {
+                  name: '',
+                  data: [],
+                };
+                /// Series Name
+                s.name = dta.Channel_Category;
+                /// Series Data
+                dta.Data.map((dta2, j) => {
+                  if (i === 0) {
+                    categories.push(dta2.Date);
+                  }
+                  s.data.push(dta2.Value)
+                });
+                gts.push(s);
+              });
+
+              this.setState(prev => ({
+                ...prev,
+                gapTotal: {
+                  series: gts,
+                  options: {
+                    xaxis: {
+                      categories: categories,
+                    }
+                  }
+                },
+                /// 테이블 데이터
+                overviewTableData: response.data.TableData,
+              }));
+            }
+            else {
+              console.log("GetBasic_Overview_Gap1 Error :", response.data.Message);
+            }
+            }
+          );
+      }
+
+      /// [Gap] Tap, 테이블 로우 클릭시 Channel Chart & GAP Chart, Keyword Gap Comparison Chart
+      const getOverviewGap2 = (Channel1, Channel2) => {
+        console.log("Channel1", Channel1);
+        console.log("Channel2", Channel2);
+        let sc = this.state.searchCondition;
+        sc.Channel1 = Channel1;
+        sc.Channel2 = Channel2;
+
+        post("/trendoverview/GetBasic_Overview_Gap2", sc)
+          .then((response) => {
+            if (response.data.ErrorCode === 'OK') {
+              console.log("GetBasic_Overview_Gap2", response);
+
+              /// Channel Chart
+              let ccSeries = [];
+              let ccCategories = [];
+              response.data.ChannelChart.map((dta, i) => {
+                let s = {
+                  name: '',
+                  data: [],
+                }
+                s.name = dta.Channel;
+                dta.Data.map((sDta) => {
+                  if (i === 0) {
+                    ccCategories.push(sDta.Date);
+                  }
+                  s.data.push(sDta.Value);
+                });
+                ccSeries.push(s);
+              });
+
+              /// Gap Chart
+              let gcSeries = {
+                name: '',
+                data: [],
+              };
+              let gcCategories = [];
+              response.data.GapChart.map((dta) => {
+                gcCategories.push(dta.Date);
+                gcSeries.data.push(dta.Value);
+              });
+
+              /// Keyword GAP Comparison Chart
+              let kgccSeries = [];
+              let kgccCategories = [];
+              response.data.GapComparison.map((dta, i) => {
+                let s = {
+                  name: '',
+                  type: 'column',
+                  data: [],
+                }
+                s.name = dta.Channel;
+                dta.Data.map((sDta) => {
+                  if (i === 0) {
+                    kgccCategories.push(sDta.Words);
+                  }
+                  s.data.push(sDta.Value);
+                });
+                kgccSeries.push(s);
+              });
+
+              response.data.GapComparison.map((dta, i) => {
+                let s = {
+                  name: '',
+                  type: 'line',
+                  data: [],
+                }
+                s.name = dta.Channel;
+                dta.Data.map((sDta) => {
+                  if (i === 0) {
+                    kgccCategories.push(sDta.Words);
+                  }
+                  s.data.push(sDta.Value);
+                });
+                kgccSeries.push(s);
+              });
+
+              this.setState(prev => ({
+                ...prev,
+                channelChart: {
+                  series: ccSeries,
+                  options: {
+                    xaxis: {
+                      categories: ccCategories,
+                    }
+                  }
+                },
+                gapChart: {
+                  series: [gcSeries],
+                  options: {
+                    xaxis: {
+                      categories: gcCategories,
+                    }
+                  }
+                },
+                kgccChart: {
+                  series: kgccSeries,
+                  options: {
+                    xaxis: {
+                      categories: kgccCategories,
+                    }
+                  }
+                }
+              }));
+            }
+            else {
+              console.log("GetBasic_Overview_Gap2 Error :", response.data.Message);
+            }
+          });
       }
 
       // 날짜 포맷
@@ -593,6 +776,7 @@ class Overview extends React.Component {
         }
         return retStr;
       }
+
       const searchStart = (searchChannel) =>{
         var searchCondition = {} ;
         var ChannelUpper = [];
@@ -649,9 +833,10 @@ class Overview extends React.Component {
           getOverviewIDRate(searchCondition);
         // }
         // else if (statesItems.activeTab === '3'){
-          //
-          console.log('GAP');
+          searchCondition.Selected_Tab = 'GAP';
+          getOverviewGap1(searchCondition);
         // }
+
       };
 
       const toggle = (tab) => {
@@ -902,7 +1087,7 @@ class Overview extends React.Component {
                                             <Card>
                                                 <CardBody>
                                                     <div className='graph-area'>
-                                                        <CompareLine options={gapTotalGraph.options} series={gapTotalGraph.series} height={gapTotalGraph.height} />
+                                                        <CompareLine options={statesItems.gapTotal.options} series={statesItems.gapTotal.series} height={gapTotalGraph.height} />
                                                         <p className='cont-noti'>* 모든 채널의 값을 지수화하여 표시</p>
                                                     </div>
                                                 </CardBody>
@@ -922,7 +1107,7 @@ class Overview extends React.Component {
                                                           <tbody>     
                                                               {statesItems.overviewTableData.map(item => {
                                                                 return(
-                                                                  <tr key={item.No}>
+                                                                  <tr key={item.No} onClick= { () => { getOverviewGap2(item.Channel1, item.Channel2) } }>
                                                                     <td>{item.No}</td>
                                                                     <td>{item.Channel1}</td>
                                                                     <td>{item.Channel2}</td>
@@ -941,7 +1126,7 @@ class Overview extends React.Component {
                                                             </div>
                                                           </div>
                                                           <div className='chart-cont'>
-                                                            <CompareLine options={channelChartGraph.options} series={channelChartGraph.series} height={330} />
+                                                            <CompareLine options={statesItems.channelChart.options} series={statesItems.channelChart.series} height={330} />
                                                           </div>
                                                         </div>
                                                         <p className='cont-noti mt0'>* 모든 채널의 값을 지수화하여 표시</p>
@@ -952,7 +1137,7 @@ class Overview extends React.Component {
                                                             </div>
                                                           </div>
                                                           <div className='chart-cont'>
-                                                            <CompareLine options={gapChartGraph.options} series={gapChartGraph.series} height={330} />
+                                                            <CompareLine options={statesItems.gapChart.options} series={statesItems.gapChart.series} height={330} />
                                                           </div>
                                                         </div>
                                                       </div>
@@ -969,7 +1154,7 @@ class Overview extends React.Component {
                                                       <div className='box-title'>
                                                           <h2>Keyword GAP Comparison Chart</h2>
                                                       </div>
-                                                      <CompareLine options={columeNegativeGraphMix.options} series={columeNegativeGraphMix.series} height={330} />
+                                                      <CompareLine options={statesItems.kgccChart.options} series={statesItems.kgccChart.series} height={330} />
                                                     </div>
                                                 </CardBody>
                                             </Card>

@@ -76,6 +76,7 @@ class Onboard extends React.Component {
       PointsOptions : pointsOptions,
       PriceDistributionData : [],
       ChannelData : [] ,
+      yMax :[0,200],
       checkInfo: [
           { id: 1, value: "Daily", isChecked: true },
           { id: 2, value: "Weekly", isChecked: false },
@@ -221,7 +222,7 @@ class Onboard extends React.Component {
 
 
   SearchClick = (e) => {
-    console.log('Sentimentanalysis SearchClick !!');
+    console.log('Onboard SearchClick !!');
     /* 
     this.setState({  
       searchBtnClick: true
@@ -235,11 +236,12 @@ class Onboard extends React.Component {
 
   render() {
     const statesItems = this.state;
+    /*
     const selectedOptionsBase = [
         { label: 'Total', value: 'social_val01', key: 0 },
         { label: 'Naver_news', value: 'social_val02', key: 1 },
         { label: 'Naver_blog', value: 'social_val03', key: 2 },
-    ];
+    ]; */
 
     const validateKeyword = (value) => {
       let error;
@@ -273,31 +275,40 @@ class Onboard extends React.Component {
     const setPriceDistribution = (ResponseData)  => {
         var dataList = [];
         var channelList = [];
+        var YMax = [];
+        var MaxValue = 0;
         let i = 0;
         var colorvalue = "";
         ResponseData.Total_Price.forEach(function(item,idx){
-
-          dataList.push({name:item.Price , Total: item.TotalCount});
+          if (MaxValue < Number(item.TotalCount)){
+            MaxValue =  Number(item.TotalCount);
+          }
+          dataList.push({name:Number(item.Price) , Total: Number(item.TotalCount)});
         });
-        channelList.push("Tatal");
+        colorvalue = "#" + Math.floor(Math.random() * 16777215).toString(16);
+        channelList.push({Channel:"Total",ChannelColor : colorvalue } );
         ResponseData.Price_List.forEach(function(item,idx){
           colorvalue = "#" + Math.floor(Math.random() * 16777215).toString(16);
           channelList.push({Channel : item.Channel , ChannelColor : colorvalue });
           item.Data.forEach(function(item1,idx1){
               i = 0;
               while ( i < dataList.length ) {
-                if (dataList[i].name === item1.Price ) {
-                  dataList[i][item.Channel] = item1.TotalCount;
+                if (dataList[i].name === Number(item1.Price) ) {
+                  dataList[i][item.Channel] = Number(item1.TotalCount);
                   break;
                 }
                 i += 1;
               }
           });
         });
-        console.log('setPriceDistribution' , ResponseData , dataList   );
+        MaxValue += 20 ;
+        YMax.push(0);
+        YMax.push(MaxValue);
+        //console.log('setPriceDistribution' , ResponseData , dataList   );
         this.setState({  
           PriceDistributionData : dataList ,
           ChannelData : channelList ,
+          yMax : YMax,
         });
     }
 
@@ -875,7 +886,7 @@ class Onboard extends React.Component {
                 </div>
                 <div className='graph-area brushChart_wrap'>
                   <p className='cont-noti'>단위: 건</p>
-                  <BrushChart priceDistributionData = {statesItems.PriceDistributionData} channelData= {statesItems.ChannelData} />
+                  <BrushChart priceDistributionData = {statesItems.PriceDistributionData} channelData= {statesItems.ChannelData} yMax={statesItems.yMax}/>
                 </div>
               </CardBody>
             </Card>

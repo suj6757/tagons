@@ -47,6 +47,7 @@ const data = [
 const BrushChartTest2 = (props) => { 
   const [priceDistributionData, setPriceDistributionData] = useState(props.priceDistributionData) ;
   const [channelData, setChannelData] = useState(props.priceDistributionData) ;
+  const [yMax, setyMax] = useState(props.yMax) ;
   useEffect(() => {
     console.log('BrushChartTest2' , props)
   },[]);
@@ -54,6 +55,7 @@ const BrushChartTest2 = (props) => {
     console.log('BrushChartTest2' , props)
     setPriceDistributionData(props.priceDistributionData);
     setChannelData(props.channelData);
+    setyMax(props.yMax);
   },[props.priceDistributionData]);
   return (
     <ResponsiveContainer width="100%" height={500} className='mt-5'>
@@ -68,8 +70,8 @@ const BrushChartTest2 = (props) => {
       >
         <CartesianGrid strokeDasharray="3 3" />
         <XAxis dataKey="name" tickLine={false} axisLine={false} />
-        <YAxis tickLine={false} axisLine={false} />
-        <Tooltip />
+        <YAxis tickLine={false} axisLine={false} type="number" domain={yMax}/>
+        <Tooltip coordinate={{ x: 100, y: 140 }} />
         <Legend align="center" verticalAlign="top" height={30} className='brushchartlegend' />
         <ReferenceLine y={0} stroke="#000" />
         <Brush dataKey="name" y={30} height={40} stroke="#8884d8" />

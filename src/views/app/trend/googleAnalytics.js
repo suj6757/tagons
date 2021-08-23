@@ -37,8 +37,8 @@ class GoogleAnalytics extends React.Component {
       keyWordtext :'',
       userInfo : userData ,
       loginCheck : loginYN,
-      internalIndexSelected : '',
-      externalSelected : '', 
+      internalIndexSelected : {},
+      externalSelected : {}, 
       UsersSessionsSeries: [] ,
       ConversionBounceRateSeries : [] ,
       checkInfo: [
@@ -479,96 +479,7 @@ class GoogleAnalytics extends React.Component {
 
   
   
-  inchangeOption = (...args) => {
-    var tableData = [];
-    var data1 = 0 ;
-    var data2 = 0 ;
-    const statesItems = this.state ;
-
-    var Columns = JSON.parse(JSON.stringify(statesItems.columns));
-    Columns[2].Header = args[0].label;
-   
-    
-    if (statesItems.TableDataSocial.length > 0){
-      statesItems.GASocialComparison.CategoryData.forEach(function(item,idx){
-        if (args[0].value === "Users"){
-          data1 = statesItems.GASocialComparison.UsersData[idx];
-        }
-        else if (args[0].value === "Sessions"){
-          data1 = statesItems.GASocialComparison.SessionsData[idx];
-        }
-        else if (args[0].value === "Conversion"){
-          data1 = statesItems.GASocialComparison.ConversionRateData[idx];
-        }
-        else if (args[0].value === "Bounce"){
-          data1 = statesItems.GASocialComparison.BounceRateData[idx];
-        }
-
-        if (statesItems.externalSelected.value === "Buzz"){
-          data2 = statesItems.GASocialComparison.BuzzData[idx];
-        }
-        else if (statesItems.externalSelected.value === "Product"){
-          data2 = statesItems.GASocialComparison.ProductsData[idx];
-        }
-        else if (statesItems.externalSelected.value === "SearchVolume"){
-          data2 = statesItems.GASocialComparison.SearchVolumeData[idx];
-        }
-        tableData.push({id:idx + 1 , title:item , purchase : data1, satisfaction:data2,});
-      }); 
-    }
-    this.setState({
-      internalIndexSelected: [args[0]],
-      TableDataSocial: tableData ,
-      columns : Columns ,  
-    });
-
-  }
-
-  exchangeOption = (...args) => {
-    var tableData = [];
-    var data1 = 0 ;
-    var data2 = 0 ;
-    const statesItems = this.state ;
-    var Columns = JSON.parse(JSON.stringify(statesItems.columns));
-    Columns[3].Header = args[0].label;
-
-    //console.log('exchangeOption',Columns1 , statesItems.internalIndexSelected );
-    if (statesItems.TableDataSocial.length > 0){
-      statesItems.GASocialComparison.CategoryData.forEach(function(item,idx){
-        if (statesItems.internalIndexSelected.value === "Users"){
-          data1 = statesItems.GASocialComparison.UsersData[idx];
-        }
-        else if (statesItems.internalIndexSelected.value === "Sessions"){
-          data1 = statesItems.GASocialComparison.SessionsData[idx];
-        }
-        else if (statesItems.internalIndexSelected.value === "Conversion"){
-          data1 = statesItems.GASocialComparison.ConversionRateData[idx];
-        }
-        else if (statesItems.internalIndexSelected.value === "Bounce"){
-          data1 = statesItems.GASocialComparison.BounceRateData[idx];
-        }
-
-        if (args[0].value === "Buzz"){
-          data2 = statesItems.GASocialComparison.BuzzData[idx];
-        }
-        else if (args[0].value === "Product"){
-          data2 = statesItems.GASocialComparison.ProductsData[idx];
-        }
-        else if (args[0].value === "SearchVolume"){
-          data2 = statesItems.GASocialComparison.SearchVolumeData[idx];
-        }
-        tableData.push({id:idx + 1 , title:item , purchase : data1, satisfaction:data2,});
-      });
-    }
-
-    this.setState({
-      externalSelected: [args[0]],
-      TableDataSocial: tableData ,
-      columns : Columns ,  
-    });
-
-    
-  }
+ 
 
   handleOneChecked = (evt) => {
     // eslint-disable-next-line prefer-const
@@ -632,7 +543,99 @@ class GoogleAnalytics extends React.Component {
       }); 
     };
 
+    const inchangeOption = (...args) => {
+      var tableData = [];
+      var data1 = 0 ;
+      var data2 = 0 ;
+      //const statesItems = this.state ;
 
+      var Columns = JSON.parse(JSON.stringify(statesItems.columns));
+      Columns[2].Header = args[0].label;
+     
+      
+      if (statesItems.TableDataSocial.length > 0){
+        statesItems.GASocialComparison.CategoryData.forEach(function(item,idx){
+          if (args[0].value === "Users"){
+            data1 = statesItems.GASocialComparison.UsersData[idx];
+          }
+          else if (args[0].value === "Sessions"){
+            data1 = statesItems.GASocialComparison.SessionsData[idx];
+          }
+          else if (args[0].value === "Conversion"){
+            data1 = statesItems.GASocialComparison.ConversionRateData[idx];
+          }
+          else if (args[0].value === "Bounce"){
+            data1 = statesItems.GASocialComparison.BounceRateData[idx];
+          }
+
+          if (statesItems.externalSelected.value === "Buzz"){
+            data2 = statesItems.GASocialComparison.BuzzData[idx];
+          }
+          else if (statesItems.externalSelected.value === "Product"){
+            data2 = statesItems.GASocialComparison.ProductsData[idx];
+          }
+          else if (statesItems.externalSelected.value === "SearchVolume"){
+            data2 = statesItems.GASocialComparison.SearchVolumeData[idx];
+          }
+          tableData.push({id:idx + 1 , title:item , purchase : data1, satisfaction:data2,});
+        }); 
+      }
+      this.setState({
+        internalIndexSelected: args[0],
+        externalSelected : statesItems.externalSelected , 
+        TableDataSocial: tableData ,
+        columns : Columns ,  
+      });
+
+    }
+
+    const exchangeOption = (...args) => {
+      var tableData = [];
+      var data1 = 0 ;
+      var data2 = 0 ;
+      // const statesItems = this.state ;
+      var Columns = JSON.parse(JSON.stringify(statesItems.columns));
+      Columns[3].Header = args[0].label;
+
+      //console.log('exchangeOption',Columns1 , statesItems.internalIndexSelected );
+      //console.log('exchangeOption',args[0], statesItems.internalIndexSelected ,statesItems.GASocialComparison);
+      if (statesItems.TableDataSocial.length > 0){
+        statesItems.GASocialComparison.CategoryData.forEach(function(item,idx){
+          if (statesItems.internalIndexSelected.value === "Users"){
+            data1 = statesItems.GASocialComparison.UsersData[idx];
+          }
+          else if (statesItems.internalIndexSelected.value === "Sessions"){
+            data1 = statesItems.GASocialComparison.SessionsData[idx];
+          }
+          else if (statesItems.internalIndexSelected.value === "Conversion"){
+            data1 = statesItems.GASocialComparison.ConversionRateData[idx];
+          }
+          else if (statesItems.internalIndexSelected.value === "Bounce"){
+            data1 = statesItems.GASocialComparison.BounceRateData[idx];
+          }
+
+          if (args[0].value === "Buzz"){
+            data2 = statesItems.GASocialComparison.BuzzData[idx];
+          }
+          else if (args[0].value === "Product"){
+            data2 = statesItems.GASocialComparison.ProductsData[idx];
+          }
+          else if (args[0].value === "SearchVolume"){
+            data2 = statesItems.GASocialComparison.SearchVolumeData[idx];
+          }
+          console.log('exchangeOption' , statesItems.internalIndexSelected.value  , data1 , args[0].value , data2 );
+          tableData.push({id:idx + 1 , title:item , purchase : data1, satisfaction:data2,});
+        });
+      }
+
+      this.setState({
+        externalSelected: args[0],
+        internalIndexSelected : statesItems.internalIndexSelected,
+        TableDataSocial: tableData ,
+        columns : Columns ,  
+      });
+     
+    }
 
     /*  Start LJJ*/
     const setGAUserIndicatorsBar = (recvData) => {
@@ -1352,7 +1355,7 @@ class GoogleAnalytics extends React.Component {
                         classNamePrefix="react-select"
                         name="form-field-name"
                         value={statesItems.internalIndexSelected}
-                        onChange={this.inchangeOption}
+                        onChange={inchangeOption}
                         options={internalIndex}
                       />
                     </FormGroup>
@@ -1364,7 +1367,7 @@ class GoogleAnalytics extends React.Component {
                         classNamePrefix="react-select"
                         name="form-field-name"
                         value={statesItems.externalSelected}
-                        onChange={this.exchangeOption}
+                        onChange={exchangeOption}
                         options={externalIndex}
                       />
                     </FormGroup>

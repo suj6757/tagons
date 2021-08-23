@@ -47,6 +47,7 @@ class Social extends React.Component {
         selectedOptionsBase : [],
         keywordRankHeader :[] ,
         keywordList : [] ,
+        channelLower :[] ,
         // eslint-disable-next-line react/no-unused-state
         selectedOptions : {}, //  label: 'Total', value: 'Total', key: 0 
         // eslint-disable-next-line react/no-unused-state
@@ -82,7 +83,7 @@ class Social extends React.Component {
               curve: 'smooth'
             },
             title: {
-              text: 'Average High & Low Temperature',
+              text: '',
               align: 'left'
             },
             grid: {
@@ -103,7 +104,7 @@ class Social extends React.Component {
             },
             yaxis: {
               title: {
-                text: 'Temperature'
+                text: ''
               },
               min: 1,
               max: 35
@@ -143,7 +144,7 @@ class Social extends React.Component {
               curve: 'smooth'
             },
             title: {
-              text: 'Average High & Low Temperature',
+              text: '',
               align: 'left'
             },
             grid: {
@@ -164,7 +165,7 @@ class Social extends React.Component {
             },
             yaxis: {
               title: {
-                text: 'Temperature'
+                text: ''
               },
               min: 1,
               max: 35
@@ -204,7 +205,7 @@ class Social extends React.Component {
               curve: 'smooth'
             },
             title: {
-              text: 'Average High & Low Temperature',
+              text: '',
               align: 'left'
             },
             grid: {
@@ -225,7 +226,7 @@ class Social extends React.Component {
             },
             yaxis: {
               title: {
-                text: 'Temperature'
+                text: ''
               },
               min: 0,
               max: 2,
@@ -521,10 +522,17 @@ class Social extends React.Component {
         const getKeywordChart = (searchCondition, selectValue) => {
           axios.post("/social/GetSocial_KeywordChart",searchCondition)
           .then((response) => {
-              if (response.data.ErrorCode === 'OK'){    
+              if (response.data.ErrorCode === 'OK'){   
+               
                 setKeywordChart(response.data); // console.log('getKeywordChart ' , response.data);
+                 this.setState({
+                  keywordSelected : " - " + searchCondition.Keyword  ,
+                 });
               }
               else{
+                this.setState({
+                  keywordSelected : "" ,
+                });
                 console.log('getKeywordChart error');
               }
               
@@ -538,7 +546,8 @@ class Social extends React.Component {
         const setKeywordRank = (ResponseData, searchCondition, selectValue) => {
           var header = [];
           var keywordBodyList = [];
-          // console.log('getKeywordRank ' , response.data.Data[0] );
+          var SearchCondition = searchCondition;
+          //console.log('getKeywordRank ' , ResponseData.Data[0] , ResponseData);
           header.push("No");
           ResponseData.Data[0].channel.forEach(function(item,idx){
             header.push(item.name);
@@ -552,7 +561,10 @@ class Social extends React.Component {
             keywordRankHeader : header ,
             keywordList : keywordBodyList ,
           });
-          getKeywordChart(searchCondition, selectValue) ;
+          
+          SearchCondition.Keyword=  ResponseData.Data[0].channel[0].Value.substring(0,ResponseData.Data[0].channel[0].Value.indexOf("("));
+          console.log('getKeywordRank ' , SearchCondition);
+          getKeywordChart(SearchCondition, selectValue) ;
   
         }
         // 전체 필수 값
@@ -629,12 +641,19 @@ class Social extends React.Component {
       const setSelectedOptions = (val) => {
         var channelList = [] ;
         var searchCondition = statesItems.searchCondition;
-        //console.log("setSelectedOptions " , val , searchCondition);
-        channelList.push(val.value);
+        
+        if (val.label === 'Total'){
+          channelList = statesItems.channelLower;
+        }
+        else{
+          channelList.push(val.value);
+        }
+        
         searchCondition.Channel = channelList;
         this.setState({  
           selectedOptions: val ,
         }); 
+        console.log("setSelectedOptions " , val , searchCondition);
         getSocialData(searchCondition, val);
         
       }
@@ -662,6 +681,7 @@ class Social extends React.Component {
         this.setState({  
           searchCondition: {} ,
           searchStart : false , 
+          channelLower : [],
         });
         if (searchChannel.length > 0 ){
           selectList.push({ label: 'Total', value: 'Total' , channelUp : "Total" , key: 0 });
@@ -700,11 +720,16 @@ class Social extends React.Component {
           searchCondition: searchCondition ,
           searchStart : true , 
           selectedOptions: { label: 'Total', value: 'Total' , channelUp : "Total" , key: 0 } ,
+          channelLower : ChannelLower,
         });
       }; 
 
       const keyWordClick = (clickItem) => {
-        console.log('keyWordClick -> ' , clickItem);
+        var SearchCondition = statesItems.searchCondition ;
+        // console.log('keyWordClick -> ' , clickItem.Value.substring(0,clickItem.Value.indexOf("(")) , clickItem.Value);
+        SearchCondition.Keyword= clickItem.Value.substring(0,clickItem.Value.indexOf("("));
+        console.log('keyWordClick -> ' , SearchCondition);
+        getKeywordChart(SearchCondition,clickItem.Value.substring(0,clickItem.Value.indexOf("(")));
       }
 
       const onKeywordpress = (e) =>{
@@ -830,7 +855,11 @@ class Social extends React.Component {
                   <Colxx xxs="12">
                       <Card>
                           <CardBody>
-                              <div>
+                              <div className='bx_select_area'>
+                                <h2>Social Trend Chart  </h2>
+                              </div>
+                              <div className='bx_select_area'>
+                                
                                   <FormGroup className="select-box">
                                       <Select
                                       components={{ Input: CustomSelectInput }}
@@ -842,12 +871,13 @@ class Social extends React.Component {
                                       value={statesItems.selectedOptions}
                                       />
                                   </FormGroup>
+                                  <p className='cont-noti small'>단위: 건</p>
                               </div>
                               <div className='clearfix box-line'>
                                   <div className='box left'>
-                                      <div className="chart_area">
+                                        <div className="graph-area chart_area">
                                           <div className='chart-header'>
-                                              Buzz
+                                                <p className='bx_name'>Buzz</p>
                                           </div>
                                           <div className='chart-cont'>
                                               <CompareLine options={statesItems.buzzGraph.options} series={statesItems.buzzGraph.series} height={statesItems.buzzGraph.height} />
@@ -855,9 +885,9 @@ class Social extends React.Component {
                                       </div>      
                                   </div>
                                   <div className='box right'>
-                                      <div className="chart_area">
+                                        <div className="graph-area chart_area">
                                           <div className='chart-header'>
-                                              Comment
+                                              <p className='bx_name'>Comment</p>
                                           </div>
                                           <div className='chart-cont'>
                                               <CompareLine options={statesItems.commentGraph.options} series={statesItems.commentGraph.series} height={statesItems.commentGraph.height} />
@@ -910,6 +940,7 @@ class Social extends React.Component {
                                   <h2>Social Keyword Chart {statesItems.keywordSelected} </h2>
                               </div>
                                 <div className='chart-cont'>
+                                    <p className='cont-noti small mt-5'>단위: 건</p>
                                     <CompareLine options={statesItems.keywordGraph.options} series={statesItems.keywordGraph.series} height={statesItems.keywordGraph.height} />
                                 </div>
                             </div>      

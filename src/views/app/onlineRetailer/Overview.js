@@ -192,215 +192,114 @@ class Overview extends React.Component {
       post('/ondetailoverview/GetRetailers_Channel_Average', reqData).
       then((response) => {
         console.log("GetRetailers_Channel_Average", response);
-        const res1 = JSON.parse('{\n' +
-          '    "Product": [\n' +
-          '        {\n' +
-          '            "Channel": "Coupang",\n' +
-          '            "Value": "866"\n' +
-          '        }, {\n' +
-          '            "Channel": "11st",\n' +
-          '            "Value": "775"\n' +
-          '        }, {\n' +
-          '            "Channel": "Wemakeprice",\n' +
-          '            "Value": "683"\n' +
-          '        }, {\n' +
-          '            "Channel": "Timon",\n' +
-          '            "Value": "854"\n' +
-          '        }, {\n' +
-          '            "Channel": "Gmarket",\n' +
-          '            "Value": "647"\n' +
-          '        }\n' +
-          '    ],\n' +
-          '    "Price": [\n' +
-          '        {\n' +
-          '            "Channel": "Coupang",\n' +
-          '            "Value": "18900"\n' +
-          '        }, {\n' +
-          '            "Channel": "11st",\n' +
-          '            "Value": "21400"\n' +
-          '        }, {\n' +
-          '            "Channel": "Wemakeprice",\n' +
-          '            "Value": "19500"\n' +
-          '        }, {\n' +
-          '            "Channel": "Timon",\n' +
-          '            "Value": "18600"\n' +
-          '        }, {\n' +
-          '            "Channel": "Gmarket",\n' +
-          '            "Value": "17900"\n' +
-          '        }\n' +
-          '    ],\n' +
-          '    "Reviews": [\n' +
-          '        {\n' +
-          '            "Channel": "Coupang",\n' +
-          '            "Value": "866"\n' +
-          '        }, {\n' +
-          '            "Channel": "11st",\n' +
-          '            "Value": "775"\n' +
-          '        }, {\n' +
-          '            "Channel": "Wemakeprice",\n' +
-          '            "Value": "683"\n' +
-          '        }, {\n' +
-          '            "Channel": "Timon",\n' +
-          '            "Value": "854"\n' +
-          '        }, {\n' +
-          '            "Channel": "Gmarket",\n' +
-          '            "Value": "647"\n' +
-          '        }\n' +
-          '    ],\n' +
-          '    "Delivery": [\n' +
-          '        {\n' +
-          '            "Channel": "Coupang",\n' +
-          '            "Value": "1"\n' +
-          '        }, {\n' +
-          '            "Channel": "11st",\n' +
-          '            "Value": "3"\n' +
-          '        }, {\n' +
-          '            "Channel": "Wemakeprice",\n' +
-          '            "Value": "2"\n' +
-          '        }, {\n' +
-          '            "Channel": "Timon",\n' +
-          '            "Value": "4"\n' +
-          '        }, {\n' +
-          '            "Channel": "Gmarket",\n' +
-          '            "Value": "3"\n' +
-          '        }\n' +
-          '    ],\n' +
-          '    "ErrorCode": "OK",\n' +
-          '    "Message": "성공"\n' +
-          '}');
+        let res1 = response.data;
 
-        // let res1 = response.data;
+        if (response.data.ErrorCode === "OK") {
+          let categories = [];
+          let productSeries = [];
+          res1.Data.Product.map((data) => {
+            categories.push(data.Channel);
+            productSeries.push(data.Value);
+          });
 
-        let categories = [];
-        let productSeries = [];
-        res1.Product.map((data) => {
-          categories.push(data.Channel);
-          productSeries.push(data.Value);
-        });
+          let priceSeries = [];
+          res1.Data.Price.map((data) => {
+            priceSeries.push(data.Value);
+          });
 
-        let priceSeries = [];
-        res1.Price.map((data) => {
-          priceSeries.push(data.Value);
-        });
+          let reviewsSeries = [];
+          res1.Data.Reviews.map((data) => {
+            reviewsSeries.push(data.Value);
+          });
 
-        let reviewsSeries = [];
-        res1.Reviews.map((data) => {
-          reviewsSeries.push(data.Value);
-        });
+          let deliverySeries = [];
+          res1.Data.Delivery.map((data) => {
+            deliverySeries.push(data.Value);
+          });
 
-        let deliverySeries = [];
-        res1.Delivery.map((data) => {
-          deliverySeries.push(data.Value);
-        });
-
-        this.setState({
-          barChartOptions: {
-            xaxis: {
-              categories: categories
+          this.setState({
+            barChartOptions: {
+              xaxis: {
+                categories: categories
+              },
             },
-          },
-          ProductSeries: [{
-            data: productSeries
-          }],
-          PriceSeries: [{
-            data: priceSeries
-          }],
-          ReviewsSeries: [{
-            data: reviewsSeries
-          }],
-          DeliverySeries: [{
-            data: deliverySeries
-          }],
-        });
+            ProductSeries: [{
+              data: productSeries
+            }],
+            PriceSeries: [{
+              data: priceSeries
+            }],
+            ReviewsSeries: [{
+              data: reviewsSeries
+            }],
+            DeliverySeries: [{
+              data: deliverySeries
+            }],
+          });
+          /// Retailer’s Crossover Analysis
+          post('/ondetailoverview/GetRetailers_Crossover_Analysis', reqData).
+          then((response1) => {
+            console.log("GetRetailers_Crossover_Analysis", response1);
 
-      });
-      /// Retailer’s Crossover Analysis
-      post('/ondetailoverview/GetRetailers_Crossover_Analysis', reqData).
-      then((response) => {
-        console.log("GetRetailers_Crossover_Analysis", response);
+            let res2 = response1.data;
 
-        const res2 = JSON.parse('{\n' +
-          '    "Data": [\n' +
-          '        {\n' +
-          '            "Channel": "Coupang",\n' +
-          '            "Num_Of_Reviews": "4348",\n' +
-          '            "Avg_Of_Ratings": "866",\n' +
-          '            "Display_Ads_Spending": "866"\n' +
-          '        }, {\n' +
-          '            "Channel": "11st",\n' +
-          '            "Num_Of_Reviews": "775",\n' +
-          '            "Avg_Of_Ratings": "866",\n' +
-          '            "Display_Ads_Spending": "866"\n' +
-          '        }, {\n' +
-          '            "Channel": "Wemakeprice",\n' +
-          '            "Num_Of_Reviews": "683",\n' +
-          '            "Avg_Of_Ratings": "866",\n' +
-          '            "Display_Ads_Spending": "866"\n' +
-          '        }, {\n' +
-          '            "Channel": "Timon",\n' +
-          '            "Num_Of_Reviews": "854",\n' +
-          '            "Avg_Of_Ratings": "866",\n' +
-          '            "Display_Ads_Spending": "866"\n' +
-          '        }, {\n' +
-          '            "Channel": "Gmarket",\n' +
-          '            "Num_Of_Reviews": "647",\n' +
-          '            "Avg_Of_Ratings": "866",\n' +
-          '            "Display_Ads_Spending": "866"\n' +
-          '        }\n' +
-          '    ],\n' +
-          '    "ErrorCode": "OK",\n' +
-          '    "Message": "성공"\n' +
-          '}');
+            if (response.data.ErrorCode === "OK") {
+              let bubbleSeries = [];
+              let tableData = [];
 
-        let bubbleSeries = [];
-        let tableData = [];
+              let numOfReviews = [];
+              let avgOfRatings = [];
 
-        let numOfReviews = [];
-        let avgOfRatings = [];
+              res2.Data.map((data) => {
 
-        res2.Data.map((data) => {
+                numOfReviews.push(parseInt(data.Num_Of_Reviews, 10));
+                avgOfRatings.push(parseInt(data.Avg_Of_Ratings, 10));
 
-          numOfReviews.push(parseInt(data.Num_Of_Reviews, 10));
-          avgOfRatings.push(parseInt(data.Avg_Of_Ratings, 10));
+                bubbleSeries.push(
+                  {
+                    name: data.Channel,
+                    data: [[
+                      parseInt(data.Num_Of_Reviews, 10),
+                      parseInt(data.Display_Ads_Spending, 10),
+                      parseInt(data.Avg_Of_Ratings, 10),
+                    ]],
+                  }
+                );
+                tableData.push(
+                  {
+                    Channels: data.Channel,
+                    'Num of Reviews': numberFormatting(data.Num_Of_Reviews),
+                    'Avg of Ratings': data.Avg_Of_Ratings,
+                    'Display Ads Spending': numberFormatting(data.Display_Ads_Spending),
+                  }
+                )
+              });
 
-          bubbleSeries.push(
-            {
-              name: data.Channel,
-              data: [[
-                parseInt(data.Num_Of_Reviews, 10),
-                parseInt(data.Display_Ads_Spending, 10),
-                parseInt(data.Avg_Of_Ratings, 10),
-              ]],
+              let xAxisMin = Math.min(avgOfRatings);
+              let xAxisMax = Math.max(avgOfRatings);
+              let yAxisMax = Math.max(numOfReviews);
+
+              this.setState({
+                // BubbleOption: {
+                //   xaxis: {
+                //     min: xAxisMin,
+                //     max: xAxisMax,
+                //   },
+                //   yaxis: {
+                //     max: yAxisMax,
+                //   }
+                // },
+                BubbleSeries: bubbleSeries,
+                TableOnlineOverviewData: tableData
+              });
             }
-          );
-          tableData.push(
-            {
-              Channels: data.Channel,
-              'Num of Reviews': numberFormatting(data.Num_Of_Reviews),
-              'Avg of Ratings': data.Avg_Of_Ratings,
-              'Display Ads Spending': numberFormatting(data.Display_Ads_Spending),
+            else {
+              alert(response1.data.Message);
             }
-          )
-        });
-
-        let xAxisMin = Math.min(avgOfRatings);
-        let xAxisMax = Math.max(avgOfRatings);
-        let yAxisMax = Math.max(numOfReviews);
-
-        // let res2 = response.data;
-        this.setState({
-          // BubbleOption: {
-          //   xaxis: {
-          //     min: xAxisMin,
-          //     max: xAxisMax,
-          //   },
-          //   yaxis: {
-          //     max: yAxisMax,
-          //   }
-          // },
-          BubbleSeries: bubbleSeries,
-          TableOnlineOverviewData: tableData
-        });
+          });
+        } else {
+          alert(response.data.Message);
+        }
       });
     };
 

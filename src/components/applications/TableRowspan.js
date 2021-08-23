@@ -77,7 +77,7 @@ class TableRowspan extends Component {
 
     return (
       // <table className={propsItem.tClass}>
-      <table style={{ height:"100%" }}>
+      <table style={{ height:"96%" }}>
           <thead className='ar-table-thead'>
           <tr className='ar-table-thead-row'>{propsItem.tColumns.map((tColumn, idx)=>
           <th className='ar-table-thead-header' key={idx}>{tColumn.header}</th>
