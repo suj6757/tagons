@@ -113,7 +113,7 @@ class GoogleAnalytics extends React.Component {
             }
           },
           dataLabels: {
-            enabled: true,
+            enabled: false,
           },
           grid: {
             show: false,
@@ -1291,7 +1291,7 @@ class GoogleAnalytics extends React.Component {
             <Card>
               <CardBody>
                 <div className="box-title">
-                  <h2>GA Keyword Gap</h2>
+                  <h2>GA User Indicators</h2>
                 </div>
 
                 <ul className="tab-list">
@@ -1321,7 +1321,8 @@ class GoogleAnalytics extends React.Component {
                               <div
                                 key={idx}
                               >
-                                <div className='chart-area'>
+                                <div className='chart-area keyword-gap-graph'>
+                                  <p className='cont-noti'>단위: 명</p>
                                   <CompareBar options={statesChart.horizontal.options} series={item.series} type="bar" height={210} />
                                 </div>
                               </div>

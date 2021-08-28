@@ -644,7 +644,7 @@ class Sentimentanalysis extends React.Component {
                         <tr>
                           <th style={{ width: "15%" }}>Competitors</th>
                           <td style={{ width: "85%" }} colSpan="3">
-                            <TagInput defaultTagNum={statesItems.defaultTagNum} searchStart={tagSearchStart}  searchBtnClick={statesItems.tagSearchBtnClick}/>
+                            <TagInput defaultTagNum={statesItems.defaultTagNum} searchStart={tagSearchStart}  searchBtnClick={statesItems.tagSearchBtnClick} suggestions={suggestions}/>
                           </td>
                         </tr>
                         <tr>
@@ -751,6 +751,7 @@ class Sentimentanalysis extends React.Component {
                         <ReactTableNor
                           data={statesItems.positiveTableSentimantData}
                           columns={statesItems.positiveColumns}
+                          className='tbl_basic'
                         /> 
                       </div>
                       <div className="box right">
@@ -771,6 +772,7 @@ class Sentimentanalysis extends React.Component {
                         <ReactTableNor
                           data={statesItems.negativeTableSentimantData}
                           columns={statesItems.negativeColumns}
+                          className='tbl_basic'
                         /> 
                       </div>
                     </div>

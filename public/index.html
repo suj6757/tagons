@@ -22,6 +22,11 @@
       work correctly both with client-side routing and a non-root public URL.
       Learn how to configure a non-root public URL by running `npm run build`.
     -->
+  <!-- Issue workaround for React v16. -->
+  <script>
+    // See https://github.com/facebook/react/issues/20829#issuecomment-802088260
+    if (!crossOriginIsolated) SharedArrayBuffer = ArrayBuffer;
+  </script>
   <title>TousFlux</title>
 </head>
 

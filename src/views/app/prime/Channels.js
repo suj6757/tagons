@@ -145,7 +145,7 @@ class Channels extends React.Component {
         }
       };
       return(
-        <>
+        <div className='channel_wrap'>
           <Row>
               <Colxx xxs="12">
               <Card>
@@ -186,7 +186,15 @@ class Channels extends React.Component {
                           <tr>
                               <th style={{ width:'15%' }}>Channel</th>
                               <td style={{ width:'85%' }}>
-                              <ChannelButton  searchStart={searchStart} searchBtnClick={statesItems.searchBtnClick} tabAtribute={[true,true,true]}/>                             
+                              {/*<ChannelButton  searchStart={searchStart} searchBtnClick={statesItems.searchBtnClick} tabAtribute={[true,true,true]}/>*/}
+                                {/* <ChannelTable /> */}
+                                <p className='cont-noti small'>단위: 건</p>
+                                {/* <TableRowspan
+                                  tClass='r-table tbl_channel'
+                                  tData={Object.assign([],statesItems.tData)}
+                                  tColumns={columns}
+                                /> */}
+                                <p className='cont-noti'>* 각 수치는 기간 내 총 합계를 의미</p>
                               </td>
                           </tr>
                           <tr>
@@ -242,7 +250,7 @@ class Channels extends React.Component {
               </Card>
               </Colxx>
           </Row>
-        </>
+        </div>
       )
     }
 }

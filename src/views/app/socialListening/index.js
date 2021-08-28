@@ -12,7 +12,7 @@ const Sentimentanalysis = React.lazy(() =>
 const SocialLink = ({ match }) => (
   <Suspense fallback={<div className="loading" />}>
     <Switch>
-      <Redirect exact from={`${match.url}/`} to={`${match.url}/needspatterns`} />
+      <Redirect exact from={`${match.url}/`} to={`${match.url}/sentimentanalysis`} />
       <Route
         path={`${match.url}/needspatterns`}
         render={(props) => <Needspatterns {...props} />}

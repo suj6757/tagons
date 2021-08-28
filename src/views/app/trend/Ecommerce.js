@@ -75,7 +75,7 @@ class Ecommerce extends React.Component {
                       enabled: false,
                   }
               },
-              colors: ['#4774c5', '#3a3b3b', '#a1a1a1', '#ffc104', '#5597d3',],
+              colors: ['#000'], //['#4774c5', '#3a3b3b', '#a1a1a1', '#ffc104', '#5597d3',],
               dataLabels: {
                   enabled: true,
                   background: {
@@ -93,7 +93,7 @@ class Ecommerce extends React.Component {
                   offsetY: -10,
               },
               markers: {
-                  size: 5,
+                  size: 0,
                   hover: {
                       size: 5,
                       sizeOffset: 5,

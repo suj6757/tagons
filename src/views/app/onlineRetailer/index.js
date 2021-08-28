@@ -16,7 +16,7 @@ const Overview = React.lazy(() =>
 const SocialLink = ({ match }) => (
   <Suspense fallback={<div className="loading" />}>
     <Switch>
-      <Redirect exact from={`${match.url}/`} to={`${match.url}/productprice`} />
+      <Redirect exact from={`${match.url}/`} to={`${match.url}/onboard`} />
       <Route
         path={`${match.url}/productprice`}
         render={(props) => <ProductPrice {...props} />}

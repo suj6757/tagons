@@ -519,6 +519,7 @@ class Overview extends React.Component {
                         <ReactTableNor
                           data={statesItems.TableOnlineOverviewData}
                           columns={columns}
+                          className='tbl_basic'
                         />
                       </div>
                     </div>

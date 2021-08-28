@@ -20,8 +20,7 @@ import DatatablePagination from '../../components/DatatablePagination';
 
 //import products from '../../data/products';
 
-function Table({ columns, data, divided = false, defaultPageSize = 6 }) {
-  
+function Table({ columns, data, divided = false, fixed = false ,defaultPageSize = 6 , rowProps = () => ({}) }) {
   const {
     getTableProps,
     getTableBodyProps,
@@ -48,7 +47,7 @@ function Table({ columns, data, divided = false, defaultPageSize = 6 }) {
     <>
       <table
         {...getTableProps()}
-        className={`r-table table ${classnames({ 'table-divided': divided })}`}
+        className={`r-table table ${classnames({ 'table-divided': divided })} ${classnames({ 'table-fixed': fixed })}`}
       >
         <thead>
           {headerGroups.map((headerGroup) => (
@@ -117,26 +116,26 @@ export const ReactTableWithPaginationCard = () => {
     () => [
       {
         Header: 'Rank',
-        accessor: 'Rank',
+        accessor: 'id',
         cellClass: 'list-item-heading text-center',
         Cell: (props) => <>{props.value}</>,
       },
       {
         Header: 'Purchase Factor',
-        accessor: 'PurchaseFactor',
-        cellClass: 'list-item-heading text-muted text-center',
+        accessor: 'purchase',
+        cellClass: 'text-muted text-center',
         Cell: (props) => <>{props.value}</>,
       },
       {
         Header: 'Satisfaction Factor',
-        accessor: 'SatisfactionFactor',
-        cellClass: 'list-item-heading text-muted text-center',
+        accessor: 'satisfaction',
+        cellClass: 'text-muted text-center',
         Cell: (props) => <>{props.value}</>,
       },
       {
         Header: 'Dis-satisfaction Factor',
-        accessor: 'DisSatisfactionFactor',
-        cellClass: 'list-item-heading text-muted text-center',
+        accessor: 'disSatisfaction',
+        cellClass: 'text-muted text-center',
         Cell: (props) => <>{props.value}</>,
       },
     ],
@@ -245,7 +244,7 @@ export const ReactTableDivided = () => {
   );
 };
 
-export const ReactTable = ({columns,data,defaultPageSize = 8}) => {
+export const ReactTable = ({columns,data}) => {
 
   const rowStyles = [
     {
@@ -277,7 +276,7 @@ export const ReactTable = ({columns,data,defaultPageSize = 8}) => {
       <Table 
         columns={columns} 
         data={data}
-        defaultPageSize={defaultPageSize}
+        defaultPageSize={data.length}
         rowProps={( row ) => ({
           onClick: () => {
             console.log('1: ', row , '2: ', row.original);

@@ -79,9 +79,11 @@ class TagInput extends React.Component {
                    handleDelete={this.handleDelete}
                    handleAddition={this.handleAddition}
                    delimiters={delimiters}
-                   allowDeleteFromEmptyInput={false}
-                   placeholder='No Competitors'
-                   name={tags.length !== tagNum ? `input-tag` : `input-tag hide`}
+                   allowDeleteFromEmptyInput={true}
+                   placeholder='Add New Item'
+                   name={tags.length !== 5 ? `input-tag` : `input-tag hide`}
+                  //  suggestions={suggestions}
+                   inline={true}
         />
       </div>
     )

@@ -67,6 +67,20 @@
     }
 }
 
+.prime_wrap{
+    .graph-area{
+        &.bar{
+            .barchart{
+                .cont-noti{
+                    position: relative;
+                    top: 15px;
+                    right: 15px;
+                }
+            }
+        }
+    }
+}
+
 .graph-area{
     &.title-type{
         position: relative;
@@ -335,26 +349,14 @@
     margin-top: 0 !important;
 }
 
-.pattern-tit {
-    text-align: center;
-}
-
-.heatmap_margin {
-    margin-top: 20px;
-    height: 100%;
-}
-
-// .heatTable {
-//     height: 92%;
-// }
 
 .graph-area {
     &.Heat-Map{
-        // padding-left: 276px;
+        padding-left: 276px;
         
         .heatmap_wrap_table{
-            // position: absolute;
-            // width: 298px;
+            position: absolute;
+            width: 298px;
             top: 0;
             left: 0;
             border-bottom: none;
@@ -369,7 +371,7 @@
                 height: 54.0437px;
                 border-left: 1px solid #ddd;
                 border-bottom: 1px solid #ddd;
-                // padding-top: 8%;
+                padding-top: 0;
                 padding-bottom: 0;
                 font-size: 14px;
             }
@@ -381,9 +383,13 @@
 
 .social_area{
     
-    .select-box{
-        margin-left: 56px;
+    .bx_select_area{
+        margin-top: 20px;
+        .select-box{
+            margin-left: 2.5%;
+        }
     }
+    
 
     .box-line{
         border: none;
@@ -395,6 +401,14 @@
             &.right{
                 width: 45%;
             }
+        }
+    }
+
+    .graph-area {
+        .bx_name{
+            right: -1px;
+            background: #333638;
+            color: #fff;
         }
     }
 }
@@ -441,19 +455,21 @@
 
 .ReactTags__selected{
 
-    .ReactTags__tag{
-        float: left;
+    > .ReactTags__tag{
+        display: inline-block;
         padding: 0.5rem 0.7rem;
         margin-right: 5px;
         border: 1px solid #bbb;
         border-radius: 20px;
         color: #555;
-        vertical-align: middle;
+        vertical-align: top;
+        cursor: default;
         .ReactTags__remove{
             margin-left: 10px;
             background: transparent;
             border: none;
         }
+        
 
         + .ReactTags__tag{
             margin: 0 5px;
@@ -461,10 +477,13 @@
     }  
 
     .ReactTags__tagInput{
+        display: inline-block;
+        
         .ReactTags__tagInputField{
             display: inline-block;
             padding: 0.5rem 1rem;
             border: 1px solid #d7d7d7;
+            cursor: default;
 
             &:focus-visible{
                 outline: none;
@@ -475,11 +494,49 @@
             }
         }
     }
+
+    /* Styles for suggestions */
+  .ReactTags__suggestions {
+        position: absolute;
+        z-index: 100;
+        ul {
+            list-style-type: none;
+            box-shadow: 0.05em 0.01em 0.5em rgba(0, 0, 0, 0.2);
+            background: white;
+            width: 200px;
+            padding-left: 0;
+        }
+      li {
+        border-bottom: 1px solid #ddd;
+        padding: 5px 10px;
+        margin: 0;
+       
+
+        &:hover{
+            background: #b7cfe0;
+            color: #fff;
+            & mark{
+                color: #fff;
+            }
+        }
+
+        &.ReactTags__activeSuggestion {
+            background: #b7cfe0;
+            cursor: pointer;
+        }
+
+        & mark {
+            text-decoration: underline;
+            background: none;
+            font-weight: 600;
+        }
+      }
+    }
 }
 
 
 .recharts-legend-wrapper{
-    top: 0 !important;
+    top: -15px !important;
 }
 
 .t-c{
@@ -583,3 +640,36 @@
         margin-bottom: 0;
     }
 }
+
+.ecommerce-chart{
+    .recharts-tooltip-wrapper{
+        pointer-events: all !important;
+        .recharts-default-tooltip{
+            max-height: 300px;
+            overflow-y: auto;
+        }
+    }
+    .recharts-tooltip-wrapper-right{
+        left: -5px  !important;
+    }
+    .recharts-tooltip-wrapper-left{
+        left: 5px  !important;
+    }
+}
+
+.channel_wrap{
+    .cont-noti{
+        margin: 20px 0;
+    }
+}
+
+.demo_area{
+    .cont-noti{
+        position: relative;
+        top: 15px;
+        right: 15px;
+        margin: 0;
+    }
+}
+
+

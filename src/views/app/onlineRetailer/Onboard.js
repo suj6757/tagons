@@ -618,7 +618,7 @@ class Onboard extends React.Component {
                           <tr>
                             <th style={{ width: "15%" }}>Competitors</th>
                             <td style={{ width: "85%" }} colSpan="3">
-                                <TagInput defaultTagNum={statesItems.defaultTagNum} searchStart={tagSearchStart}  searchBtnClick={statesItems.tagSearchBtnClick} />
+                                <TagInput suggestions={suggestions} defaultTagNum={statesItems.defaultTagNum} searchStart={tagSearchStart}  searchBtnClick={statesItems.tagSearchBtnClick} />
                             </td>
                           </tr>
                           <tr>
@@ -884,7 +884,7 @@ class Onboard extends React.Component {
                     />
                   </FormGroup>
                 </div>
-                <div className='graph-area brushChart_wrap'>
+                                <div className='graph-area brushChart_wrap ecommerce-chart'>
                   <p className='cont-noti'>단위: 건</p>
                   <BrushChart priceDistributionData = {statesItems.PriceDistributionData} channelData= {statesItems.ChannelData} yMax={statesItems.yMax}/>
                 </div>

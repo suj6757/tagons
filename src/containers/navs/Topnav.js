@@ -1,5 +1,5 @@
-// /* eslint-disable jsx-a11y/click-events-have-key-events */
-// /* eslint-disable jsx-a11y/no-static-element-interactions */
+/* eslint-disable jsx-a11y/click-events-have-key-events */
+/* eslint-disable jsx-a11y/no-static-element-interactions */
 /* eslint-disable no-use-before-define */
 import React, { useState } from 'react';
 import { injectIntl } from 'react-intl';
@@ -97,46 +97,50 @@ const TopNav = ({
         <UncontrolledDropdown className="top-nav" isOpen={menuDropdown} onMouseEnter={showDropdown} onMouseLeave={hideDropdown}>
           <DropdownToggle tag="div">
             <ul className="d-inline-block top-nav-list">
-              <li><NavLink to="/app/prime/prime" activeClassName="active" className="nav-menu">PRIME</NavLink></li>
-              <li className="mr50"><NavLink to="/app/gogo/start" activeClassName="active" className="nav-menu">TREND</NavLink></li>
-              <li className="mr100"><NavLink to="#" activeClassName="" className="nav-menu">SOCIAL LISTENING</NavLink></li>
-              <li className="mr100"><NavLink to="#" activeClassName="" className="nav-menu">ONLINE RETAILER</NavLink></li>
-              <li className="mr50"><NavLink to="#" activeClassName="" className="nav-menu">SIMULATOR</NavLink></li>
-              <li><NavLink to="#" activeClassName="" className="nav-menu">ABOUT TousFlux</NavLink></li>
+              <li className="menu1"><NavLink to='/app/prime' activeClassName="active" className="nav-menu">PRIME</NavLink></li>
+              <li className="menu2"><NavLink to="/app/trend" activeClassName="active" className="nav-menu">TREND</NavLink></li>
+              <li className="menu3"><NavLink to="/app/socialListening" activeClassName="active" className="nav-menu">SOCIAL LISTENING</NavLink></li>
+              <li className="menu4"><NavLink to="/app/onlineRetailer" activeClassName="active" className="nav-menu">ONLINE RETAILER</NavLink></li>
+              <li className="menu5"><NavLink to="#" activeClassName="" className="nav-menu">SIMULATOR</NavLink></li>
+              <li className="menu6"><NavLink to="#" activeClassName="" className="nav-menu">ABOUT TousFlux</NavLink></li>
             </ul>
           </DropdownToggle>
           <DropdownMenu>
             <div className="sub-menu-area">
-              <ul className="sub-list1">
-                <li><DropdownItem tag={NavLink} to="/app/prime/prime" activeClassName="active" className="sub-menu">STATES</DropdownItem></li>
-                <li><DropdownItem tag={NavLink} to="/app/prime/channels" activeClassName="active" className="sub-menu">CHANNELS</DropdownItem></li>
-              </ul>
-              <ul className="sub-list2">
-                <li><DropdownItem tag={NavLink} to="/app/trend/overview" activeClassName="active" className="sub-menu">OVERVIEW</DropdownItem></li>
-                <li><DropdownItem tag={NavLink} to="/app/trend/social" activeClassName="active" className="sub-menu">SOCIAL</DropdownItem></li>
-                <li><DropdownItem tag={NavLink} to="/app/trend/ecommerce" activeClassName="active" className="sub-menu">E-COMMERCE</DropdownItem></li>
-                <li><DropdownItem tag={NavLink} to="/app/trend/googleAnalytics" activeClassName="active" className="sub-menu">GOOGLE ANALYTICS</DropdownItem></li>
-                <li><DropdownItem tag={NavLink} to="/app/trend/response" activeClassName="active" className="sub-menu">TREND-RESPONSE</DropdownItem></li>
-              </ul>
-              <ul className="sub-list3"> 
-                <li><DropdownItem tag={NavLink} to="/app/socialListening/sentimentanalysis" activeClassName="active" className="sub-menu">SENTIMENT ANALYSIS</DropdownItem></li>
-                <li><DropdownItem tag={NavLink} to="/app/socialListening/needspatterns" activeClassName="active" className="sub-menu">NEEDS PATTERNS</DropdownItem></li>
-              </ul>
-              <ul className="sub-list4">
-                <li><DropdownItem tag={NavLink} to="/app/onlineRetailer/onboard" activeClassName="active" className="sub-menu">ONBOARD</DropdownItem></li>
-                <li><DropdownItem tag={NavLink} to="/app/onlineRetailer/overview" activeClassName="active" className="sub-menu">OVERVIEW</DropdownItem></li>
-                <li><DropdownItem tag={NavLink} to="/app/onlineRetailer/productprice" activeClassName="active" className="sub-menu">PRODUCT &amp; PRICE</DropdownItem></li>
-              </ul>
-              <ul className="sub-list5">
-                <li><NavLink to="#" activeClassName="" className="sub-menu">INFLUENCER</NavLink></li>
-                <li><NavLink to="#" activeClassName="" className="sub-menu">ADS</NavLink></li>
-                <li><NavLink to="#" activeClassName="" className="sub-menu">SELECT CHANNEL</NavLink></li>
-              </ul>
-              <ul className="sub-list6">
-                <li><NavLink to="#" activeClassName="" className="sub-menu">TousFlux 소개</NavLink></li>
-                <li><NavLink to="#" activeClassName="" className="sub-menu">사용법</NavLink></li>
-                <li><NavLink to="#" activeClassName="" className="sub-menu">공지사항</NavLink></li>
-              </ul>
+              <div className="left-box" />
+              <div className="sub-menu-box">
+                <ul className="sub-list1">
+                  <li><DropdownItem tag={NavLink} to="/app/prime/prime" activeClassName="active" className="sub-menu">STATES</DropdownItem></li>
+                  <li><DropdownItem tag={NavLink} to="/app/prime/channels" activeClassName="active" className="sub-menu">CHANNELS</DropdownItem></li>
+                </ul>
+                <ul className="sub-list2">
+                  <li><DropdownItem tag={NavLink} to="/app/trend/overview" activeClassName="active" className="sub-menu">OVERVIEW</DropdownItem></li>
+                  <li><DropdownItem tag={NavLink} to="/app/trend/social" activeClassName="active" className="sub-menu">SOCIAL</DropdownItem></li>
+                  <li><DropdownItem tag={NavLink} to="/app/trend/ecommerce" activeClassName="active" className="sub-menu">E-COMMERCE</DropdownItem></li>
+                  <li><DropdownItem tag={NavLink} to="/app/trend/googleAnalytics" activeClassName="active" className="sub-menu">GOOGLE ANALYTICS</DropdownItem></li>
+                  <li><DropdownItem tag={NavLink} to="/app/trend/response" activeClassName="active" className="sub-menu">TREND-RESPONSE</DropdownItem></li>
+                  <li><DropdownItem tag={NavLink} to="/app/gogo/start" activeClassName="active" className="sub-menu">INDUSTRY</DropdownItem></li>
+                </ul>
+                <ul className="sub-list3"> 
+                  <li><DropdownItem tag={NavLink} to="/app/socialListening/sentimentanalysis" activeClassName="active" className="sub-menu">SENTIMENT ANALYSIS</DropdownItem></li>
+                  <li><DropdownItem tag={NavLink} to="/app/socialListening/needspatterns" activeClassName="active" className="sub-menu">NEEDS PATTERNS</DropdownItem></li>
+                </ul>
+                <ul className="sub-list4">
+                  <li><DropdownItem tag={NavLink} to="/app/onlineRetailer/onboard" activeClassName="active" className="sub-menu">ONBOARD</DropdownItem></li>
+                  <li><DropdownItem tag={NavLink} to="/app/onlineRetailer/overview" activeClassName="active" className="sub-menu">OVERVIEW</DropdownItem></li>
+                  <li><DropdownItem tag={NavLink} to="/app/onlineRetailer/productprice" activeClassName="active" className="sub-menu">PRODUCT &amp; PRICE</DropdownItem></li>
+                </ul>
+                <ul className="sub-list5">
+                  <li><NavLink to="#" activeClassName="" className="sub-menu">INFLUENCER</NavLink></li>
+                  <li><NavLink to="#" activeClassName="" className="sub-menu">ADS</NavLink></li>
+                  <li><NavLink to="#" activeClassName="" className="sub-menu">SELECT CHANNEL</NavLink></li>
+                </ul>
+                <ul className="sub-list6">
+                  <li><NavLink to="#" activeClassName="" className="sub-menu">TousFlux 소개</NavLink></li>
+                  <li><NavLink to="#" activeClassName="" className="sub-menu">사용법</NavLink></li>
+                  <li><NavLink to="#" activeClassName="" className="sub-menu">공지사항</NavLink></li>
+                </ul>
+              </div>
             </div>
           </DropdownMenu>
         </UncontrolledDropdown>

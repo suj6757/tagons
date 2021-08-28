@@ -77,7 +77,7 @@ class Response extends React.Component {
           },
           colors: ['#404141','#ed7d31'],
           dataLabels: {
-            enabled: true,
+            enabled: false,
             background: {
               foreColor: '#000',
               padding: 0,
@@ -93,7 +93,7 @@ class Response extends React.Component {
             offsetY: -10,
           },
           markers: {
-            size: 5,
+            size: 0,
             hover: {
               size: 5,
               sizeOffset: 5,
@@ -471,7 +471,7 @@ class Response extends React.Component {
                   <h2>Trend Response</h2>
                 </div>
 
-                <div className="box-area response-area">
+                <div className="box-area response-area response-legend">
                   <div className='graph-area total-area title-type box-left'>
                     <p className='bx_name'>{statesItems.Selected_Index_Title}</p>
                     <CompareLine options={statesItems.totalGraph.options} series={statesItems.totalGraph.series} height={statesItems.totalGraph.height} />

@@ -14,7 +14,7 @@ import {Table} from 'reactstrap';
 import { useTable } from "react-table";
 
 // eslint-disable-next-line import/prefer-default-export
-export const ReactTable = ({columns,data}) => {
+export const ReactTable = ({columns,data, className}) => {
   // Use the state and functions returned from useTable to build your UI
   const {
     getTableProps,
@@ -24,18 +24,17 @@ export const ReactTable = ({columns,data}) => {
     prepareRow
   } = useTable({
     columns,
-    data
+    data,
   });
 
   const handleClick = evt => {
     // 클릭 데이터 넘김
     console.dir(evt);
   }
- 
 
   // Render the UI for your table
   return (
-    <Table {...getTableProps()} className='tbl_updown' bordered>
+    <Table {...getTableProps()} className={className} bordered>
       <thead>
         {headerGroups.map((headerGroup) => (
           <tr {...headerGroup.getHeaderGroupProps()}>

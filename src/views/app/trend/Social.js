@@ -64,7 +64,7 @@ class Social extends React.Component {
             chart: {
               type: 'line',
               dropShadow: {
-                enabled: true,
+                enabled: false,
                 color: '#000',
                 top: 18,
                 left: 7,
@@ -73,59 +73,52 @@ class Social extends React.Component {
               },
               toolbar: {
                 show: false
+              }, 
+              zoom: {
+                enabled: false,
               }
             },
-            colors: ['#77B6EA', '#545454'],
+            colors: ['#000'],
             dataLabels: {
-              enabled: true,
+              enabled: false,
+            },
+            markers: {
+              size: 10,
+              hover: {
+                size: 5,
+                sizeOffset: 5,
+                fillColor: '#000',
+              },
+              discrete: [{
+                fillColor: '#e3e3e3',
+                strokeColor: '#fff',
+                size: 5
+              }]
             },
             stroke: {
               curve: 'smooth'
             },
-            title: {
-              text: '',
-              align: 'left'
-            },
             grid: {
-              borderColor: '#e7e7e7',
-              row: {
-                colors: ['#f3f3f3', 'transparent'], // takes an array which will be repeated on columns
-                opacity: 0.5
-              },
-            },
-            markers: {
-              size: 1
+              show: false,
             },
             xaxis: {
               categories: [],
-              title: {
-                text: ''
-              }
+              tickPlacement: 'between',
             },
             yaxis: {
-              title: {
-                text: ''
-              },
-              min: 1,
-              max: 35
+              show: false
             },
-            legend: {
-              position: 'top',
-              horizontalAlign: 'right',
-              floating: true,
-              offsetY: -25,
-              offsetX: -5
-            }
+
           },
         }, 
         commentGraph : {
-          series: [],
+           series: [],
           height: 500,
           options: {
             chart: {
               type: 'line',
               dropShadow: {
-                enabled: true,
+                enabled: false,
                 color: '#000',
                 top: 18,
                 left: 7,
@@ -134,49 +127,42 @@ class Social extends React.Component {
               },
               toolbar: {
                 show: false
+              }, 
+              zoom: {
+                enabled: false,
               }
             },
-            colors: ['#77B6EA', '#545454'],
+            colors: ['#000'],
             dataLabels: {
-              enabled: true,
+              enabled: false,
+            },
+            markers: {
+              size: 5,
+              hover: {
+                size: 5,
+                sizeOffset: 5,
+                fillColor: '#000',
+              },
+              discrete: [{
+                fillColor: '#e3e3e3',
+                strokeColor: '#fff',
+                size: 5
+              }]
             },
             stroke: {
               curve: 'smooth'
             },
-            title: {
-              text: '',
-              align: 'left'
-            },
             grid: {
-              borderColor: '#e7e7e7',
-              row: {
-                colors: ['#f3f3f3', 'transparent'], // takes an array which will be repeated on columns
-                opacity: 0.5
-              },
-            },
-            markers: {
-              size: 1
+              show: false,
             },
             xaxis: {
               categories: [],
-              title: {
-                text: ''
-              }
+              tickPlacement: 'between',
             },
             yaxis: {
-              title: {
-                text: ''
-              },
-              min: 1,
-              max: 35
+              show: false
             },
-            legend: {
-              position: 'top',
-              horizontalAlign: 'right',
-              floating: true,
-              offsetY: -25,
-              offsetX: -5
-            }
+
           },
         }, 
         keywordGraph : {
@@ -197,9 +183,22 @@ class Social extends React.Component {
                 show: false
               }
             },
-            colors: ['#77B6EA', '#545454'],
+            colors: ['#b9b9b9'],
             dataLabels: {
               enabled: true,
+              background: {
+                foreColor: '#000',
+                padding: 0,
+                borderRadius: 0,
+                borderColor: 'transparent',
+               },
+               style: {
+                  fontSize: '14px',
+                  fontFamily: 'Helvetica, Arial, sans-serif',
+                  fontWeight: 'bold',
+                  colors: ['transparent'],
+                },
+                offsetY: -10,
             },
             stroke: {
               curve: 'smooth'
@@ -209,14 +208,20 @@ class Social extends React.Component {
               align: 'left'
             },
             grid: {
-              borderColor: '#e7e7e7',
-              row: {
-                colors: ['#f3f3f3', 'transparent'], // takes an array which will be repeated on columns
-                opacity: 0.5
-              },
+              show: false,
             },
             markers: {
-              size: 1
+              size: 5,
+              hover: {
+                size: 5,
+                sizeOffset: 5,
+                fillColor: '#000',
+              },
+              discrete: [{
+                fillColor: '#e3e3e3',
+                strokeColor: '#fff',
+                size: 5
+              }]
             },
             xaxis: {
               categories: [],
@@ -228,16 +233,7 @@ class Social extends React.Component {
               title: {
                 text: ''
               },
-              min: 0,
-              max: 2,
             },
-            legend: {
-              position: 'top',
-              horizontalAlign: 'right',
-              floating: true,
-              offsetY: -25,
-              offsetX: -5
-            }
           },
         }, 
       }
@@ -332,127 +328,113 @@ class Social extends React.Component {
                                 data : [] ,};
           var commentCategoryData = [];
           var buzzOption = {
-              series: [],
-              height: 500,
-              options: {
-                chart: {
-                  type: 'line',
-                  dropShadow: {
-                    enabled: true,
-                    color: '#000',
-                    top: 18,
-                    left: 7,
-                    blur: 10,
-                    opacity: 0.2
-                  },
-                  toolbar: {
-                    show: false
-                  }
+            series: [],
+            height: 500,
+            options: {
+              chart: {
+                type: 'line',
+                dropShadow: {
+                  enabled: false,
+                  color: '#000',
+                  top: 18,
+                  left: 7,
+                  blur: 10,
+                  opacity: 0.2
                 },
-                colors: ['#77B6EA', '#545454'],
-                dataLabels: {
-                  enabled: true,
-                },
-                stroke: {
-                  curve: 'smooth'
-                },
-                title: {
-                  text: 'Average High & Low Temperature',
-                  align: 'left'
-                },
-                grid: {
-                  borderColor: '#e7e7e7',
-                  row: {
-                    colors: ['#f3f3f3', 'transparent'], // takes an array which will be repeated on columns
-                    opacity: 0.5
-                  },
-                },
-                markers: {
-                  size: 1
-                },
-                xaxis: {
-                  categories: [],
-                  title: {
-                    text: ''
-                  }
-                },
-                yaxis: {
-                  title: {
-                    text: 'Temperature'
-                  },
-                  min: 1,
-                  max: 35
-                },
-                legend: {
-                  position: 'top',
-                  horizontalAlign: 'right',
-                  floating: true,
-                  offsetY: -25,
-                  offsetX: -5
+                toolbar: {
+                  show: false
+                }, 
+                zoom: {
+                  enabled: false,
                 }
               },
-            };
+              colors: ['#000'],
+              dataLabels: {
+                enabled: false,
+              },
+              markers: {
+                size: 0,
+                hover: {
+                  size: 5,
+                  sizeOffset: 5,
+                  fillColor: '#000',
+                },
+                discrete: [{
+                  fillColor: '#e3e3e3',
+                  strokeColor: '#fff',
+                  size: 5
+                }]
+              },
+              stroke: {
+                curve: 'smooth'
+              },
+              grid: {
+                show: false,
+              },
+              xaxis: {
+                categories: [],
+                tickPlacement: 'between',
+              },
+              yaxis: {
+                show: false
+              },
+
+            },
+          };
           var commentOption = {
-              series: [],
-              height: 500,
-              options: {
-                chart: {
-                  type: 'line',
-                  dropShadow: {
-                    enabled: true,
-                    color: '#000',
-                    top: 18,
-                    left: 7,
-                    blur: 10,
-                    opacity: 0.2
-                  },
-                  toolbar: {
-                    show: false
-                  }
+            series: [],
+            height: 500,
+            options: {
+              chart: {
+                type: 'line',
+                dropShadow: {
+                  enabled: false,
+                  color: '#000',
+                  top: 18,
+                  left: 7,
+                  blur: 10,
+                  opacity: 0.2
                 },
-                colors: ['#77B6EA', '#545454'],
-                dataLabels: {
-                  enabled: true,
-                },
-                stroke: {
-                  curve: 'smooth'
-                },
-                title: {
-                  text: '',
-                  align: 'left'
-                },
-                grid: {
-                  borderColor: '#e7e7e7',
-                  row: {
-                    colors: ['#f3f3f3', 'transparent'], // takes an array which will be repeated on columns
-                    opacity: 0.5
-                  },
-                },
-                markers: {
-                  size: 1
-                },
-                xaxis: {
-                  categories: [],
-                  title: {
-                    text: ''
-                  }
-                },
-                yaxis: {
-                  title: {
-                    text: 'Temperature'
-                  },
-                  min: 0,
-                  max: 35
-                },
-                legend: {
-                  position: 'top',
-                  horizontalAlign: 'right',
-                  floating: true,
-                  offsetY: -25,
-                  offsetX: -5
+                toolbar: {
+                  show: false
+                }, 
+                zoom: {
+                  enabled: false,
                 }
               },
-            };
+              colors: ['#000'],
+              dataLabels: {
+                enabled: false,
+              },
+              markers: {
+                size: 0,
+                hover: {
+                  size: 5,
+                  sizeOffset: 5,
+                  fillColor: '#000',
+                },
+                discrete: [{
+                  fillColor: '#e3e3e3',
+                  strokeColor: '#fff',
+                  size: 5
+                }]
+              },
+              stroke: {
+                curve: 'smooth'
+              },
+              grid: {
+                show: false,
+              },
+              xaxis: {
+                categories: [],
+                tickPlacement: 'between',
+              },
+              yaxis: {
+                show: false
+              },
+
+            },
+          };
           chartData.buzz.forEach(function(item,idx){
              if (item.Channel === selectValue.value ){
                 buzzData = item;
@@ -921,7 +903,7 @@ class Social extends React.Component {
                                         <td>{items.Rank}</td>
                                         {items.channel.map(item =>{
                                           return (
-                                            <td  onClick={keyWordClick.bind(this,item)}>{item.Value}</td>
+                                            <td  onClick={keyWordClick.bind(this,item)} style={{color: (item.Value.indexOf('▲')>0)?'#ff0000':(item.Value.indexOf('▼')>0)?'#0070c0':'#000000'}} >{item.Value}</td>
                                           )})}
                                       </tr>   
                                  )})}

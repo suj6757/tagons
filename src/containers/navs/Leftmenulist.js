@@ -23,6 +23,7 @@ export const LeftTrend = ({match}) => {
       <MenuItem><NavLink to="/app/trend/ecommerce" activeClassName="active">E-COMMERCE</NavLink></MenuItem>
       <MenuItem><NavLink to="/app/trend/googleAnalytics" activeClassName="active">GOOGLE ANALYTICS</NavLink></MenuItem>
       <MenuItem><NavLink to="/app/trend/response" activeClassName="active">TREND-RESPONSE</NavLink></MenuItem>
+      <MenuItem><NavLink to="/app/gogo/start" activeClassName="active">INDUSTRY</NavLink></MenuItem>
     </>
   )
 }
